@@ -1,1 +1,0 @@
-C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\cpp_pointer_array\x64\Debug\cpp_pointer_array.exe

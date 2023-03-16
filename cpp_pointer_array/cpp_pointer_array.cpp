@@ -8,8 +8,15 @@
 
 //원시배열: 동일한 타입의 원소들의 (물리적으로 )'연속적'인 메모리 블럭
 
-
+//배열을 함수에 매개변수로 넘기는 표기방식
 void DoChange(int tArray[][2], int tRow, int tCol, int tValue);
+
+void DoChangePtr( int(*tpPtr)[2], int tRow, int tCol, int tValue);
+
+
+void DoChange1D(int tArray[], int, int);
+
+void DoChange1DPtr(int* tpPtr, int, int);
 
 int main()
 {
@@ -57,9 +64,11 @@ int main()
         { 0, 0 }
     };
 
-
+    //임의접근 random access
+    // 배열의 이름은 배열의 시작주소 값이다.
     //tArray2D[0][0] = 7;
-    DoChange(tArray2D, 0, 0, 7);
+    //DoChange(tArray2D, 0, 0, 7);
+    DoChangePtr(tArray2D, 0, 0, 7);
 
 
     std::cout << std::endl;
@@ -75,6 +84,25 @@ int main()
 
 
 
+
+
+
+
+    int tArray1D[3] = { 1, 2, 3 };
+
+    //다음 한 줄을 함수로 만들어 프로그램 구조를 변경해보세요.
+    //tArray1D[0] = 7;
+    //DoChange1D(tArray1D, 0, 7);
+    DoChange1DPtr(tArray1D, 0, 7);
+
+    std::cout << std::endl;
+    for (int ti = 0; ti < 3; ++ti)
+    {
+        std::cout << tArray1D[ti] << "\t";
+    }
+
+
+
     return 0;
 }
 //포인터와 배열은 주소값을 다룬다는 공통점이 있다.
@@ -82,4 +110,26 @@ int main()
 void DoChange(int tArray[][2], int tRow, int tCol, int tValue)
 {
     tArray[tRow][tCol] = tValue;
+}
+
+
+
+void DoChangePtr(int(*tpPtr)[2], int tRow, int tCol, int tValue)
+{
+    //tpPtr[tRow][tCol] = tValue;
+
+    int* tpRyu = *(tpPtr + tRow);   //2차원 수준에서 시작 주소값에 포인터증가 연산하여 간접참조
+    *(tpRyu + tCol) = tValue;       //1차원 수준에서 포인터 증가 연산하여 간접참조
+}
+
+
+
+void DoChange1D(int tArray[], int tIndex, int tValue)
+{
+    tArray[tIndex] = tValue;
+}
+
+void DoChange1DPtr(int* tpPtr, int tIndex, int tValue)
+{
+    tpPtr[tIndex] = tValue;
 }
