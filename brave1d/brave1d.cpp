@@ -18,6 +18,30 @@
 
  */
 
+
+/*
+    OOP의 4가지 특징
+
+
+    추상화
+        데이터의 추상화 + 코드의 추상화 ---> 데이터의 추상화
+
+    은닉화
+
+        멤버함수 뒤로 멤버변수를 감춘다.
+
+    상속성
+
+        공통된 속성들을 부모클래스에 두고,
+        자식클래스들은 부모클래스를 이어받아 작성한다.
+
+    다형성
+    
+        같은 메시지에 다른 반응
+
+
+*/
+
 #include <iostream>
 #include <time.h>
 
@@ -28,7 +52,13 @@
 using namespace std;
 
 
-void DoMove(CBrave* tBrave, int tVelocity);
+//void DoMove(CBrave* tBrave, int tVelocity);
+
+//함수의 오버로드: 함수가 이름은 같고, 매개변수리스트가 다른 것
+//  <-- 매개변수 리스트가 다르다( 매개변수 개수가 다르거나, 매개변수의 타입이 다른 것 )
+
+//void DoDamage(CBrave* tBrave, CSlime* tSlime);
+//void DoDamage(CSlime* tSlime, CBrave* tBrave);
 
 
 int main()
@@ -37,22 +67,17 @@ int main()
 
     int tWorld[5] = { 100, 0, 1, 0, 200 };
 
-    //int tBraveX = 0;
-    //float tBraveHP = 1000.0f;
-    //float tBraveAP = 100.0f;
-    CBrave tBrave;  //지역객체
 
-    //CSlime으로 데이터 추상화
-    CSlime tSlime;  //지역객체
-    //float tSlimeHP = 200.0f;
-    //float tSlimeAP = 500.0f;
-
-
+    //동적할당한 객체로 변경
+    //new
+    //CBrave tBrave;  //지역객체
+    //CSlime tSlime;  //지역객체
+    CBrave* tBrave = nullptr;
+    tBrave = new CBrave();
+    CSlime* tSlime = nullptr;
+    tSlime = new CSlime();
 
     char tMoveDir = 'd';
-
-
-
 
     cout << "((용사와 슬라임))" << endl;
     cout << "==종료하려면 n을 입력하세요==" << endl;
@@ -74,9 +99,9 @@ int main()
 
         if ('a' == tMoveDir)
         {
-            if (tBrave.mX > 0)
+            if (tBrave->GetX() > 0)
             {
-                DoMove(&tBrave, -1);
+                tBrave->DoMove(-1);
                 //tBrave.mX = tBrave.mX - 1;
                 cout << "<--move left" << endl;
             }
@@ -88,10 +113,10 @@ int main()
 
         if ('d' == tMoveDir)
         {
-            if (tBrave.mX < 4)
+            if (tBrave->GetX() < 4)
             {
                 //tBrave.mX = tBrave.mX + 1;
-                DoMove(&tBrave, +1);
+                tBrave->DoMove(+1);
 
                 cout << "-->move right" << endl;
             }
@@ -102,17 +127,17 @@ int main()
         }
 
         int tAttrib = 0;
-        tAttrib = tWorld[tBrave.mX];
+        tAttrib = tWorld[tBrave->GetX()];
         switch (tAttrib)
         {
         case 0: //아무것도 없음
         {
-            cout << "No one here." << "(You are on" << tBrave.mX << "Tile)" << endl;
+            cout << "No one here." << "(You are on " << tBrave->GetX() << "Tile)" << endl;
         }
         break;
         case 1: //슬라임 있음
         {
-            cout << "Slime is here." << "(You are on" << tBrave.mX << "Tile)" << endl;
+            cout << "Slime is here." << "(You are on " << tBrave->GetX() << "Tile)" << endl;
 
             char tIsRollDice = 'r';
             while (1)
@@ -126,13 +151,13 @@ int main()
                     int tDiceNumber = rand() % 6 + 1;
                     cout << tDiceNumber << endl;
 
-                    switch (tDiceNumber)
+                    /*switch (tDiceNumber)
                     {
                     case 1:
                     case 2:
                     case 3:
                     {
-                        tBrave.mHP = tBrave.mHP - tSlime.mAP;
+                        tBrave->DoDamage(tSlime);
 
                         cout << "Brave is damaged" << endl;
                     }
@@ -141,20 +166,53 @@ int main()
                     case 5:
                     case 6:
                     {
-                        tSlime.mHP = tSlime.mHP - tBrave.mAP;
+                        tSlime->DoDamage(tBrave);
+
+                        cout << "Slime is damaged." << endl;
+                    }
+                    break;
+                    }*/
+
+
+                    CUnit* tpUnit = nullptr;
+                    CUnit* tpAttacker = nullptr;
+
+                    switch (tDiceNumber)
+                    {
+                    case 1:
+                    case 2:
+                    case 3:
+                    {
+                        tpUnit = tBrave;
+                        tpAttacker = tSlime;
+
+                        cout << "Brave is damaged" << endl;
+                    }
+                    break;
+                    case 4:
+                    case 5:
+                    case 6:
+                    {
+                        tpUnit = tSlime;
+                        tpAttacker = tBrave;
 
                         cout << "Slime is damaged." << endl;
                     }
                     break;
                     }
 
-                    if (tSlime.mHP <= 0)
+                    tpUnit->DoDamage(tpAttacker);
+
+
+
+
+                    if (tSlime->GetHP() <= 0)
                     {
                         cout << "Slime is very tired." << endl;
 
                         break;
                     }
-                    if (tBrave.mHP <= 0)
+                    if (tBrave->GetHP() <= 0)
                     {
                         cout << "Brave is very tired." << endl;
 
@@ -166,12 +224,12 @@ int main()
         break;
         case 100:
         {
-            cout << "Brave is in home." << "(You are on" << tBrave.mX << "Tile)" << endl;
+            cout << "Brave is in home." << "(You are on " << tBrave->GetX() << "Tile)" << endl;
         }
         break;
         case 200:
         {
-            cout << "Brave is in End of world." << "(You are on" << tBrave.mX << "Tile)" << endl;
+            cout << "Brave is in End of world." << "(You are on " << tBrave->GetX() << "Tile)" << endl;
         }
         break;
         }
@@ -180,6 +238,18 @@ int main()
 
     cout << "슬라임은 심심하다." << endl << "어서 빨리 일어나라! 용사!" << endl;
 
+    //delete
+    if (nullptr != tBrave)
+    {
+        delete tBrave;
+        tBrave = nullptr;
+    }
+
+    if (nullptr != tSlime)
+    {
+        delete tSlime;
+        tSlime = nullptr;
+    }
 
     return 0;
 }
@@ -187,7 +257,17 @@ int main()
 
 
 
-void DoMove(CBrave* tBrave, int tVelocity)
-{
-    tBrave->mX = tBrave->mX + tVelocity;
-}
+//void DoMove(CBrave* tBrave, int tVelocity)
+//{
+//    tBrave->mX = tBrave->mX + tVelocity;
+//}
+
+//void DoDamage(CBrave* tBrave, CSlime* tSlime)
+//{
+//    tBrave->mHP = tBrave->mHP - tSlime->mAP;
+//}
+
+//void DoDamage(CSlime* tSlime, CBrave* tBrave)
+//{
+//    tSlime->mHP = tSlime->mHP - tBrave->mAP;
+//}

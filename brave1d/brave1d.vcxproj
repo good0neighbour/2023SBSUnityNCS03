@@ -130,10 +130,12 @@
     <ClCompile Include="brave1d.cpp" />
     <ClCompile Include="CBrave.cpp" />
     <ClCompile Include="CSlime.cpp" />
+    <ClCompile Include="CUnit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CBrave.h" />
     <ClInclude Include="CSlime.h" />
+    <ClInclude Include="CUnit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
