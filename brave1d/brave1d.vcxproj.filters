@@ -27,6 +27,12 @@
     <ClCompile Include="CUnit.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="CRyuMgr.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CUIPlay.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CBrave.h">
@@ -36,6 +42,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="CUnit.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CRyuMgr.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CUIPlay.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

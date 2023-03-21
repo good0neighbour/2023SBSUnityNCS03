@@ -17,6 +17,7 @@ private:
 
 public:
     CBrave();
+    virtual ~CBrave() {};
 
 public:
     void DoMove(int tVelocity);

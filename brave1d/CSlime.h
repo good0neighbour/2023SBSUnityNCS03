@@ -19,6 +19,7 @@ class CSlime: public CUnit
 
 public:
     CSlime();
+    virtual ~CSlime() {};
 
 public:
     //void DoDamage(CBrave* tBrave);

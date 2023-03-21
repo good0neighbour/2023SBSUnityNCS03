@@ -129,12 +129,16 @@
   <ItemGroup>
     <ClCompile Include="brave1d.cpp" />
     <ClCompile Include="CBrave.cpp" />
+    <ClCompile Include="CRyuMgr.cpp" />
     <ClCompile Include="CSlime.cpp" />
+    <ClCompile Include="CUIPlay.cpp" />
     <ClCompile Include="CUnit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CBrave.h" />
+    <ClInclude Include="CRyuMgr.h" />
     <ClInclude Include="CSlime.h" />
+    <ClInclude Include="CUIPlay.h" />
     <ClInclude Include="CUnit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -40,6 +40,25 @@
         같은 메시지에 다른 반응
 
 
+
+
+    디자인 패턴 Design Pattern : 프로그램 구조를 만드는 것에 대한, OOP의 모범답안집
+
+
+    싱글톤 패턴
+    Singleton Pattern
+    : 큰 분류상 생성 패턴(객체를 어떻게 생성할 것인지에 대한 해결책)에 속한다
+
+        싱글톤 패턴의 목적: 객체의 최대 생성 개수를 1개로 제한하는 패턴
+
+
+
+    용사의 경험치 플레이 데이터는 CRyuMgr에서 관리한다
+
+    -슬라임을 데미지 입혔을 시 100 경험치를 얻는다
+    -슬라임을 처치했을 시 300 경험치를 얻는다
+    -배틀이 끝나면 UI로 용사의 플레이 데이터를 표시한다
+
 */
 
 #include <iostream>
@@ -48,6 +67,9 @@
 //해더파일: 클래스 등의 정의부의 선언이 담긴 부분이다. (함수의 선언이 담긴 부분이다 ). 즉 형태를 담고있는 부분이다.
 #include "CBrave.h"
 #include "CSlime.h"
+
+#include "CRyuMgr.h"
+#include "CUIPlay.h"
 
 using namespace std;
 
@@ -63,10 +85,16 @@ using namespace std;
 
 int main()
 {
+    
     srand((unsigned int)time(nullptr));
-
+    //지형정보 구축
     int tWorld[5] = { 100, 0, 1, 0, 200 };
 
+    //용사의 전역적 플레이 데이터 생성
+    CRyuMgr::GetInstance();
+    //용사의 플레이 데이터 UI객체
+    CUIPlay tUIPlay;
+    
 
     //동적할당한 객체로 변경
     //new
@@ -200,15 +228,20 @@ int main()
                     }
                     break;
                     }
-
+                    //다형성: 같은 메시지에 다른 반응
+                    //  override + virtual + 부모클래스포인터 타입
                     tpUnit->DoDamage(tpAttacker);
 
 
 
-
+                    
                     if (tSlime->GetHP() <= 0)
                     {
                         cout << "Slime is very tired." << endl;
+
+                        //to do
+                        //경험치 100 얻기
+                        CRyuMgr::GetInstance()->mExp = CRyuMgr::GetInstance()->mExp + 300;
 
                         break;
                     }
@@ -220,6 +253,9 @@ int main()
                     }
                 }
             }
+
+            //to do
+            tUIPlay.Display();
         }
         break;
         case 100:
@@ -250,6 +286,9 @@ int main()
         delete tSlime;
         tSlime = nullptr;
     }
+
+
+    CRyuMgr::ReleaseInstance();
 
     return 0;
 }
