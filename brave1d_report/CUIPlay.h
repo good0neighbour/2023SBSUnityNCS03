@@ -2,6 +2,8 @@
 class CUIPlay
 {
 public:
-	void Display();
+	void ExpDisplay();
+	void UnavailableCommand(char whatCommand);
+	void NewUIInstanceCreated();
 };
 

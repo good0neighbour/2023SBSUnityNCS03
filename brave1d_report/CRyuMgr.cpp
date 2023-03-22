@@ -4,8 +4,7 @@ CRyuMgr* CRyuMgr::mpInstance = nullptr;
 
 CRyuMgr::CRyuMgr()
 {
-	//객체 생성 시 용사의 상태를 Move로 한다.
-	mStatus = Move;
+	
 }
 CRyuMgr::~CRyuMgr()
 {

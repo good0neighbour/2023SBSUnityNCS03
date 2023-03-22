@@ -17,8 +17,12 @@
 
  */
 
+/*
+    CInputMgr 클래스 생성, 사용자 입력에 대한 처리 추상화.
+    CBrave 클래스에 Status 추가, 용사의 상태에 따라 사용자의 입력 제한.
+*/
+
 #include <iostream>
-#include <time.h>
 
 #include "CBrave.h"
 #include "CSlime.h"
@@ -31,7 +35,6 @@ using namespace std;
 
 int main()
 {
-    srand((unsigned int)time(nullptr));
     int tWorld[5] = { 100, 0, 1, 0, 200 };
 
     CRyuMgr::GetInstance();
@@ -45,7 +48,7 @@ int main()
     char tMoveDir = 'd';
 
     //입력매니저 인스턴스 생성
-    CInputMgr::GetInstance();
+    CInputMgr::GetInstance(&tUIPlay);
 
     cout << "((용사와 슬라임))" << endl;
     cout << "==종료하려면 n을 입력하세요==" << endl;
@@ -57,7 +60,7 @@ int main()
 
         //입력문자를 KeyInput함수에 전달
         //KeyInput함수가 true 반환 시 게임 계속, false 반환 시 루프 종료
-        if (CInputMgr::GetInstance()->KeyInput(tMoveDir, tBrave) == false)
+        if (!CInputMgr::GetInstance()->KeyInput(tMoveDir, tBrave))
         {
             break;
         }
@@ -73,6 +76,7 @@ int main()
         break;
         case 1:
         {
+            tBrave->mStatus = Attack;
             cout << "Slime is here." << "(You are on " << tBrave->GetX() << "Tile)" << endl;
 
             char tIsRollDice = 'r';
@@ -81,57 +85,15 @@ int main()
                 cout << "Roll a Dice of Fate!(r):";
                 cin >> tIsRollDice;
 
-                if ('r' == tIsRollDice)
+                //오버로드된 KeyInput 함수 사용
+                //true 반환 시 전투 루프 계속, false 반환 시 전투 루프 탈출
+                if (!CInputMgr::GetInstance()->KeyInput(tIsRollDice, tBrave, tSlime))
                 {
-                    int tDiceNumber = rand() % 6 + 1;
-                    cout << tDiceNumber << endl;
-
-                    CUnit* tpUnit = nullptr;
-                    CUnit* tpAttacker = nullptr;
-
-                    switch (tDiceNumber)
-                    {
-                    case 1:
-                    case 2:
-                    case 3:
-                    {
-                        tpUnit = tBrave;
-                        tpAttacker = tSlime;
-
-                        cout << "Brave is damaged" << endl;
-                    }
                     break;
-                    case 4:
-                    case 5:
-                    case 6:
-                    {
-                        tpUnit = tSlime;
-                        tpAttacker = tBrave;
-
-                        cout << "Slime is damaged." << endl;
-                    }
-                    break;
-                    }
-                    tpUnit->DoDamage(tpAttacker);
-
-                    if (tSlime->GetHP() <= 0)
-                    {
-                        cout << "Slime is very tired." << endl;
-
-                        CRyuMgr::GetInstance()->mExp = CRyuMgr::GetInstance()->mExp + 300;
-
-                        break;
-                    }
-                    else if (tBrave->GetHP() <= 0)
-                    {
-                        cout << "Brave is very tired." << endl;
-
-                        break;
-                    }
                 }
             }
-
-            tUIPlay.Display();
+            tBrave->mStatus = Move;
+            tUIPlay.ExpDisplay();
         }
         break;
         case 100:

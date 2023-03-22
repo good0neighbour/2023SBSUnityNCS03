@@ -127,9 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CActor.cpp" />
     <ClCompile Include="pgeCircleShootor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CActor.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
