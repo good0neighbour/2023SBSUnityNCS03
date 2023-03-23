@@ -22,12 +22,28 @@ void CUIPlay::Display(KeyWords tKeyWord)
 void CUIPlay::Display(KeyWords tKeyWord, int tValue)
 {
 	//매크로 사용
-	DISPLAY_PROCESS
+	//DISPLAY_PROCESS
+	char* tFrontOutput = nullptr;
+	char* tBackOutput = nullptr;
+
+	StringSearch(GetText(tKeyWord), &tFrontOutput, &tBackOutput);
+	cout << tFrontOutput << tValue << tBackOutput << endl;
+
+	delete[] tFrontOutput;
+	delete[] tBackOutput;
 }
 void CUIPlay::Display(KeyWords tKeyWord, char tValue)
 {
 	//매크로 사용
-	DISPLAY_PROCESS
+	//DISPLAY_PROCESS
+	char* tFrontOutput = nullptr;
+	char* tBackOutput = nullptr;
+
+	StringSearch(GetText(tKeyWord), &tFrontOutput, &tBackOutput);
+	cout << tFrontOutput << tValue << tBackOutput << endl;
+
+	delete[] tFrontOutput;
+	delete[] tBackOutput;
 }
 
 void CUIPlay::StringSearch(const char* tMessage, char** tFrontOutput, char** tBackOutput)
@@ -70,28 +86,42 @@ void CUIPlay::StringSearch(const char* tMessage, char** tFrontOutput, char** tBa
 	}
 
 	//배열 동적할당
-	char* tFrontString = new char[tFrontIndex + 1];
-	char* tBackString = new char[tBackIndex + 1];
+	//char* tFrontString = new char[tFrontIndex + 1];
+	//char* tBackString = new char[tBackIndex + 1];
+
+	//ryu
+	*tFrontOutput = new char[tFrontIndex + 1];
+	*tBackOutput = new char[tBackIndex + 1];
+	/**tFrontOutput = new char[33];
+	*tBackOutput = new char[33];*/
+
+	cout << strlen(tMessage) << endl;
+	cout << tFrontIndex + 2 + tBackIndex << endl;
+	
 
 	//문자열 복사
 	for (int ti = 0; ti < tFrontIndex; ti++)
 	{
 		//중광호 이전 부분은 그대로 복사
-		tFrontString[ti] = tMessage[ti];
+		//tFrontString[ti] = tMessage[ti];
+		*tFrontOutput[ti] = tMessage[ti];
 	}
 	for (int ti = 0; ti < tBackIndex; ti++)
 	{
 		//중괄호 이후 부분은 인덱스 고려
-		tBackString[ti] = tMessage[tFrontIndex + 2 + ti];
+		//tBackString[ti] = tMessage[tFrontIndex + 2 + ti];
+		*tBackOutput[ti] = tMessage[tFrontIndex + 2 + ti];
 	}
 
 	//문자열 종료 알림
-	tFrontString[tFrontIndex] = '\0';
-	tBackString[tBackIndex] = '\0';
+	//tFrontString[tFrontIndex] = '\0';
+	//tBackString[tBackIndex] = '\0';
+	*tFrontOutput[tFrontIndex] = '\0';
+	*tBackOutput[tBackIndex] = '\0';
 
 	//주소값 전달
-	*tFrontOutput = tFrontString;
-	*tBackOutput = tBackString;
+	//*tFrontOutput = tFrontString;
+	//*tBackOutput = tBackString;
 }
 
 char CUIPlay::InputFromUser()

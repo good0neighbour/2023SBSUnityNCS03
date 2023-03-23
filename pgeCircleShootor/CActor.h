@@ -1,13 +1,11 @@
 #pragma once
 
 
-class CActor
-{
-public:
-	float mActorX = 0.0f;
-	float mActorY = 0.0f;
+//#include "olcPixelGameEngine.h"
+#include "CUnit.h"
 
-public:
-	void DoMoveX(float tXSpeed, float t);
+class CActor: public CUnit	//»ó¼Ó
+{
+
 };
 
