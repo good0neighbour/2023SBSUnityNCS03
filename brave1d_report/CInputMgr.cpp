@@ -38,10 +38,10 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave)
     case 'a':
     {
         //용사의 상태가 Move가 아닌 경우
-        if (tBrave->mStatus != Move)
+        if (CRyuMgr::GetInstance()->mStatus != Move)
         {
             //반복되는 문자열 출력을 추상화
-            mUI->UnavailableCommand(tMoveDir);
+            mUI->Display(UnavailableCommand, tMoveDir);
 
             //게임 계속
             return true;
@@ -63,10 +63,10 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave)
     case 'd':
     {
         //용사의 상태가 Move가 아닌 경우
-        if (tBrave->mStatus != Move)
+        if (CRyuMgr::GetInstance()->mStatus != Move)
         {
             //반복되는 문자열 출력을 추상화
-            mUI->UnavailableCommand(tMoveDir);
+            mUI->Display(UnavailableCommand, tMoveDir);
 
             //게임 계속
             return true;
@@ -89,7 +89,7 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave)
     default:
     {
         //반복되는 문자열 출력을 추상화
-        mUI->UnavailableCommand(tMoveDir);
+        mUI->Display(UnavailableCommand, tMoveDir);
 
         //게임 계속
         return true;
@@ -103,10 +103,10 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave, CSlime* tSlime)
     case 'r':
     {
         //용사의 상태가 Attack이 아닌 경우
-        if (tBrave->mStatus != Attack)
+        if (CRyuMgr::GetInstance()->mStatus != Combat)
         {
             //반복되는 문자열 출력을 추상화
-            mUI->UnavailableCommand(tMoveDir);
+            mUI->Display(UnavailableCommand, tMoveDir);
 
             //게임 계속
             return true;
@@ -158,7 +158,7 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave, CSlime* tSlime)
     default:
     {
         //반복되는 문자열 출력을 추상화
-        mUI->UnavailableCommand(tMoveDir);
+        mUI->Display(UnavailableCommand, tMoveDir);
 
         //전투 계속
         return true;
@@ -180,7 +180,7 @@ CInputMgr* CInputMgr::GetInstance()
     {
         //오류 방지로 CUIPlay를 새로 생성했으나, 권장되지 않음
         mInstance = new CInputMgr(new CUIPlay());
-        mInstance->mUI->NewUIInstanceCreated();
+        mInstance->mUI->Display(NewUIInstanceCreated);
     }
     return mInstance;
 }

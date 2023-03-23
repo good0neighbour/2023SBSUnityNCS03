@@ -9,9 +9,6 @@ CBrave::CBrave()
     mX = 0;
     mHP = 1000.0f;
     mAP = 100.0f;
-
-    //객체 생성 시 용사의 상태를 Move로 한다.
-    mStatus = Move;
 }
 
 void CBrave::DoMove(int tVelocity)

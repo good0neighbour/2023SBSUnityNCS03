@@ -20,9 +20,9 @@
 /*
     CInputMgr 클래스 생성, 사용자 입력에 대한 처리 추상화.
     CBrave 클래스에 Status 추가, 용사의 상태에 따라 사용자의 입력 제한.
+    콘솔창 문자열 출력은 CUIPlay가 대신 수행.
+    그러는 김에 문자 입력도 CUIPlay가 대신 수행.
 */
-
-#include <iostream>
 
 #include "CBrave.h"
 #include "CSlime.h"
@@ -30,8 +30,6 @@
 #include "CRyuMgr.h"
 #include "CInputMgr.h"
 #include "CUIPlay.h"
-
-using namespace std;
 
 int main()
 {
@@ -50,13 +48,16 @@ int main()
     //입력매니저 인스턴스 생성
     CInputMgr::GetInstance(&tUIPlay);
 
-    cout << "((용사와 슬라임))" << endl;
-    cout << "==종료하려면 n을 입력하세요==" << endl;
+    //새로운 콘솔 출력 방식 사용
+    tUIPlay.Display(Initiatiation);
 
     while (true)
     {
-        cout << "move?(a/d)";
-        cin >> tMoveDir;
+        //새로운 콘솔 출력 방식 사용
+        tUIPlay.Display(MoveQuestion);
+
+        //새로운 입력 방식 사용
+        tMoveDir = tUIPlay.InputFromUser();
 
         //입력문자를 KeyInput함수에 전달
         //KeyInput함수가 true 반환 시 게임 계속, false 반환 시 루프 종료
@@ -71,19 +72,26 @@ int main()
         {
         case 0:
         {
-            cout << "No one here." << "(You are on " << tBrave->GetX() << "Tile)" << endl;
+            //새로운 콘솔 출력 방식 사용
+            tUIPlay.Display(NoOneHere, tBrave->GetX());
         }
         break;
         case 1:
         {
-            tBrave->mStatus = Attack;
-            cout << "Slime is here." << "(You are on " << tBrave->GetX() << "Tile)" << endl;
+            //전투 상태로 전환
+            CRyuMgr::GetInstance()->mStatus = Combat;
+
+            //새로운 콘솔 출력 방식 사용
+            tUIPlay.Display(SlimeIsHere, tBrave->GetX());
 
             char tIsRollDice = 'r';
             while (1)
             {
-                cout << "Roll a Dice of Fate!(r):";
-                cin >> tIsRollDice;
+                //새로운 콘솔 출력 방식 사용
+                tUIPlay.Display(RollADice);
+
+                //새로운 입력 방식 사용
+                tIsRollDice = tUIPlay.InputFromUser();
 
                 //오버로드된 KeyInput 함수 사용
                 //true 반환 시 전투 루프 계속, false 반환 시 전투 루프 탈출
@@ -92,24 +100,31 @@ int main()
                     break;
                 }
             }
-            tBrave->mStatus = Move;
-            tUIPlay.ExpDisplay();
+
+            //이동 상태로 전환
+            CRyuMgr::GetInstance()->mStatus = Move;
+
+            //새로운 콘솔 출력 방식 사용
+            tUIPlay.Display(Experience, CRyuMgr::GetInstance()->mExp);
         }
         break;
         case 100:
         {
-            cout << "Brave is in home." << "(You are on " << tBrave->GetX() << "Tile)" << endl;
+            //새로운 콘솔 출력 방식 사용
+            tUIPlay.Display(BraveHome, tBrave->GetX());
         }
         break;
         case 200:
         {
-            cout << "Brave is in End of world." << "(You are on " << tBrave->GetX() << "Tile)" << endl;
+            //새로운 콘솔 출력 방식 사용
+            tUIPlay.Display(WorldEnd, tBrave->GetX());
         }
         break;
         }
     }
 
-    cout << "슬라임은 심심하다." << endl << "어서 빨리 일어나라! 용사!" << endl;
+    //새로운 콘솔 출력 방식 사용
+    tUIPlay.Display(GameEnd);
 
     if (nullptr != tBrave)
     {
