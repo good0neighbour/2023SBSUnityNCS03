@@ -1,127 +1,138 @@
-#include "CUIPlay.h"
+ï»¿#include "CUIPlay.h"
 #include "CRyuMgr.h"
 
 #include <iostream>
 
 using namespace std;
 
-//¹İº¹µÇ´Â ÄÚµå´Â ¸ÅÅ©·Î·Î ´ëÃ¼
-#define DISPLAY_PROCESS \
-char* tFrontOutput = nullptr;\
-char* tBackOutput = nullptr;\
-StringSearch(GetText(tKeyWord), &tFrontOutput, &tBackOutput);\
-cout << tFrontOutput << tValue << tBackOutput << endl;\
-delete[] tFrontOutput;\
-delete[] tBackOutput;
+//ê°€ë…ì„±ì„ ìœ„í•œ ë§¤í¬ë¡œ
+#define LANGUAGE_SELECT(tKorean, tEnglish, tSpanish) \
+switch (mLanguage)\
+{\
+case Korean:\
+return tKorean;\
+case English:\
+return tEnglish;\
+case Spanish:\
+return tSpanish;\
+default:\
+return "ì˜ëª»ëœ ì–¸ì–´";\
+}
 
 void CUIPlay::Display(KeyWords tKeyWord)
 {
-	//ÄÜ¼ÖÃ¢¿¡ ¹®ÀÚ¿­ Ãâ·Â
+	//ì½˜ì†”ì°½ì— ë¬¸ìì—´ ì¶œë ¥
 	cout << GetText(tKeyWord) << endl;
 }
 void CUIPlay::Display(KeyWords tKeyWord, int tValue)
 {
-	//¸ÅÅ©·Î »ç¿ë
-	//DISPLAY_PROCESS
+	//ì¤‘ê´„í˜¸ ì´ì „ì˜ ë¬¸ìì—´ì„ ë‹´ì„ ê²ƒ
 	char* tFrontOutput = nullptr;
+	//ì¤‘ê´„í˜¸ ì´í›„ì˜ ë¬¸ìì—´ì„ ë‹´ì„ ê²ƒ
 	char* tBackOutput = nullptr;
 
+	//ì¤‘ê´„í˜¸ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ë¬¸ìì—´ì„ ì „, í›„ë¡œ ë¶„ë¦¬.
 	StringSearch(GetText(tKeyWord), &tFrontOutput, &tBackOutput);
+	//ì¤‘ê°„ì— ê°’ì„ ë¼ì›Œ ë„£ì–´ ì¶œë ¥
 	cout << tFrontOutput << tValue << tBackOutput << endl;
 
+	//ë™ì í• ë‹¹ í•´ì œ
 	delete[] tFrontOutput;
 	delete[] tBackOutput;
 }
 void CUIPlay::Display(KeyWords tKeyWord, char tValue)
 {
-	//¸ÅÅ©·Î »ç¿ë
-	//DISPLAY_PROCESS
+	//ì¤‘ê´„í˜¸ ì´ì „ì˜ ë¬¸ìì—´ì„ ë‹´ì„ ê²ƒ
 	char* tFrontOutput = nullptr;
+	//ì¤‘ê´„í˜¸ ì´í›„ì˜ ë¬¸ìì—´ì„ ë‹´ì„ ê²ƒ
 	char* tBackOutput = nullptr;
 
+	//ì¤‘ê´„í˜¸ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ë¬¸ìì—´ì„ ì „, í›„ë¡œ ë¶„ë¦¬.
 	StringSearch(GetText(tKeyWord), &tFrontOutput, &tBackOutput);
+	//ì¤‘ê°„ì— ê°’ì„ ë¼ì›Œ ë„£ì–´ ì¶œë ¥
 	cout << tFrontOutput << tValue << tBackOutput << endl;
 
+	//ë™ì í• ë‹¹ í•´ì œ
 	delete[] tFrontOutput;
 	delete[] tBackOutput;
 }
 
 void CUIPlay::StringSearch(const char* tMessage, char** tFrontOutput, char** tBackOutput)
 {
-	//ÀÔ·Â¹ŞÀº ¹®ÀÚ¿­À» Å½»öÇÏ±â À§ÇÔ
+	//ì…ë ¥ë°›ì€ ë¬¸ìì—´ì„ íƒìƒ‰í•˜ê¸° ìœ„í•¨
 	int ti = 0;
-	//Áß°ıÈ£ ÀÌÀüÀÇ ¹®ÀÚ °³¼ö
+	//ì¤‘ê´„í˜¸ ì´ì „ì˜ ë¬¸ì ê°œìˆ˜
 	int tFrontIndex = 0;
-	//Áß°ıÈ£ ÀÌÈÄÀÇ ¹®ÀÚ °³¼ö
+	//ì¤‘ê´„í˜¸ ì´í›„ì˜ ë¬¸ì ê°œìˆ˜
 	int tBackIndex = 0;
-	//Áß°ıÈ£ ÀÌÀüÀÎÁö ¿©ºÎ
+	//ì¤‘ê´„í˜¸ ì´ì „ì¸ì§€ ì—¬ë¶€
 	bool tCountingFront = true;
 
-	//Áß°ıÈ£ ÀüÈÄ·Î ¹®ÀÚ¿­ °³¼ö È®ÀÎ
-	//¹è¿­ »ı¼ºÀ» À§ÇØ ÀÌ ÀÛ¾÷À» ¸ÕÀú ½Ç½Ã
+	//ì¤‘ê´„í˜¸ ì „í›„ë¡œ ë¬¸ìì—´ ê°œìˆ˜ í™•ì¸
+	//ë°°ì—´ ìƒì„±ì„ ìœ„í•´ ì´ ì‘ì—…ì„ ë¨¼ì € ì‹¤ì‹œ
 	while (tMessage[ti] != '\0')
 	{
-		//Áß°ıÈ£ ¹ß°ß ½Ã
+		//ì¤‘ê´„í˜¸ ë°œê²¬ ì‹œ
 		if (tMessage[ti] == '{')
 		{
-			//Áß°ıÈ£ ÀÌÀüÀÇ ¹®ÀÚ ³¡³²
+			//ì¤‘ê´„í˜¸ ì´ì „ì˜ ë¬¸ì ëë‚¨
 			tCountingFront = false;
-			//Áß°ıÈ£ ´İ±â´Â ¹Ù·Î °Ç³Ê¶Ù±â À§ÇØ +2¸¦ ÇÑ´Ù.
+			//ì¤‘ê´„í˜¸ ë‹«ê¸°ëŠ” ë°”ë¡œ ê±´ë„ˆë›°ê¸° ìœ„í•´ +2ë¥¼ í•œë‹¤.
 			ti += 2;
 		}
 		else
 		{
 			if (tCountingFront)
 			{
-				//Áß°ıÈ£ ÀÌÀüÀÇ ¹®ÀÚ °³¼ö Ãß°¡
+				//ì¤‘ê´„í˜¸ ì´ì „ì˜ ë¬¸ì ê°œìˆ˜ ì¶”ê°€
 				tFrontIndex++;
 			}
 			else
 			{
-				//Áß°ıÈ£ ÀÌÈÄÀÇ ¹®ÀÚ °³¼ö Ãß°¡
+				//ì¤‘ê´„í˜¸ ì´í›„ì˜ ë¬¸ì ê°œìˆ˜ ì¶”ê°€
 				tBackIndex++;
 			}
 			ti++;
 		}
 	}
 
-	//¹è¿­ µ¿ÀûÇÒ´ç
-	//char* tFrontString = new char[tFrontIndex + 1];
-	//char* tBackString = new char[tBackIndex + 1];
+	//ë°°ì—´ ë™ì í• ë‹¹
+	char* tFrontString = new char[tFrontIndex + 1];
+	char* tBackString = new char[tBackIndex + 1];
 
 	//ryu
-	*tFrontOutput = new char[tFrontIndex + 1];
-	*tBackOutput = new char[tBackIndex + 1];
+	//*tFrontOutput = new char[tFrontIndex + 1];
+	//*tBackOutput = new char[tBackIndex + 1];
 	/**tFrontOutput = new char[33];
 	*tBackOutput = new char[33];*/
 
-	cout << strlen(tMessage) << endl;
-	cout << tFrontIndex + 2 + tBackIndex << endl;
+	//cout << strlen(tMessage) << endl;
+	//cout << tFrontIndex + 2 + tBackIndex << endl;
 	
 
-	//¹®ÀÚ¿­ º¹»ç
+	//ë¬¸ìì—´ ë³µì‚¬
 	for (int ti = 0; ti < tFrontIndex; ti++)
 	{
-		//Áß±¤È£ ÀÌÀü ºÎºĞÀº ±×´ë·Î º¹»ç
-		//tFrontString[ti] = tMessage[ti];
-		*tFrontOutput[ti] = tMessage[ti];
+		//ì¤‘ê´‘í˜¸ ì´ì „ ë¶€ë¶„ì€ ê·¸ëŒ€ë¡œ ë³µì‚¬
+		tFrontString[ti] = tMessage[ti];
+		//*tFrontOutput[ti] = tMessage[ti];
 	}
 	for (int ti = 0; ti < tBackIndex; ti++)
 	{
-		//Áß°ıÈ£ ÀÌÈÄ ºÎºĞÀº ÀÎµ¦½º °í·Á
-		//tBackString[ti] = tMessage[tFrontIndex + 2 + ti];
-		*tBackOutput[ti] = tMessage[tFrontIndex + 2 + ti];
+		//ì¤‘ê´„í˜¸ ì´í›„ ë¶€ë¶„ì€ ì¸ë±ìŠ¤ ê³ ë ¤
+		tBackString[ti] = tMessage[tFrontIndex + 2 + ti];
+		//*tBackOutput[ti] = tMessage[tFrontIndex + 2 + ti];
 	}
 
-	//¹®ÀÚ¿­ Á¾·á ¾Ë¸²
-	//tFrontString[tFrontIndex] = '\0';
-	//tBackString[tBackIndex] = '\0';
-	*tFrontOutput[tFrontIndex] = '\0';
-	*tBackOutput[tBackIndex] = '\0';
+	//ë¬¸ìì—´ ì¢…ë£Œ ì•Œë¦¼
+	tFrontString[tFrontIndex] = '\0';
+	tBackString[tBackIndex] = '\0';
+	//*tFrontOutput[tFrontIndex] = '\0';
+	//*tBackOutput[tBackIndex] = '\0';
 
-	//ÁÖ¼Ò°ª Àü´Ş
-	//*tFrontOutput = tFrontString;
-	//*tBackOutput = tBackString;
+	//ì£¼ì†Œê°’ ì „ë‹¬
+	*tFrontOutput = tFrontString;
+	*tBackOutput = tBackString;
 }
 
 char CUIPlay::InputFromUser()
@@ -131,33 +142,157 @@ char CUIPlay::InputFromUser()
 	return tChar;
 }
 
+void CUIPlay::NextLanguage()
+{
+	mLanguage = (Languages)(mLanguage + 1);
+	if (mLanguage == LanguagesEnd)
+	{
+		mLanguage = (Languages)0;
+	}
+}
+
 const char* CUIPlay::GetText(KeyWords tKeyWord)
 {
 	switch (tKeyWord)
 	{
 	case Initiatiation:
-		return "((¿ë»ç¿Í ½½¶óÀÓ))\n==Á¾·áÇÏ·Á¸é nÀ» ÀÔ·ÂÇÏ¼¼¿ä==";
+		LANGUAGE_SELECT(
+			//êµ­ì–´
+			"((ìš©ì‚¬ì™€ ìŠ¬ë¼ì„))\n\
+******************************\n\
+lì„ ì…ë ¥í•˜ì—¬ ì–¸ì–´ ë³€ê²½\n\
+******************************\n\
+==ì¢…ë£Œí•˜ë ¤ë©´ nì„ ì…ë ¥í•˜ì„¸ìš”==\n",
+
+			//ì˜ë¬¸
+			"((Brave and Slime))\n\
+******************************\n\
+Change language by typing l\n\
+******************************\n\
+==Type n to quit==\n",
+
+			//ìŠ¤í˜ì¸ì–´
+			"((valiente y limo))\n\
+******************************\n\
+Cambia el idioma escribiendo l\n\
+******************************\n\
+==Escriba n para salir==\n"
+		);
 	case MoveQuestion:
-		return "move?(a/d)";
+		LANGUAGE_SELECT(
+			"ì´ë™?(a/d)",
+			"move?(a/d)",
+			"mover?(a/d)"
+		);
 	case NoOneHere:
-		return "No one here. (You are on Tile{})";
+		LANGUAGE_SELECT(
+			"ì•„ë¬´ë„ ì—†ë‹¤. (ë‹¹ì‹ ì€ {}ë²ˆì§¸ íƒ€ì¼ì— ìˆë‹¤.)\n",
+			"No one here. (You are on Tile{})\n",
+			"Nadie aqui. (EstÃ¡s en Tile{})\n"
+		);
 	case SlimeIsHere:
-		return "Slime is here. (You are on Tile{})";
+		LANGUAGE_SELECT(
+			"ìŠ¬ë¼ì„ì´ ìˆë‹¤. (ë‹¹ì‹ ì€ {}ë²ˆì§¸ íƒ€ì¼ì— ìˆë‹¤.)",
+			"Slime is here. (You are on Tile{})",
+			"El limo estÃ¡ aquÃ­. (EstÃ¡s en Tile{})"
+		);
 	case RollADice:
-		return "Roll a Dice of Fate!(r):";
+		LANGUAGE_SELECT(
+			"ìš´ëª…ì˜ ì£¼ì‚¬ìœ„ë¥¼ êµ´ë ¤ë¼!(r):",
+			"Roll a Dice of Fate!(r):",
+			"Â¡Tira un Dado del Destino!(r):"
+		);
 	case BraveHome:
-		return "Brave is in home. (You are on Tile{})";
+		LANGUAGE_SELECT(
+			"ìš©ìëŠ” ì§‘ì— ìˆë‹¤. (ë‹¹ì‹ ì€ {}ë²ˆì§¸ íƒ€ì¼ì— ìˆë‹¤.)\n",
+			"Brave is in home. (You are on Tile{})\n",
+			"Valiente estÃ¡ en casa. (EstÃ¡s en Tile{})\n"
+		);
 	case WorldEnd:
-		return "Brave is in End of world. (You are on Tile{})";
+		LANGUAGE_SELECT(
+			"ìš©ì‚¬ëŠ” ì„¸ìƒì˜ ëì— ìˆë‹¤. (ë‹¹ì‹ ì€ {}ë²ˆì§¸ íƒ€ì¼ì— ìˆë‹¤.)\n",
+			"Brave is in End of world. (You are on Tile{})\n",
+			"Brave estÃ¡ en Fin del mundo. (EstÃ¡s en Tile{})\n"
+		);
 	case GameEnd:
-		return "½½¶óÀÓÀº ½É½ÉÇÏ´Ù.\n¾î¼­ »¡¸® ÀÏ¾î³ª¶ó! ¿ë»ç!";
+		LANGUAGE_SELECT(
+			"ìŠ¬ë¼ì„ì€ ì‹¬ì‹¬í•˜ë‹¤.\nì–´ì„œ ë¹¨ë¦¬ ì¼ì–´ë‚˜ë¼! ìš©ì‚¬!\n",
+			"Slime is boring.\nGet up quickly! Brave!\n",
+			"El limo es aburrido.\nÂ¡LevÃ¡ntate rÃ¡pido! Â¡Corajudo!\n"
+		);
 	case NewUIInstanceCreated:
-		return "CUIPlay¿¡ ÀÎ½ºÅÏ½º¸¦ Àü´ŞÇÏÁö ¾Ê¾Æ »õ·Î¿î ÀÎ½ºÅÏ½º°¡ »ı¼ºµË´Ï´Ù.";
+		LANGUAGE_SELECT(
+			"CUIPlayì— ì¸ìŠ¤í„´ìŠ¤ë¥¼ ì „ë‹¬í•˜ì§€ ì•Šì•„ ìƒˆë¡œìš´ ì¸ìŠ¤í„´ìŠ¤ê°€ ìƒì„±ë©ë‹ˆë‹¤.\n",
+			"You didn't pass an instance to CUIPlay, so a new instance is created.\n",
+			"No pasÃ³ una instancia a CUIPlay, por lo que se crea una nueva instancia.\n"
+		);
 	case UnavailableCommand:
-		return "\'{}\' ¼öÇàÇÒ ¼ö ¾ø´Â ¸í·ÉÀÔ´Ï´Ù.";
+		LANGUAGE_SELECT(
+			"\'{}\' ìˆ˜í–‰í•  ìˆ˜ ì—†ëŠ” ëª…ë ¹ì…ë‹ˆë‹¤.\n",
+			"\'{}\' This command cannot be performed.\n",
+			"\'{}\' Este comando no se puede ejecutar.\n"
+		);
 	case Experience:
-		return "Brave's Exp: {}";
+		LANGUAGE_SELECT(
+			"ìš©ì‚¬ì˜ ê²½í—˜ì¹˜: {}\n",
+			"Brave's Exp: {}\n",
+			"Experiencia de valiente: {}\n"
+		);
+	case BraveIsSleeping:
+		LANGUAGE_SELECT(
+			"ìš©ì‚¬ëŠ” ìê³ ìˆë‹¤.",
+			"brave is sleeping.",
+			"valiente esta durmiendo."
+		);
+	case MoveLeft:
+		LANGUAGE_SELECT(
+			"<--ì¢Œë¡œ ì´ë™",
+			"<--move left",
+			"<--mover hacia la izquierda"
+		);
+	case CantMove:
+		LANGUAGE_SELECT(
+			"ìš©ì‚¬ëŠ” ë”ì´ìƒ ì´ë™í•  ìˆ˜ ì—†ë‹¤.",
+			"Brave can not move any more.",
+			"Valiente no puede moverse mÃ¡s."
+		);
+	case MoveRight:
+		LANGUAGE_SELECT(
+			"-->ìš°ë¡œ ì´ë™",
+			"-->move right",
+			"-->mover a la derecha"
+		);
+	case BraveDamaged:
+		LANGUAGE_SELECT(
+			"ìš©ì‚¬ëŠ” í”¼í•´ì…ì—ˆë‹¤",
+			"Brave is damaged",
+			"Valiente estÃ¡ daÃ±ado"
+		);
+	case SlimeDamaged:
+		LANGUAGE_SELECT(
+			"ìŠ¬ë¼ì„ì€ í”¼í•´ì…ì—ˆë‹¤.",
+			"Slime is damaged.",
+			"El limo estÃ¡ daÃ±ado."
+		);
+	case SlimeTired:
+		LANGUAGE_SELECT(
+			"ìŠ¬ë¼ì„ì€ ë§¤ìš° ì§€ì³¤ë‹¤.",
+			"Slime is very tired.",
+			"El limo estÃ¡ muy cansado."
+		);
+	case BraveTired:
+		LANGUAGE_SELECT(
+			"ìš©ì‚¬ëŠ” ë§¤ìš° ì§€ì³¤ë‹¤.",
+			"Brave is very tired.",
+			"Valiente estÃ¡ muy cansado."
+		);
+	case LanguageChanged:
+		LANGUAGE_SELECT(
+			"\nCurrent language: í•œêµ­ì–´",
+			"\nCurrent language: English",
+			"\nCurrent language: EspaÃ±ol"
+		);
 	default:
-		return "Àß¸øµÈ °ª";
+		return "ì˜ëª»ëœ ê°’\n";
 	}
 }

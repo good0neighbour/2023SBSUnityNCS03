@@ -13,11 +13,32 @@ enum KeyWords
 	GameEnd,
 	NewUIInstanceCreated,
 	UnavailableCommand,
-	Experience
+	Experience,
+	BraveIsSleeping,
+	MoveLeft,
+	CantMove,
+	MoveRight,
+	BraveDamaged,
+	SlimeDamaged,
+	SlimeTired,
+	BraveTired,
+	LanguageChanged
+};
+
+//언어 목록
+enum Languages
+{
+	Korean,
+	English,
+	Spanish,
+	LanguagesEnd
 };
 
 class CUIPlay
 {
+private:
+	Languages mLanguage = Korean;
+
 public:
 	//콘솔에 문자열 출력
 	void Display(KeyWords tKeyWord);
@@ -33,6 +54,8 @@ public:
 	//main 스크립트가 더이상 iostream을 포함할 필요가 없도록 문자 입력도 이 함수를 통해 실시한다.
 	//main 스크립트는 약간 더 깔끔해질 것이다.
 	char InputFromUser();
+
+	void NextLanguage();
 
 private:
 	//키워드를 전달하면 메시지를 반환하는 함수

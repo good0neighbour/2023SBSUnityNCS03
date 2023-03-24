@@ -30,7 +30,8 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave)
     {
     case 'n':
     {
-        cout << "brave is sleeping." << endl;
+        //용사가 자고있다는 메세지 출력
+        mUI->Display(BraveIsSleeping);
 
         //게임 루프 종료
         return false;
@@ -40,6 +41,7 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave)
         //용사의 상태가 Move가 아닌 경우
         if (CRyuMgr::GetInstance()->mStatus != Move)
         {
+            //수행할 수 없는 명령이라고 알림
             //반복되는 문자열 출력을 추상화
             mUI->Display(UnavailableCommand, tMoveDir);
 
@@ -50,11 +52,11 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave)
         if (tBrave->GetX() > 0)
         {
             tBrave->DoMove(-1);
-            cout << "<--move left" << endl;
+            mUI->Display(MoveLeft);
         }
         else
         {
-            cout << "Brave can not move any more." << endl;
+            mUI->Display(CantMove);
         }
 
         //게임 계속
@@ -76,12 +78,23 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave)
         {
             tBrave->DoMove(+1);
 
-            cout << "-->move right" << endl;
+            mUI->Display(MoveRight);
         }
         else
         {
-            cout << "Brave can not move any more." << endl;
+            mUI->Display(CantMove);
         }
+
+        //게임 계속
+        return true;
+    }
+    case 'l':
+    {
+        //다음 언어로 변경
+        mUI->NextLanguage();
+
+        //변경 되었음을 알리는 문자열 출력
+        mUI->Display(LanguageChanged);
 
         //게임 계속
         return true;
@@ -124,20 +137,20 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave, CSlime* tSlime)
             tpUnit = tBrave;
             tpAttacker = tSlime;
 
-            cout << "Brave is damaged" << endl;
+            mUI->Display(BraveDamaged);
         }
         else
         {
             tpUnit = tSlime;
             tpAttacker = tBrave;
 
-            cout << "Slime is damaged." << endl;
+            mUI->Display(SlimeDamaged);
         }
         tpUnit->DoDamage(tpAttacker);
 
         if (tSlime->GetHP() <= 0)
         {
-            cout << "Slime is very tired." << endl;
+            mUI->Display(SlimeTired);
 
             CRyuMgr::GetInstance()->mExp = CRyuMgr::GetInstance()->mExp + 300;
 
@@ -146,7 +159,7 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave, CSlime* tSlime)
         }
         else if (tBrave->GetHP() <= 0)
         {
-            cout << "Brave is very tired." << endl;
+            mUI->Display(BraveTired);
 
             //전투 종료
             return false;
