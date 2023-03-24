@@ -128,11 +128,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CActor.cpp" />
+    <ClCompile Include="CBullet.cpp" />
     <ClCompile Include="CUnit.cpp" />
     <ClCompile Include="pgeCircleShootor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CActor.h" />
+    <ClInclude Include="CBullet.h" />
     <ClInclude Include="CUnit.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
     <ClInclude Include="pgeCircleShootor.h" />

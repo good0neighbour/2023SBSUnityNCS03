@@ -13,8 +13,13 @@ protected:
 
 	olc::vf2d mVelocity;	//속도
 
+	float mRadius = 0.0f;	//외관의 크기
+
+	//활성화 여부
+	bool mIsActive = false;
 
 public:
+	void Create(float tRadius = 20.0f);
 	//void DoMoveX(float tXSpeed, float t);
 	void Update(float t);
 	void Render(olc::PixelGameEngine* tpEngine);
@@ -41,6 +46,15 @@ public:
 	inline olc::vf2d GetVelocity() const
 	{
 		return mVelocity;
+	}
+
+	inline void SetIsActive(const bool tIsActive)
+	{
+		mIsActive = tIsActive;
+	}
+	inline const bool GetIsActive() const
+	{
+		return mIsActive;
 	}
 };
 
