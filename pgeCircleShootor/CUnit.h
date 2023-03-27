@@ -21,7 +21,7 @@ protected:
 public:
 	void Create(float tRadius = 20.0f);
 	//void DoMoveX(float tXSpeed, float t);
-	void Update(float t);
+	virtual void Update(float t);
 	void Render(olc::PixelGameEngine* tpEngine);
 
 	inline void SetPosition(float tX, float tY)

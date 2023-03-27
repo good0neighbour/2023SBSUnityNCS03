@@ -1,6 +1,8 @@
 ﻿#define OLC_PGE_APPLICATION
 //#include "olcPixelGameEngine.h"
 
+#include "config.h"
+
 
 /*
 	PixelGameEngine
@@ -129,6 +131,7 @@
 #include "pgeCircleShootor.h"
 
 #include "CActor.h"
+#include "CEnemy.h"
 
 // Override base class with your custom functionality
 //class pgeCircleShootor : public olc::PixelGameEngine
@@ -306,18 +309,59 @@ bool pgeCircleShootor::OnUserCreate()
 	mActor->SetPosition(ScreenWidth() * 0.5f, ScreenHeight() * 0.5f + 80.0f);
 	mActor->SetIsActive(true);
 
+	mEnemy = new CEnemy();
+	mEnemy->Create();
+	mEnemy->SetPosition(ScreenWidth() * 0.5f, 0.0f + 80.0f);
+	mEnemy->SetIsActive(true);
+
+	mEnemy->SetVelocity(olc::vf2d(-1.0f, 0.0f) * 20.0f);
+
+
+
+	mEnemyAimed = new CEnemy();
+	mEnemyAimed->Create();
+	mEnemyAimed->SetPosition(ScreenWidth() * 0.5f - 50.0f, 0.0f + 80.0f);
+	mEnemyAimed->SetIsActive(true);
+
+	mEnemyAimed->SetVelocity(olc::vf2d(0.0f, 0.0f));
+
 
 
 	mBullets.clear();	//원소 모두 지우기
 	//탄환 10발 생성
 	CBullet* tpBullet = nullptr;
-	for (int ti = 0; ti < 10; ++ti)
+	for (int ti = 0; ti < ACTOR_BULLET_COUNT; ++ti)
 	{
 		tpBullet = new CBullet;
 		tpBullet->Create(5.0f);
 		tpBullet->SetPosition(ScreenWidth() * 0.5f, ScreenHeight() * 0.5f + 80.0f);
 		tpBullet->SetIsActive(false);
 		mBullets.push_back(tpBullet);
+	}
+
+	//적의 일반탄환 생성
+	mBulletsEnemy.clear();
+	tpBullet = nullptr;
+	for (int ti = 0; ti < ENEMY_BULLET_COUNT; ++ti)
+	{
+		tpBullet = new CBullet;
+		tpBullet->Create(5.0f);
+		tpBullet->SetPosition(ScreenWidth() * 0.5f, 0.0f + 80.0f);
+		tpBullet->SetIsActive(false);
+		mBulletsEnemy.push_back(tpBullet);
+	}
+
+
+	//적의 조준탄환 생성
+	mBulletsEnemyAimed.clear();
+	tpBullet = nullptr;
+	for (int ti = 0; ti < ENEMY_BULLET_COUNT; ++ti)
+	{
+		tpBullet = new CBullet;
+		tpBullet->Create(5.0f);
+		tpBullet->SetPosition(ScreenWidth() * 0.5f, 0.0f + 80.0f);
+		tpBullet->SetIsActive(false);
+		mBulletsEnemyAimed.push_back(tpBullet);
 	}
 
 	//주인공 기체의 초기위치 지정
@@ -329,6 +373,31 @@ bool pgeCircleShootor::OnUserCreate()
 }
 bool pgeCircleShootor::OnUserDestroy()
 {
+
+	//적 조준탄환 해제
+	for (vector<CBullet*>::iterator t = mBulletsEnemyAimed.begin(); t != mBulletsEnemyAimed.end(); ++t)
+	{
+		if (nullptr != (*t))
+		{
+			delete (*t);
+			*t = nullptr;
+		}
+	}
+	mBulletsEnemyAimed.clear();
+
+
+	//적 일반탄환 해제
+	for (vector<CBullet*>::iterator t = mBulletsEnemy.begin(); t != mBulletsEnemy.end(); ++t)
+	{
+		if (nullptr != (*t))
+		{
+			delete (*t);
+			*t = nullptr;
+		}
+	}
+	mBulletsEnemy.clear();
+
+
 	//반복자를 이용하여 원소들을 순회
 	for (vector<CBullet*>::iterator t = mBullets.begin(); t != mBullets.end(); ++t)
 	{
@@ -339,6 +408,20 @@ bool pgeCircleShootor::OnUserDestroy()
 		}
 	}
 	mBullets.clear();
+
+
+
+	if (nullptr != mEnemyAimed)
+	{
+		delete mEnemyAimed;
+		mEnemyAimed = nullptr;
+	}
+
+	if (nullptr != mEnemy)
+	{
+		delete mEnemy;
+		mEnemy = nullptr;
+	}
 
 	//todo
 	if (nullptr != mActor)
@@ -422,6 +505,19 @@ bool pgeCircleShootor::OnUserUpdate(float fElapsedTime)
 		tYDir = 1.0f;
 	}
 
+
+	if (GetKey(olc::Key::SPACE).bReleased)
+	{
+		//주인공 기체의 일반탄환 발사
+		mActor->DoFire(mBullets);
+	}
+	if (GetKey(olc::Key::SPACE).bPressed)
+	{
+		//주인공 기체의 일반탄환 발사
+		mActor->DoFire(mBullets);
+	}
+
+
 	olc::vf2d tXVelocity(1.0f, 0.0f);	//x축 기저벡터로 초기화
 	olc::vf2d tYVelocity(0.0f, 1.0f);	//y축 기저벡터로 초기화
 
@@ -440,8 +536,59 @@ bool pgeCircleShootor::OnUserUpdate(float fElapsedTime)
 	//update
 	//Update Method패턴이 적용된 결과다.
 	mActor->Update(fElapsedTime);
-	
+	mEnemy->Update(fElapsedTime);
+	mEnemyAimed->Update(fElapsedTime);
 
+	//적기는 일반탄환을
+	//일정 시간 간격으로 순차적으로 한 발씩 연사한다
+	//<-- 타이머 개념을 만들어야 한다.
+
+	//게임엔진이 fElapsedTime을 알려주고 있다.
+	//fElapsedTime은 한 프레임에 걸리는 실제 시간이다.
+	//그러므로 이것을 이용하여 타이머 개념을 만들 수 있다.
+	if (mEnemy->mTimeTick >= 2.0f)
+	{
+		//fire
+		mEnemy->DoFire(mBulletsEnemy);
+		cout << "Enemy Do Fire" << endl;
+
+		mEnemy->mTimeTick -= 2.0f;
+	}
+	else
+	{
+		mEnemy->mTimeTick = mEnemy->mTimeTick + fElapsedTime;
+	}
+
+	if (mEnemyAimed->mTimeTick >= 1.0f)
+	{
+		//fire
+		mEnemyAimed->DoFireAimed(mBulletsEnemyAimed, mActor);
+		cout << "EnemyAimed Do Fire Aimed" << endl;
+
+		mEnemyAimed->mTimeTick = 0.0f;
+	}
+	else
+	{
+		mEnemyAimed->mTimeTick = mEnemyAimed->mTimeTick + fElapsedTime;
+	}
+
+	
+	for (auto t = mBullets.begin(); t != mBullets.end(); ++t)
+	{
+		(*t)->Update(fElapsedTime);
+	}
+	
+	//적 기체 일반탄환
+	for (auto t = mBulletsEnemy.begin(); t != mBulletsEnemy.end(); ++t)
+	{
+		(*t)->Update(fElapsedTime);
+	}
+	
+	//적 기체 조준탄환
+	for (auto t = mBulletsEnemyAimed.begin(); t != mBulletsEnemyAimed.end(); ++t)
+	{
+		(*t)->Update(fElapsedTime);
+	}
 
 
 	//render
@@ -458,8 +605,22 @@ bool pgeCircleShootor::OnUserUpdate(float fElapsedTime)
 	//void Render(PixelGameEngine*)
 	//DrawCircleEquation(mActor.mPosition.x, mActor.mPosition.y, 20.0f);
 	mActor->Render(this);
+	mEnemy->Render(this);
+	mEnemyAimed->Render(this);
 
 	for (vector<CBullet*>::iterator t = mBullets.begin(); t != mBullets.end(); ++t)
+	{
+		(*t)->Render(this);
+	}
+
+	//적 기체 일반탄환
+	for (auto t = mBulletsEnemy.begin(); t != mBulletsEnemy.end(); ++t)
+	{
+		(*t)->Render(this);
+	}
+
+	//적 기체 조준탄환
+	for (auto t = mBulletsEnemyAimed.begin(); t != mBulletsEnemyAimed.end(); ++t)
 	{
 		(*t)->Render(this);
 	}
