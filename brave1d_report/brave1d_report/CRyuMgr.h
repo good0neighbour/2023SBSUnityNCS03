@@ -6,6 +6,7 @@ enum Status
 {
 	Move,
 	Combat,
+	BossCombat,
 	Down
 };
 

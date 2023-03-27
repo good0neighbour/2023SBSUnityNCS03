@@ -22,4 +22,7 @@ public:
     }
 
     virtual void DoDamage(CUnit* tAttacker) {};
+
+    //체력 설정용 함수
+    void SetHP(float tHP);
 };

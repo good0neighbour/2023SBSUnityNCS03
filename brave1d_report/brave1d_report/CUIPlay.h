@@ -22,6 +22,12 @@ enum KeyWords
 	SlimeDamaged,
 	SlimeTired,
 	BraveTired,
+	RockScissorsPaper,
+	BossIsHere,
+	BraveHpUp,
+	BraveRockPaperScissors,
+	BossRockPaperScissors,
+	Draw,
 	LanguageChanged
 };
 

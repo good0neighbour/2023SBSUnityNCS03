@@ -116,7 +116,7 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave, CSlime* tSlime)
     case 'r':
     {
         //용사의 상태가 Attack이 아닌 경우
-        if (CRyuMgr::GetInstance()->mStatus != Combat)
+        if (CRyuMgr::GetInstance()->mStatus != Combat && CRyuMgr::GetInstance()->mStatus != BossCombat)
         {
             //반복되는 문자열 출력을 추상화
             mUI->Display(UnavailableCommand, tMoveDir);
@@ -125,28 +125,125 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave, CSlime* tSlime)
             return true;
         }
 
-        int tDiceNumber = rand() % 6 + 1;
-        cout << tDiceNumber << endl;
-
         CUnit* tpUnit = nullptr;
         CUnit* tpAttacker = nullptr;
 
-        //가독성을 위해 switch문을 if문으로 변경
-        if (tDiceNumber < 4)
-        {
-            tpUnit = tBrave;
-            tpAttacker = tSlime;
+        int tDiceNumber;
 
-            mUI->Display(BraveDamaged);
+        //보통 슬라임과의 전투
+        if (CRyuMgr::GetInstance()->mStatus == Combat)
+        {
+            tDiceNumber = rand() % 6 + 1;
+            cout << tDiceNumber << endl;
+
+            //가독성을 위해 switch문을 if문으로 변경
+            if (tDiceNumber < 4)
+            {
+                tpUnit = tBrave;
+                tpAttacker = tSlime;
+
+                mUI->Display(BraveDamaged);
+            }
+            else
+            {
+                tpUnit = tSlime;
+                tpAttacker = tBrave;
+
+                mUI->Display(SlimeDamaged);
+            }
+            tpUnit->DoDamage(tpAttacker);
         }
+        //보스 슬라임과의 전투
         else
         {
-            tpUnit = tSlime;
-            tpAttacker = tBrave;
+            int tStatus = 0;   //0: 승, 1: 무, 2: 패
 
-            mUI->Display(SlimeDamaged);
+            //0: 묵, 1: 찌, 2: 빠
+            int tBossDice = rand() % 3;
+            tDiceNumber = rand() % 3;
+
+            switch (tDiceNumber)
+            {
+            case 0:
+                mUI->Display(BraveRockPaperScissors, 'R');
+                switch (tBossDice)
+                {
+                case 0:
+                    mUI->Display(BossRockPaperScissors, 'R');
+                    tStatus = 1;
+                    break;
+                case 1:
+                    mUI->Display(BossRockPaperScissors, 'S');
+                    tStatus = 0;
+                    break;
+                case 2:
+                    mUI->Display(BossRockPaperScissors, 'P');
+                    tStatus = 2;
+                    break;
+                }
+                break;
+            case 1:
+                mUI->Display(BraveRockPaperScissors, 'S');
+                switch (tBossDice)
+                {
+                case 0:
+                    mUI->Display(BossRockPaperScissors, 'R');
+                    tStatus = 2;
+                    break;
+                case 1:
+                    mUI->Display(BossRockPaperScissors, 'S');
+                    tStatus = 1;
+                    break;
+                case 2:
+                    mUI->Display(BossRockPaperScissors, 'P');
+                    tStatus = 0;
+                    break;
+                }
+                break;
+            case 2:
+                mUI->Display(BraveRockPaperScissors, 'P');
+                switch (tBossDice)
+                {
+                case 0:
+                    mUI->Display(BossRockPaperScissors, 'R');
+                    tStatus = 2;
+                    break;
+                case 1:
+                    mUI->Display(BossRockPaperScissors, 'S');
+                    tStatus = 0;
+                    break;
+                case 2:
+                    mUI->Display(BossRockPaperScissors, 'P');
+                    tStatus = 1;
+                    break;
+                }
+                break;
+            }
+
+            //가독성을 위해 switch문을 if문으로 변경
+            if (tStatus == 2)
+            {
+                tpUnit = tBrave;
+                tpAttacker = tSlime;
+
+                mUI->Display(BraveDamaged);
+            }
+            else if (tStatus == 0)
+            {
+                tpUnit = tSlime;
+                tpAttacker = tBrave;
+
+                mUI->Display(SlimeDamaged);
+            }
+            else
+            {
+                //비겼다.
+                mUI->Display(Draw);
+                //전투 계속
+                return true;
+            }
+            tpUnit->DoDamage(tpAttacker);
         }
-        tpUnit->DoDamage(tpAttacker);
 
         if (tSlime->GetHP() <= 0)
         {
@@ -154,12 +251,19 @@ bool CInputMgr::KeyInput(char tMoveDir, CBrave* tBrave, CSlime* tSlime)
 
             CRyuMgr::GetInstance()->mExp = CRyuMgr::GetInstance()->mExp + 300;
 
+            //전투 승리 시 용사 체력 초기화
+            tBrave->SetHP(1000.0f);
+            mUI->Display(BraveHpUp);
+
             //전투 종료
             return false;
         }
         else if (tBrave->GetHP() <= 0)
         {
             mUI->Display(BraveTired);
+
+            //전투 패배 시 슬라임 체력 초기화
+            tSlime->SetHP(200.0f);
 
             //전투 종료
             return false;

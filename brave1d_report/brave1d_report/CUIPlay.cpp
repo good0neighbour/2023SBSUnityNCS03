@@ -16,7 +16,7 @@ return tEnglish;\
 case Spanish:\
 return tSpanish;\
 default:\
-return "잘못된 언어";\
+return "잘못된 언어\n";\
 }
 
 void CUIPlay::Display(KeyWords tKeyWord)
@@ -96,39 +96,24 @@ void CUIPlay::StringSearch(const char* tMessage, char** tFrontOutput, char** tBa
 		}
 	}
 
-	//배열 동적할당
 	char* tFrontString = new char[tFrontIndex + 1];
 	char* tBackString = new char[tBackIndex + 1];
-
-	//ryu
-	//*tFrontOutput = new char[tFrontIndex + 1];
-	//*tBackOutput = new char[tBackIndex + 1];
-	/**tFrontOutput = new char[33];
-	*tBackOutput = new char[33];*/
-
-	//cout << strlen(tMessage) << endl;
-	//cout << tFrontIndex + 2 + tBackIndex << endl;
 	
-
 	//문자열 복사
 	for (int ti = 0; ti < tFrontIndex; ti++)
 	{
 		//중광호 이전 부분은 그대로 복사
 		tFrontString[ti] = tMessage[ti];
-		//*tFrontOutput[ti] = tMessage[ti];
 	}
 	for (int ti = 0; ti < tBackIndex; ti++)
 	{
 		//중괄호 이후 부분은 인덱스 고려
 		tBackString[ti] = tMessage[tFrontIndex + 2 + ti];
-		//*tBackOutput[ti] = tMessage[tFrontIndex + 2 + ti];
 	}
 
 	//문자열 종료 알림
 	tFrontString[tFrontIndex] = '\0';
 	tBackString[tBackIndex] = '\0';
-	//*tFrontOutput[tFrontIndex] = '\0';
-	//*tBackOutput[tBackIndex] = '\0';
 
 	//주소값 전달
 	*tFrontOutput = tFrontString;
@@ -285,6 +270,42 @@ Cambia el idioma escribiendo l\n\
 			"용사는 매우 지쳤다.",
 			"Brave is very tired.",
 			"Valiente está muy cansado."
+		);
+	case RockScissorsPaper:
+		LANGUAGE_SELECT(
+			"가위바위보를 하라.(r)",
+			"Do rock paper scissors.(r)",
+			"Haz piedra, papel o tijera.(r)"
+		);
+	case BossIsHere:
+		LANGUAGE_SELECT(
+			"보스 슬라임이 여기 있다.",
+			"The boss slime is here.",
+			"El limo jefe está aquí."
+		);
+	case BraveHpUp:
+		LANGUAGE_SELECT(
+			"용사 체력 재생.",
+			"Regenerating Brave's HP.",
+			"Regenerando el HP de Brave."
+		);
+	case BraveRockPaperScissors:
+		LANGUAGE_SELECT(
+			"용사는 {}를 냈다.",
+			"The Brave put out {}.",
+			"El valiente apagó {}."
+		);
+	case BossRockPaperScissors:
+		LANGUAGE_SELECT(
+			"슬라임은 {}를 냈다.",
+			"Slime put out {}.",
+			"Slime apagó {}."
+		);
+	case Draw:
+		LANGUAGE_SELECT(
+			"비겼다.",
+			"비겼다.",
+			"비겼다."
 		);
 	case LanguageChanged:
 		LANGUAGE_SELECT(

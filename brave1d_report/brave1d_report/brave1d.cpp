@@ -18,11 +18,13 @@
  */
 
 /*
-    CInputMgr 클래스 생성, 사용자 입력에 대한 처리 추상화.
-    CBrave 클래스에 Status 추가, 용사의 상태에 따라 사용자의 입력 제한.
+    CInputMgr 클래스 생성. 사용자 입력에 대한 처리를 추상화.
+    CBrave 클래스에 Status 추가. 용사의 상태에 따라 사용자의 입력 제한.
     콘솔창 문자열 출력은 CUIPlay가 대신 수행.
     그러는 김에 문자 입력도 CUIPlay가 대신 수행.
     문자열 출력은 언어 설정에 따라 다르게 출력.
+    보스 슬라임 추가. 가위바위보 실행.
+    전투 승리 시 용사 체력 재생.
 */
 
 #include "CBrave.h"
@@ -34,6 +36,7 @@
 
 int main()
 {
+    //게임 시작 전
     int tWorld[5] = { 100, 0, 1, 0, 200 };
 
     CRyuMgr::GetInstance();
@@ -43,6 +46,9 @@ int main()
     tBrave = new CBrave();
     CSlime* tSlime = nullptr;
     tSlime = new CSlime();
+    //보스 슬라임
+    CSlime* tBossSlime = nullptr;
+    tBossSlime = new CSlime();
 
     char tMoveDir = 'd';
 
@@ -52,6 +58,8 @@ int main()
     //새로운 콘솔 출력 방식 사용
     tUIPlay.Display(Initiatiation);
 
+
+    //게임 중
     while (true)
     {
         //새로운 콘솔 출력 방식 사용
@@ -119,11 +127,42 @@ int main()
         {
             //새로운 콘솔 출력 방식 사용
             tUIPlay.Display(WorldEnd, tBrave->GetX());
+
+            //보스 전투 상태로 전환
+            CRyuMgr::GetInstance()->mStatus = BossCombat;
+
+            //새로운 콘솔 출력 방식 사용
+            tUIPlay.Display(BossIsHere, tBrave->GetX());
+
+            char tIsRollDice = 'r';
+            while (1)
+            {
+                //새로운 콘솔 출력 방식 사용
+                tUIPlay.Display(RockScissorsPaper);
+
+                //새로운 입력 방식 사용
+                tIsRollDice = tUIPlay.InputFromUser();
+
+                //오버로드된 KeyInput 함수 사용
+                //true 반환 시 전투 루프 계속, false 반환 시 전투 루프 탈출
+                if (!CInputMgr::GetInstance()->KeyInput(tIsRollDice, tBrave, tBossSlime))
+                {
+                    break;
+                }
+            }
+
+            //이동 상태로 전환
+            CRyuMgr::GetInstance()->mStatus = Move;
+
+            //새로운 콘솔 출력 방식 사용
+            tUIPlay.Display(Experience, CRyuMgr::GetInstance()->mExp);
         }
         break;
         }
     }
 
+
+    //게임 종료
     //새로운 콘솔 출력 방식 사용
     tUIPlay.Display(GameEnd);
 
