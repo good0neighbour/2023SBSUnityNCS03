@@ -77,5 +77,43 @@ void CEnemy::DoFireAimed(vector<CBullet*>& tBullets, CUnit* tpTarget)
 	{
 		mCurIndexBullet = 0;
 	}
+}
 
+void CEnemy::DoFireCircled(vector<CBullet*>& tBullets)
+{
+	//8발을 동시에 발사
+	for (int ti = mCurIndexBullet * 8; ti < mCurIndexBullet * 8 + 8; ++ti)
+	{
+		tBullets[ti]->SetPosition(this->GetPosition());
+
+		//방향 결정 코드
+		olc::vf2d tVelocity;
+		//	속도는 벡터, 벡터는 수벡터 형식으로 다룬다
+		//데카르트 좌표계의 x, y 성분을 구한다
+		// x = r * cosT
+		// y = r * sinT
+		// degree 각도 vs radian 호도
+		//<-- degree는 한 바퀴를 360등분한 거의 한 조각이다. 즉 측정치다.
+		//<-- 반면에 radian은 지름이 1인 원의 둘레의 길이. 즉, 원주율이 3.14...인데에 착안하여 만들어진 도법이다. 즉, 원의 호의 길이를 각도로 삼는다
+		//<--<-- 그러므로, radian은 실수 연산 체계에 통합된다
+		//		 그러므로 모든 수학함수에서는 radian을 사용한다.
+		//
+		//		반지름이 1인 원을 가정했을 때 원의 둘레 길이는 2 * PI * 1
+		//	그러므로, 비례식을 세우면 360 : 2PI = 1 : x
+		//	그러므로, x = PI / 180
+		tVelocity.x = 1.0f * std::cosf(45.0f * ti * (3.14159f / 180.0f));
+		tVelocity.y = 1.0f * std::sinf(45.0f * ti * (3.14159f / 180.0f));
+
+		tBullets[ti]->SetVelocity(tVelocity * 50.0f);
+		tBullets[ti]->SetIsActive(true);
+	}
+
+	if (mCurIndexBullet < ENEMY_BULLET_COUNT - 1)
+	{
+		mCurIndexBullet++;
+	}
+	else
+	{
+		mCurIndexBullet = 0;
+	}
 }

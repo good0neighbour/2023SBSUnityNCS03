@@ -14,6 +14,7 @@ public:
 	
 	void DoFire(vector<CBullet*>& tBullets);
 	void DoFireAimed(vector<CBullet*>& tBullets, CUnit* tpTarget);
+	void DoFireCircled(vector<CBullet*>& tBullets);
 
 
 private:

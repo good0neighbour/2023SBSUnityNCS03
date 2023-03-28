@@ -326,6 +326,14 @@ bool pgeCircleShootor::OnUserCreate()
 	mEnemyAimed->SetVelocity(olc::vf2d(0.0f, 0.0f));
 
 
+	mEnemyCircled = new CEnemy();
+	mEnemyCircled->Create();
+	mEnemyCircled->SetPosition(ScreenWidth() * 0.5f + 80.0f, 0.0f + 80.0f);
+	mEnemyCircled->SetIsActive(true);
+
+	mEnemyCircled->SetVelocity(olc::vf2d(1.0f, 0.0f) * 20.0f);
+
+
 
 	mBullets.clear();	//원소 모두 지우기
 	//탄환 10발 생성
@@ -364,6 +372,19 @@ bool pgeCircleShootor::OnUserCreate()
 		mBulletsEnemyAimed.push_back(tpBullet);
 	}
 
+
+	//적의 원형탄환 생성
+	mBulletsEnemyCircled.clear();
+	tpBullet = nullptr;
+	for (int ti = 0; ti < ENEMY_BULLET_COUNT * 8; ++ti)
+	{
+		tpBullet = new CBullet;
+		tpBullet->Create(5.0f);
+		tpBullet->SetPosition(ScreenWidth() * 0.5f + 80.0f, 0.0f + 80.0f);
+		tpBullet->SetIsActive(false);
+		mBulletsEnemyCircled.push_back(tpBullet);
+	}
+
 	//주인공 기체의 초기위치 지정
 	/*mActor.mPosition.x = ScreenWidth() * 0.5f;
 	mActor.mPosition.y = ScreenHeight() * 0.5f + 80.0f;*/
@@ -373,6 +394,19 @@ bool pgeCircleShootor::OnUserCreate()
 }
 bool pgeCircleShootor::OnUserDestroy()
 {
+
+	//적 조준탄환 해제
+	for (vector<CBullet*>::iterator t = mBulletsEnemyCircled.begin(); t != mBulletsEnemyCircled.end(); ++t)
+	{
+		if (nullptr != (*t))
+		{
+			delete (*t);
+			*t = nullptr;
+		}
+	}
+	mBulletsEnemyCircled.clear();
+
+
 
 	//적 조준탄환 해제
 	for (vector<CBullet*>::iterator t = mBulletsEnemyAimed.begin(); t != mBulletsEnemyAimed.end(); ++t)
@@ -411,6 +445,12 @@ bool pgeCircleShootor::OnUserDestroy()
 
 
 
+	if (nullptr != mEnemyCircled)
+	{
+		delete mEnemyCircled;
+		mEnemyCircled = nullptr;
+	}
+
 	if (nullptr != mEnemyAimed)
 	{
 		delete mEnemyAimed;
@@ -435,6 +475,90 @@ bool pgeCircleShootor::OnUserDestroy()
 }
 bool pgeCircleShootor::OnUserUpdate(float fElapsedTime)
 {
+	switch (mCurSceneType)
+	{
+	case SCENE_TITLE:
+	{
+		UpdateTitle(fElapsedTime);
+	}
+	break;
+	case SCENE_PLAYGAME:
+	{
+		UpdatePlayGame(fElapsedTime);
+	}
+	break;
+	}
+
+
+
+	return true;
+}
+
+void pgeCircleShootor::UpdateTitle(float fElapsedTime)
+{
+	//update
+
+	//스페이스바 키입력이 있으면 플레이 시작
+	//<-- SCENE_PLAYGAME으로 장면 전환
+	if (GetKey(olc::Key::SPACE).bReleased)
+	{
+		mCurSceneType = SCENE_PLAYGAME;
+	}
+
+
+
+	//render
+	this->Clear(olc::YELLOW);
+
+
+}
+
+void pgeCircleShootor::UpdatePlayGame(float fElapsedTime)
+{
+	//collision처리
+	//원 vs 원 충돌 알고리즘 :
+	//	충돌 알고리즘 중에서 가장 방법이 간단하고
+	//	연산이 작은 알고리즘이다.
+	// 주인공 일반탄환 vs 적 기체 충돌을 가정
+
+	for (auto t : mBullets) //cpp11에서 추가된 for문
+	{
+		if (t->GetIsActive())
+		{
+			if (mEnemy->GetIsActive())
+			{
+				//충돌 체크
+
+				float tAdd = 0.0f;		//두 원의 반지름의 합
+				float tDistance = 0.0f;	//두 원의 중심 사이의 거리
+
+				/*tAdd = t->GetRadius() + mEnemy->GetRadius();
+				tDistance = std::sqrtf((t->GetPosition().x - mEnemy->GetPosition().x) * (t->GetPosition().x - mEnemy->GetPosition().x) + (t->GetPosition().y - mEnemy->GetPosition().y) * (t->GetPosition().y - mEnemy->GetPosition().y));*/
+
+				//tAdd, tDistance 모두 양수다( 길이의 개념이므로 그렇다 )
+				//양변이 양수라면 그 등식은 제곱해도 똑같이 성립한다.
+				//이러한 성질을 이용하여 양변을 제곱하여 제곱근을 구하기를 없애겠다.
+				//<-- 왜냐하면 제곱근을 구한다는 것에는 무한의 개념이 들어있다. 그런데, 무한개념이 들어간 값을 구하는 것은 컴퓨터에서 비교적 연산이 많이 먹는 것이다. 그러므로 이러한 연산을 제거할 수 있다면 제거하는 것이 좋다.
+				tAdd = (t->GetRadius() + mEnemy->GetRadius()) * (t->GetRadius() + mEnemy->GetRadius());
+				tDistance = (t->GetPosition().x - mEnemy->GetPosition().x) * (t->GetPosition().x - mEnemy->GetPosition().x) + (t->GetPosition().y - mEnemy->GetPosition().y) * (t->GetPosition().y - mEnemy->GetPosition().y);
+
+				if (tAdd >= tDistance)
+				{
+					cout << "collision" << endl;
+					//적 제거
+					mEnemy->SetIsActive(false);
+					//탄환 제거
+					t->SetIsActive(false);
+
+					break;
+				}
+			}
+		}
+	}
+
+
+
+
 
 	olc::vf2d tVelocity(0.0f, 0.0f);
 	mActor->SetVelocity(tVelocity * 0.0f);
@@ -451,13 +575,13 @@ bool pgeCircleShootor::OnUserUpdate(float fElapsedTime)
 
 		//오일러 축차적 방법에 의한 이동코드
 		/*
-			속도 * 거리의 변화량 / 시간의 변화량
+		속도 * 거리의 변화량 / 시간의 변화량
 
-			속도의 정의로부터 다음 식을 유도했다
+		속도의 정의로부터 다음 식을 유도했다
 
-			//현재 위치 = 이전 위치 + 속도 * 시간간격
+		//현재 위치 = 이전 위치 + 속도 * 시간간격
 
-			무한소 개념에 의해 간격이 정해지므로(불연속), 적분에 의한 방법보다는 부정확하다.
+		무한소 개념에 의해 간격이 정해지므로(불연속), 적분에 의한 방법보다는 부정확하다.
 		*/
 
 		//현재 위치 = 이전 위치 + 속도 * 시간간격
@@ -531,13 +655,14 @@ bool pgeCircleShootor::OnUserUpdate(float fElapsedTime)
 		tVelocity = tVelocity.norm();			//벡터의 정규화, 크기를 1로 만든다
 	}
 
-	mActor->SetVelocity(tVelocity * 50.0f);		//	벡터의 스칼라곱셈
+	mActor->SetVelocity(tVelocity * 75.0f);		//	벡터의 스칼라곱셈
 
 	//update
 	//Update Method패턴이 적용된 결과다.
 	mActor->Update(fElapsedTime);
 	mEnemy->Update(fElapsedTime);
-	mEnemyAimed->Update(fElapsedTime);
+	/*mEnemyAimed->Update(fElapsedTime);
+	mEnemyCircled->Update(fElapsedTime);*/
 
 	//적기는 일반탄환을
 	//일정 시간 간격으로 순차적으로 한 발씩 연사한다
@@ -546,46 +671,66 @@ bool pgeCircleShootor::OnUserUpdate(float fElapsedTime)
 	//게임엔진이 fElapsedTime을 알려주고 있다.
 	//fElapsedTime은 한 프레임에 걸리는 실제 시간이다.
 	//그러므로 이것을 이용하여 타이머 개념을 만들 수 있다.
-	if (mEnemy->mTimeTick >= 2.0f)
-	{
-		//fire
-		mEnemy->DoFire(mBulletsEnemy);
-		cout << "Enemy Do Fire" << endl;
+	//if (mEnemy->mTimeTick >= 2.0f)
+	//{
+	//	//fire
+	//	mEnemy->DoFire(mBulletsEnemy);
+	//	cout << "Enemy Do Fire" << endl;
 
-		mEnemy->mTimeTick -= 2.0f;
-	}
-	else
-	{
-		mEnemy->mTimeTick = mEnemy->mTimeTick + fElapsedTime;
-	}
+	//	mEnemy->mTimeTick -= 2.0f;
+	//}
+	//else
+	//{
+	//	mEnemy->mTimeTick = mEnemy->mTimeTick + fElapsedTime;
+	//}
 
-	if (mEnemyAimed->mTimeTick >= 1.0f)
-	{
-		//fire
-		mEnemyAimed->DoFireAimed(mBulletsEnemyAimed, mActor);
-		cout << "EnemyAimed Do Fire Aimed" << endl;
+	//if (mEnemyAimed->mTimeTick >= 1.0f)
+	//{
+	//	//fire
+	//	mEnemyAimed->DoFireAimed(mBulletsEnemyAimed, mActor);
+	//	cout << "EnemyAimed Do Fire Aimed" << endl;
 
-		mEnemyAimed->mTimeTick = 0.0f;
-	}
-	else
-	{
-		mEnemyAimed->mTimeTick = mEnemyAimed->mTimeTick + fElapsedTime;
-	}
+	//	mEnemyAimed->mTimeTick = 0.0f;
+	//}
+	//else
+	//{
+	//	mEnemyAimed->mTimeTick = mEnemyAimed->mTimeTick + fElapsedTime;
+	//}
 
-	
+	////circled의 타이머
+	//if (mEnemyCircled->mTimeTick >= 1.0f)
+	//{
+	//	//fire
+	//	mEnemyCircled->DoFireCircled(mBulletsEnemyCircled);
+	//	cout << "EnemyAimed Do Fire Circled" << endl;
+
+	//	mEnemyCircled->mTimeTick = 0.0f;
+	//}
+	//else
+	//{
+	//	mEnemyCircled->mTimeTick = mEnemyCircled->mTimeTick + fElapsedTime;
+	//}
+
+
 	for (auto t = mBullets.begin(); t != mBullets.end(); ++t)
 	{
 		(*t)->Update(fElapsedTime);
 	}
-	
+
 	//적 기체 일반탄환
 	for (auto t = mBulletsEnemy.begin(); t != mBulletsEnemy.end(); ++t)
 	{
 		(*t)->Update(fElapsedTime);
 	}
-	
+
 	//적 기체 조준탄환
 	for (auto t = mBulletsEnemyAimed.begin(); t != mBulletsEnemyAimed.end(); ++t)
+	{
+		(*t)->Update(fElapsedTime);
+	}
+
+	//적 기체 원형탄환
+	for (auto t = mBulletsEnemyCircled.begin(); t != mBulletsEnemyCircled.end(); ++t)
 	{
 		(*t)->Update(fElapsedTime);
 	}
@@ -606,7 +751,8 @@ bool pgeCircleShootor::OnUserUpdate(float fElapsedTime)
 	//DrawCircleEquation(mActor.mPosition.x, mActor.mPosition.y, 20.0f);
 	mActor->Render(this);
 	mEnemy->Render(this);
-	mEnemyAimed->Render(this);
+	/*mEnemyAimed->Render(this);
+	mEnemyCircled->Render(this);*/
 
 	for (vector<CBullet*>::iterator t = mBullets.begin(); t != mBullets.end(); ++t)
 	{
@@ -625,8 +771,11 @@ bool pgeCircleShootor::OnUserUpdate(float fElapsedTime)
 		(*t)->Render(this);
 	}
 
-
-	return true;
+	//적 기체 원형탄환
+	for (auto t = mBulletsEnemyCircled.begin(); t != mBulletsEnemyCircled.end(); ++t)
+	{
+		(*t)->Render(this);
+	}
 }
 
 //실제 직선은 무한하지만,

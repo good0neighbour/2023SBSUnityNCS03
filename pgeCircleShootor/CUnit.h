@@ -56,5 +56,14 @@ public:
 	{
 		return mIsActive;
 	}
+
+	inline void SetRadius(const float tRadius)
+	{
+		mRadius = tRadius;
+	}
+	inline const bool GetRadius() const
+	{
+		return mRadius;
+	}
 };
 

@@ -29,17 +29,34 @@ class CEnemy;
 //조준탄환: 목적지점으로의 방향을 실행 중에 결정하여 발사하는 탄환
 //원형탄환: 45도 간격으로 원을 그리는 방향으로 방향을 결정하여 발사하는 탄환, 8발을 동시에 발사하겠다
 
+
+//열거형: 해당 타입이 가질 수 있는 값들을 나열해놓은 타입
+//장면의 종류
+enum
+{
+	SCENE_TITLE = 0,
+	SCENE_PLAYGAME
+};
+
+
+
+
 class pgeCircleShootor : public olc::PixelGameEngine
 {
+	int mCurSceneType = SCENE_TITLE;
+
 	CActor* mActor = nullptr;
 	CEnemy* mEnemy = nullptr;
 
 	CEnemy* mEnemyAimed = nullptr;
+	//조준탄 발사 적
+	CEnemy* mEnemyCircled = nullptr;
 
 	//탄환 여러발
 	vector<CBullet*> mBullets;	//주인공의 일반탄환
 	vector<CBullet*> mBulletsEnemy;	//적의 일반탄환
 	vector<CBullet*> mBulletsEnemyAimed;	//적의 조준탄환
+	vector<CBullet*> mBulletsEnemyCircled;	//적의 원형탄환
 
 
 public:
@@ -53,6 +70,9 @@ public:
 	bool OnUserCreate() override;
 	bool OnUserDestroy() override;
 	bool OnUserUpdate(float fElapsedTime) override;
+
+	void UpdateTitle(float fElapsedTime);
+	void UpdatePlayGame(float fElapsedTime);
 
 
 	//직선 그리기 함수
