@@ -12,11 +12,16 @@
 		이런 정의에서 유도하여
 		Sx = (1 / 2) * Ax * t^2 + Cx0 * t + Cx1
 
+
+		Cx0: 초기속도
+		Cx1: 초기위치
+
 	가속도의 정의
 	Ax = d Vx / d T
 
 		이런 정의에서 유도하여
 		Vx = Ax * t + Cx0
+
 
 
 */
@@ -59,9 +64,30 @@
 
 */
 
+using namespace olc;
+using namespace std;
+
 // Override base class with your custom functionality
 class Example : public olc::PixelGameEngine
 {
+	vf2d mPosition; //현재 위치
+	vf2d mVelocity; //속도
+	vf2d mAccel;	//가속도
+
+	const float GRAVITY = 9.8;	//중력가속도
+
+	//점프 여부
+	bool mIsJump = false;
+
+
+	//초기위치
+	vf2d mPosInit;
+	//초기속도
+	vf2d mVelocityInit;
+
+	//운동이 시작되고 난 후에 누적되는 시간
+	float t = 0.0f;
+
 public:
 	Example()
 	{
@@ -72,13 +98,119 @@ public:
 public:
 	bool OnUserCreate() override
 	{
-		// Called once at the start, so create things here
+		//초기위치
+		mPosInit.x = ScreenWidth() * 0.5f;
+		mPosInit.y = ScreenHeight() - 20.0f;
+		//초기위치로 지정
+		mPosition = mPosInit;
+		
+		//가속도
+		mAccel.x = 0.0f;
+		mAccel.y = 0.0f;
+
+		//초기속도
+		mVelocity.x = 0.0f;
+		mVelocity.y = 0.0f;
+		//초기속도로 지정
+		mVelocity = mVelocityInit;
+
+		mIsJump = false;
+
 		return true;
 	}
 
+	//x축: 등가속도 운동
+	//y축: 중력가속도가 작용하는 가속도 운동
+
 	bool OnUserUpdate(float fElapsedTime) override
 	{
+		if (GetKey(olc::Key::LEFT).bReleased)
+		{
+			//t시간 경과 후에 현재 위치를 초기위치로, 현재 속도를 초기 속도로, 현재 가속도를 가속도로 설정
+			mPosInit.y = mPosition.y;
+
+			//Vx = Ax * t + Cx0
+			mVelocity.y = mAccel.y * t + mVelocityInit.y;
+			mAccel.y = (mVelocity.y - mVelocityInit.y) / t;
+			mVelocityInit.y = mVelocity.y;//0.0f;
+
+
+			//이전 시간의 현재 위치가 이제 초기 위치가 된다.
+			mPosInit.x = mPosition.x;
+			mPosition = mPosInit;
+
+			mAccel.x = 0.0f;
+			//초기 x축 속도의 크기는 50
+			mVelocityInit.x = -50.0f;
+			mVelocity = mVelocityInit;
+			//새로운 운동이 시작되므로 t를 0부터 재시작
+			t = 0.0f;
+		}
+
+		if (GetKey(olc::Key::RIGHT).bReleased)
+		{
+			//t시간 경과 후에 현재 위치를 초기위치로, 현재 속도를 초기 속도로, 현재 가속도를 가속도로 설정
+			mPosInit.y = mPosition.y;
+
+			//Vx = Ax * t + Cx0
+			mVelocity.y = mAccel.y * t + mVelocityInit.y;
+			mAccel.y = (mVelocity.y - mVelocityInit.y) / t;
+			mVelocityInit.y = mVelocity.y;//0.0f;
+
+			//이전 시간의 현재 위치가 이제 초기 위치가 된다.
+			mPosInit.x = mPosition.x;
+			mPosition = mPosInit;
+
+			mAccel.x = 0.0f;
+			//초기 x축 속도의 크기는 50
+			mVelocityInit.x = 50.0f;
+			mVelocity = mVelocityInit;
+			//t를 재시작
+			t = 0.0f;
+		}
+
+		if (GetKey(olc::Key::SPACE).bReleased)
+		{
+			mPosInit.x = mPosition.x;
+
+			//이전 시간의 현재 위치가 이제 초기 위치가 된다.
+			mPosInit.y = mPosition.y;
+			mPosition = mPosInit;
+
+			mAccel.y = GRAVITY;//0.0f;
+			//초기 x축 속도의 크기는 50
+			mVelocityInit.y = (-1.0f) * 5 * GRAVITY;	//중력가속도의 5배 힘 반대방향
+			mVelocity = mVelocityInit;
+
+			t = 0.0f;
+
+			//점프 상태로 변경
+			mIsJump = true;
+		}
+
+
+
+
+		//Sx = (1 / 2) * Ax * t ^ 2 + Cx0 * t + Cx1
+
+		mAccel.x = 0.0f;
+		mPosition.x = 0.5f * mAccel.x * t * t + mVelocityInit.x * t + mPosInit.x;
+
+		if (mIsJump)
+		{
+			//mAccel.y = GRAVITY;	//중력가속도 적용
+			mPosition.y = 0.5f * mAccel.y * t * t + mVelocityInit.y * t + mPosInit.y;
+		}
+
+		//시간은 누적
+		t = t + fElapsedTime * 3.0f;
+
+
 		Clear(olc::DARK_BLUE);
+
+
+
+		DrawCircle(mPosition, 10.0f);
 
 		return true;
 	}
