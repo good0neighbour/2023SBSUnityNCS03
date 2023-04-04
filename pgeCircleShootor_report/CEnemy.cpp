@@ -18,16 +18,6 @@ void CEnemy::Update(float t)
 		//this->mPosition.x = 320.0f - this->mRadius;
 		this->SetVelocity(olc::vf2d(-1.0f, 0.0f) * 20.0f);
 	}
-
-	/*if (this->mPosition.y - this->mRadius < 0.0f)
-	{
-		this->mPosition.y = 0.0f + this->mRadius;
-	}
-
-	if (this->mPosition.y + this->mRadius > 240.0f)
-	{
-		this->mPosition.y = 240.0f - this->mRadius;
-	}*/
 }
 
 //적 기체의 일반탄환 발사 기능

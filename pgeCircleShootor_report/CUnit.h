@@ -61,7 +61,7 @@ public:
 	{
 		mRadius = tRadius;
 	}
-	inline const bool GetRadius() const
+	inline const float GetRadius() const
 	{
 		return mRadius;
 	}
