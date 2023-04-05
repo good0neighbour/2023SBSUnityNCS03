@@ -49,6 +49,21 @@ void DisplayGrid()
 
 int main()
 {
+	//befoer
+	DisplayGrid();
+
+	DoFloodFill(1, 1);
+
+	//after
+	cout << endl;
+	DisplayGrid();
+
+	DoFloodFill(1, 3);
+
+	//after
+	cout << endl;
+	DisplayGrid();
+
 	return 0;
 }
 
@@ -90,6 +105,12 @@ void DoFloodFill(int tCol, int tRow)
 //}
 //
 ////재귀함수
+// 재귀함수의 장단점
+// 장점
+// i) 코드가 심미적이다(아름답다)
+// 단점
+// i) 비재귀 버전에 비해서 함수호출 비용이 많이 든다
+// ii) 스택 오버 플로우 stack overflow가 일어날 가능성이 크다
 //unsigned int DoFactorial(unsigned int tN)
 //{
 //    if (0 == tN)
