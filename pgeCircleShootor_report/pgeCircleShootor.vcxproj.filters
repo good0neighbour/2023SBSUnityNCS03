@@ -30,7 +30,7 @@
     <ClCompile Include="CEnemy.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="CScene.cpp">
+    <ClCompile Include="CStatus.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="CTitleScene.cpp">
@@ -62,7 +62,7 @@
     <ClInclude Include="CEnemy.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="CScene.h">
+    <ClInclude Include="CStatus.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="CTitleScene.h">

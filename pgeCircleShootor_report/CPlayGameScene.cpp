@@ -10,6 +10,7 @@ void CPlayGameScene::Execute()
 }
 void CPlayGameScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
 {
+	//플레이어 탄환 충돌
 	for (auto tBullet : tGame->mBullets)
 	{
 		if (tBullet->GetIsActive())
@@ -26,7 +27,7 @@ void CPlayGameScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
 
 					if (tAdd >= tDistance)
 					{
-						cout << "collision" << endl;
+						cout << "Enemy killed in action" << endl;
 						tEnemy->mTimeTick = 0.0f;
 						tEnemy->SetIsActive(false);
 						tBullet->SetIsActive(false);
@@ -36,6 +37,46 @@ void CPlayGameScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
 				}
 			}
 		}
+	}
+
+	//적 탄환 충돌
+	if (mIsPlayerMortal)
+	{
+		for (auto tBullet : tGame->mBulletsEnemyAll)
+		{
+			if (tBullet->GetIsActive())
+			{
+				if (tGame->mActor->GetIsActive())
+				{
+					float tAdd = 0.0f;
+					float tDistance = 0.0f;
+
+					tAdd = (tBullet->GetRadius() + tGame->mActor->GetRadius()) * (tBullet->GetRadius() + tGame->mActor->GetRadius());
+					tDistance = (tBullet->GetPosition().x - tGame->mActor->GetPosition().x) * (tBullet->GetPosition().x - tGame->mActor->GetPosition().x) + (tBullet->GetPosition().y - tGame->mActor->GetPosition().y) * (tBullet->GetPosition().y - tGame->mActor->GetPosition().y);
+
+					if (tAdd >= tDistance)
+					{
+						cout << "Player killed in action" << endl;
+						tGame->mActor->SetPosition(tGame->ScreenWidth() * 0.5f, tGame->ScreenHeight() * 0.5f + 80.0f);
+						mIsPlayerMortal = false;
+						tBullet->SetIsActive(false);
+
+						break;
+					}
+				}
+			}
+		}
+	}
+	//적 탄환 충돌 직후
+	else if (mPlayerMortalTime < 2.0f)
+	{
+		mPlayerMortalTime += fElapsedTime;
+	}
+	//적 탄환 충돌 후 일정 시간 경과
+	else
+	{
+		mPlayerMortalTime = 0.0f;
+		mIsPlayerMortal = true;
 	}
 
 	olc::vf2d tVelocity(0.0f, 0.0f);
@@ -69,7 +110,7 @@ void CPlayGameScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
 	{
 		tGame->mActor->DoFire(tGame->mBullets);
 	}
-	if (tGame->GetKey(olc::Key::SPACE).bPressed)
+	else if (tGame->GetKey(olc::Key::SPACE).bPressed)
 	{
 		tGame->mActor->DoFire(tGame->mBullets);
 	}
@@ -193,9 +234,13 @@ void CPlayGameScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
 		(*t)->Update(fElapsedTime);
 	}
 
+	//render
 	tGame->Clear(olc::VERY_DARK_BLUE);
 
-	tGame->mActor->Render(tGame);
+	if (mIsPlayerMortal || (int)(mPlayerMortalTime * 10.0f) % 2 == 1)
+	{
+		tGame->mActor->Render(tGame);
+	}
 	tGame->mEnemies[0]->Render(tGame);
 	tGame->mEnemies[1]->Render(tGame);
 	tGame->mEnemies[2]->Render(tGame);
