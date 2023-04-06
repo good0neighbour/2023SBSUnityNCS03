@@ -44,32 +44,28 @@ void CPlayGameScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
 	float tXDir = 0.0f;
 	float tYDir = 0.0f;
 
-	if (tGame->GetKey(olc::Key::LEFT).bHeld)
+	if (tGame->GetKey(olc::Key::LEFT).bHeld && tGame->GetKey(olc::Key::A).bHeld)
 	{
 		tXDir = -1.0f;
 	}
 
-	if (tGame->GetKey(olc::Key::RIGHT).bHeld)
+	if (tGame->GetKey(olc::Key::RIGHT).bHeld && tGame->GetKey(olc::Key::D).bHeld)
 	{
 		tXDir = 1.0f;
 	}
 
-	if (tGame->GetKey(olc::Key::UP).bHeld)
+	if (tGame->GetKey(olc::Key::UP).bHeld && tGame->GetKey(olc::Key::W).bHeld)
 	{
 		tYDir = -1.0f;
 	}
 
-	if (tGame->GetKey(olc::Key::DOWN).bHeld)
+	if (tGame->GetKey(olc::Key::DOWN).bHeld && tGame->GetKey(olc::Key::S).bHeld)
 	{
 		tYDir = 1.0f;
 	}
 
 
-	if (tGame->GetKey(olc::Key::SPACE).bReleased)
-	{
-		tGame->mActor->DoFire(tGame->mBullets);
-	}
-	if (tGame->GetKey(olc::Key::SPACE).bPressed)
+	if (tGame->GetKey(olc::Key::SPACE).bReleased && tGame->GetKey(olc::Key::SPACE).bPressed)
 	{
 		tGame->mActor->DoFire(tGame->mBullets);
 	}
