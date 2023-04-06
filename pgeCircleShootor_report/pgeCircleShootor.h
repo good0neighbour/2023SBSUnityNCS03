@@ -7,13 +7,14 @@
 #include <vector>
 using namespace std;
 
-class CScene;
+class CStatus;
 class CEnemy;
 
 class pgeCircleShootor : public olc::PixelGameEngine
 {
 private:
-	CScene* mScene = nullptr;
+	CStatus* mScene = nullptr;
+	unsigned int mCoin = 0;
 
 public: //임시
 	CActor* mActor = nullptr;
@@ -23,6 +24,7 @@ public: //임시
 	vector<CBullet*> mBulletsEnemy;
 	vector<CBullet*> mBulletsEnemyAimed;
 	vector<CBullet*> mBulletsEnemyCircled;
+	vector<CBullet*> mBulletsEnemyAll;
 
 
 public:
@@ -42,12 +44,16 @@ public:
 	void DrawLineEquation(int tX_0, int tY_0, int tX_1, int tY_1);
 	void DrawCircleEquation(int tXCenter, int tYCenter, int tRadius, olc::Pixel tColor = olc::WHITE);
 
-	inline const CScene* GetCurScene()
-	{
-		return mScene;
-	}
-	inline void SetScene(CScene* tValue)
+	inline void SetScene(CStatus* tValue)
 	{
 		mScene = tValue;
+	}
+	inline void CoinInsert()
+	{
+		mCoin++;
+	}
+	inline const unsigned int GetCoinNum()
+	{
+		return mCoin;
 	}
 };

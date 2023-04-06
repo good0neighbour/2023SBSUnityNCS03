@@ -83,6 +83,7 @@ bool pgeCircleShootor::OnUserCreate()
 		tpBullet->SetPosition(ScreenWidth() * 0.5f, 0.0f + 80.0f);
 		tpBullet->SetIsActive(false);
 		mBulletsEnemy.push_back(tpBullet);
+		mBulletsEnemyAll.push_back(tpBullet);
 	}
 
 	mBulletsEnemyAimed.clear();
@@ -94,6 +95,7 @@ bool pgeCircleShootor::OnUserCreate()
 		tpBullet->SetPosition(ScreenWidth() * 0.5f, 0.0f + 80.0f);
 		tpBullet->SetIsActive(false);
 		mBulletsEnemyAimed.push_back(tpBullet);
+		mBulletsEnemyAll.push_back(tpBullet);
 	}
 
 	mBulletsEnemyCircled.clear();
@@ -105,6 +107,7 @@ bool pgeCircleShootor::OnUserCreate()
 		tpBullet->SetPosition(ScreenWidth() * 0.5f + 80.0f, 0.0f + 80.0f);
 		tpBullet->SetIsActive(false);
 		mBulletsEnemyCircled.push_back(tpBullet);
+		mBulletsEnemyAll.push_back(tpBullet);
 	}
 
 	mActor->SetPosition(ScreenWidth() * 0.5f, ScreenHeight() * 0.5f + 80.0f);
