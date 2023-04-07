@@ -16,6 +16,10 @@ void CTitleScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
 	else if (tGame->GetKey(olc::Key::SPACE).bReleased)
 	{
 		tGame->SetScene(new CPlayGameScene());
+		tGame->SceneExecute();
+
+		delete this;
+		return;
 	}
 
 	//시간 경과에 따른 글자 출력 여부

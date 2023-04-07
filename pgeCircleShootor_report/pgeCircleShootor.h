@@ -48,9 +48,17 @@ public:
 	{
 		mScene = tValue;
 	}
+	inline void SceneExecute()
+	{
+		mScene->Execute();
+	}
 	inline void CoinInsert()
 	{
 		mCoin++;
+	}
+	inline void CoinDecrease()
+	{
+		mCoin--;
 	}
 	inline const unsigned int GetCoinNum()
 	{

@@ -1,10 +1,9 @@
-﻿  CActor.cpp
-  CBullet.cpp
-  CEnemy.cpp
+﻿  CGameOverScene.cpp
   CPlayGameScene.cpp
   CTitleScene.cpp
-  CScene.cpp
   CUnit.cpp
+C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\pgeCircleShootor.h(53,1): error C2027: 정의되지 않은 형식 'CStatus'을(를) 사용했습니다.
+C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\pgeCircleShootor.h(10,7): message : 'CStatus' 선언을 참조하십시오.
 C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\CUnit.cpp(30,91): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\CUnit.cpp(30,87): warning C4244: '인수': 'T'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
           with
@@ -17,8 +16,8 @@ C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\CUnit.cpp(30,68): warning C4
               T=float
           ]
   pgeCircleShootor.cpp
-C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\pgeCircleShootor.cpp(227,42): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\pgeCircleShootor.cpp(245,51): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\pgeCircleShootor.h(53,1): error C2027: 정의되지 않은 형식 'CStatus'을(를) 사용했습니다.
+C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\pgeCircleShootor.h(10,7): message : 'CStatus' 선언을 참조하십시오.
+C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\pgeCircleShootor.cpp(230,42): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\pgeCircleShootor.cpp(248,51): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다...
-  LINK : C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\x64\Debug\pgeCircleShootor.exe을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
-  pgeCircleShootor.vcxproj -> C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\x64\Debug\pgeCircleShootor.exe

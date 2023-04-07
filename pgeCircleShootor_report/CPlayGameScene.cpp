@@ -1,15 +1,19 @@
 #include "CPlayGameScene.h"
 #include "CTitleScene.h"
+#include "CGameOverScene.h"
 #include "CEnemy.h"
 
 #include "pgeCircleShootor.h"
 
 void CPlayGameScene::Execute()
 {
-
+	mPlayerMortalTime = 0.0f;
+	mIsPlayerMortal = true;
+	mIsGameOver = false;
 }
 void CPlayGameScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
 {
+	//플레이어 탄환 충돌
 	for (auto tBullet : tGame->mBullets)
 	{
 		if (tBullet->GetIsActive())
@@ -26,7 +30,7 @@ void CPlayGameScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
 
 					if (tAdd >= tDistance)
 					{
-						cout << "collision" << endl;
+						cout << "Enemy killed in action" << endl;
 						tEnemy->mTimeTick = 0.0f;
 						tEnemy->SetIsActive(false);
 						tBullet->SetIsActive(false);
@@ -38,34 +42,80 @@ void CPlayGameScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
 		}
 	}
 
+	//적 탄환 충돌
+	if (mIsPlayerMortal)
+	{
+		for (auto tBullet : tGame->mBulletsEnemyAll)
+		{
+			if (tBullet->GetIsActive())
+			{
+				float tAdd = 0.0f;
+				float tDistance = 0.0f;
+
+				tAdd = (tBullet->GetRadius() + tGame->mActor->GetRadius()) * (tBullet->GetRadius() + tGame->mActor->GetRadius());
+				tDistance = (tBullet->GetPosition().x - tGame->mActor->GetPosition().x) * (tBullet->GetPosition().x - tGame->mActor->GetPosition().x) + (tBullet->GetPosition().y - tGame->mActor->GetPosition().y) * (tBullet->GetPosition().y - tGame->mActor->GetPosition().y);
+
+				if (tAdd >= tDistance)
+				{
+					cout << "Player killed in action" << endl;
+					mIsPlayerMortal = false;
+					tGame->mActor->SetPosition(tGame->ScreenWidth() * 0.5f, tGame->ScreenHeight() * 0.5f + 80.0f);
+					tBullet->SetIsActive(false);
+					if (tGame->GetCoinNum() > 0)
+					{
+						tGame->CoinDecrease();
+					}
+					else
+					{
+						mIsGameOver = true;
+						tGame->mActor->SetIsActive(false);
+					}
+
+					break;
+				}
+			}
+		}
+	}
+	//충돌 직후
+	else if (mPlayerMortalTime < 2.0f)
+	{
+		mPlayerMortalTime += fElapsedTime;
+	}
+	//충돌 후 일정 시간 경과
+	else
+	{
+		mPlayerMortalTime = 0.0f;
+		mIsPlayerMortal = true;
+	}
+
 	olc::vf2d tVelocity(0.0f, 0.0f);
 	tGame->mActor->SetVelocity(tVelocity * 0.0f);
 
 	float tXDir = 0.0f;
 	float tYDir = 0.0f;
 
-	if (tGame->GetKey(olc::Key::LEFT).bHeld && tGame->GetKey(olc::Key::A).bHeld)
+	if (tGame->GetKey(olc::Key::LEFT).bHeld || tGame->GetKey(olc::Key::A).bHeld)
 	{
 		tXDir = -1.0f;
 	}
 
-	if (tGame->GetKey(olc::Key::RIGHT).bHeld && tGame->GetKey(olc::Key::D).bHeld)
+	if (tGame->GetKey(olc::Key::RIGHT).bHeld || tGame->GetKey(olc::Key::D).bHeld)
 	{
 		tXDir = 1.0f;
 	}
 
-	if (tGame->GetKey(olc::Key::UP).bHeld && tGame->GetKey(olc::Key::W).bHeld)
+	if (tGame->GetKey(olc::Key::UP).bHeld || tGame->GetKey(olc::Key::W).bHeld)
 	{
 		tYDir = -1.0f;
 	}
 
-	if (tGame->GetKey(olc::Key::DOWN).bHeld && tGame->GetKey(olc::Key::S).bHeld)
+	if (tGame->GetKey(olc::Key::DOWN).bHeld || tGame->GetKey(olc::Key::S).bHeld)
 	{
 		tYDir = 1.0f;
 	}
 
 
-	if (tGame->GetKey(olc::Key::SPACE).bReleased && tGame->GetKey(olc::Key::SPACE).bPressed)
+	if (tGame->GetKey(olc::Key::SPACE).bReleased || tGame->GetKey(olc::Key::SPACE).bPressed)
 	{
 		tGame->mActor->DoFire(tGame->mBullets);
 	}
@@ -189,9 +239,13 @@ void CPlayGameScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
 		(*t)->Update(fElapsedTime);
 	}
 
+	//render
 	tGame->Clear(olc::VERY_DARK_BLUE);
 
-	tGame->mActor->Render(tGame);
+	if ((int)(mPlayerMortalTime * 10.0f) % 2 == 0)
+	{
+		tGame->mActor->Render(tGame);
+	}
 	tGame->mEnemies[0]->Render(tGame);
 	tGame->mEnemies[1]->Render(tGame);
 	tGame->mEnemies[2]->Render(tGame);
@@ -214,5 +268,23 @@ void CPlayGameScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
 	for (auto t = tGame->mBulletsEnemyCircled.begin(); t != tGame->mBulletsEnemyCircled.end(); ++t)
 	{
 		(*t)->Render(tGame);
+	}
+
+	//남은 동전 수 출력
+	char tTemp[32] = { 0 };
+	sprintf_s(tTemp, "Coin: %d", tGame->GetCoinNum());
+	tGame->DrawString(0, 0, tTemp);
+
+	//게임 종료 텍스트 출력
+	if (mIsGameOver)
+	{
+		tGame->DrawString(50, 100, "Game Over", olc::WHITE, 5U);
+		if (mPlayerMortalTime > 2.0f)
+		{
+			tGame->SetScene(new CGameOverScene());
+			tGame->SceneExecute();
+
+			delete this;
+		}
 	}
 }

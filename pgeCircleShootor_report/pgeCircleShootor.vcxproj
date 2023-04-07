@@ -130,6 +130,7 @@
     <ClCompile Include="CActor.cpp" />
     <ClCompile Include="CBullet.cpp" />
     <ClCompile Include="CEnemy.cpp" />
+    <ClCompile Include="CGameOverScene.cpp" />
     <ClCompile Include="CPlayGameScene.cpp" />
     <ClCompile Include="CTitleScene.cpp" />
     <ClCompile Include="CStatus.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="CActor.h" />
     <ClInclude Include="CBullet.h" />
     <ClInclude Include="CEnemy.h" />
+    <ClInclude Include="CGameOverScene.h" />
     <ClInclude Include="CPlayGameScene.h" />
     <ClInclude Include="CTitleScene.h" />
     <ClInclude Include="config.h" />
