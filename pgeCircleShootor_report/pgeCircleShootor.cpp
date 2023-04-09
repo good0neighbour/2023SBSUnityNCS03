@@ -1,32 +1,11 @@
-﻿#define OLC_PGE_APPLICATION
-
-#include "config.h"
-
-/*
-	PixelGameEngine
-		게임프로그램에 필요한 기능들을 모아둔 클래스
-
-	Example
-		게임플레이에 관련한 로직을 작성하는 용도의 클래스
-
-	위와 같이 분리하여 작성할 수 있도록 설계된 것이다.
-
-
-*/
-
+﻿#include "config.h"
 #include "pgeCircleShootor.h"
 
 #include "CActor.h"
 #include "CEnemy.h"
 #include "CTitleScene.h"
 
-int main()
-{
-	pgeCircleShootor tShootor;
-	if (tShootor.Construct(320, 240, 2, 2))
-		tShootor.Start();
-	return 0;
-}
+pgeCircleShootor* pgeCircleShootor::mpInstance = nullptr;
 
 bool pgeCircleShootor::OnUserCreate()
 {
@@ -180,11 +159,17 @@ bool pgeCircleShootor::OnUserDestroy()
 		mActor = nullptr;
 	}
 
+	if (nullptr != mScene)
+	{
+		delete mScene;
+		mScene = nullptr;
+	}
+
 	return true;
 }
 bool pgeCircleShootor::OnUserUpdate(float fElapsedTime)
 {
-	mScene->Update(this, fElapsedTime);
+	mScene->Update(fElapsedTime);
 	
 	return true;
 }
@@ -276,5 +261,23 @@ void pgeCircleShootor::DrawCircleEquation(int tXCenter, int tYCenter, int tRadiu
 
 		tX++;
 		tY = (int)(std::sqrtf((float)tRadius * tRadius - tX * tX) + 0.5f);
+	}
+}
+
+pgeCircleShootor* pgeCircleShootor::GetInstance()
+{
+	if (mpInstance == nullptr)
+	{
+		mpInstance = new pgeCircleShootor();
+	}
+	return mpInstance;
+}
+
+void pgeCircleShootor::ReleaseInstance()
+{
+	if (mpInstance != nullptr)
+	{
+		delete mpInstance;
+		mpInstance = nullptr;
 	}
 }

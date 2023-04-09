@@ -11,6 +11,6 @@ private:
 
 public:
 	virtual void Execute() override;
-	virtual void Update(pgeCircleShootor* tGame, float fElapsedTime) override;
+	virtual void Update(float fElapsedTime) override;
 };
 

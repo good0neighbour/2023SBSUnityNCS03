@@ -6,6 +6,6 @@ class CStatus
 {
 public:
 	virtual void Execute() {};
-	virtual void Update(pgeCircleShootor* game, float fElapsedTime) {};
+	virtual void Update(float fElapsedTime) {};
 };
 

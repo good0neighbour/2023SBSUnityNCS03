@@ -6,17 +6,17 @@ void CTitleScene::Execute()
 {
 
 }
-void CTitleScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
+void CTitleScene::Update(float fElapsedTime)
 {
 	//사용자의 키 입력
-	if (tGame->GetKey(olc::Key::C).bPressed)
+	if (GAME->GetKey(olc::Key::C).bPressed)
 	{
-		tGame->CoinInsert();
+		GAME->CoinInsert();
 	}
-	else if (tGame->GetKey(olc::Key::SPACE).bReleased)
+	else if (GAME->GetKey(olc::Key::SPACE).bReleased)
 	{
-		tGame->SetScene(new CPlayGameScene());
-		tGame->SceneExecute();
+		GAME->SetScene(new CPlayGameScene());
+		GAME->SceneExecute();
 
 		delete this;
 		return;
@@ -34,13 +34,13 @@ void CTitleScene::Update(pgeCircleShootor* tGame, float fElapsedTime)
 	}
 
 	//render
-	tGame->Clear(olc::DARK_YELLOW);
+	GAME->Clear(olc::DARK_YELLOW);
 	if (mDisplay)
 	{
-		tGame->DrawString(70, 100, "Press C to insert coin.\nPress SpaceBar to Start.");
+		GAME->DrawString(70, 100, "Press C to insert coin.\nPress SpaceBar to Start.");
 	}
 
 	char tTemp[32] = { 0 };
-	sprintf_s(tTemp, "Coin: %d", tGame->GetCoinNum());
-	tGame->DrawString(130, 200, tTemp);
+	sprintf_s(tTemp, "Coin: %d", GAME->GetCoinNum());
+	GAME->DrawString(130, 200, tTemp);
 }

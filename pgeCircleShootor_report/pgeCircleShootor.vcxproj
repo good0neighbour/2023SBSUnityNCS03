@@ -135,6 +135,7 @@
     <ClCompile Include="CTitleScene.cpp" />
     <ClCompile Include="CStatus.cpp" />
     <ClCompile Include="CUnit.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="pgeCircleShootor.cpp" />
   </ItemGroup>
   <ItemGroup>
