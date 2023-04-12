@@ -1,2 +1,0 @@
-C:\Projects\2023SBSUnityNCS03\pgeCircleShootor_report\x64\Debug\pgeCircleShootor.exe
-C:\GitHub\2023SBSUnityNCS03\pgeCircleShootor_report\x64\Debug\pgeCircleShootor.exe
