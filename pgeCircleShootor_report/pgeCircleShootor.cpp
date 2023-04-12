@@ -14,12 +14,10 @@ bool pgeCircleShootor::OnUserCreate()
 	mActor = new CActor();
 	mActor->Create();
 	mActor->SetPosition(ScreenWidth() * 0.5f, ScreenHeight() * 0.5f + 80.0f);
-	mActor->SetIsActive(true);
 
 	mEnemies[0] = new CEnemy();
 	mEnemies[0]->Create();
 	mEnemies[0]->SetPosition(ScreenWidth() * 0.5f, 0.0f + 80.0f);
-	mEnemies[0]->SetIsActive(true);
 
 	mEnemies[0]->SetVelocity(olc::vf2d(-1.0f, 0.0f) * 20.0f);
 
@@ -28,7 +26,6 @@ bool pgeCircleShootor::OnUserCreate()
 	mEnemies[1] = new CEnemy();
 	mEnemies[1]->Create();
 	mEnemies[1]->SetPosition(ScreenWidth() * 0.5f - 50.0f, 0.0f + 80.0f);
-	mEnemies[1]->SetIsActive(true);
 
 	mEnemies[1]->SetVelocity(olc::vf2d(0.0f, 0.0f));
 
@@ -36,7 +33,6 @@ bool pgeCircleShootor::OnUserCreate()
 	mEnemies[2] = new CEnemy();
 	mEnemies[2]->Create();
 	mEnemies[2]->SetPosition(ScreenWidth() * 0.5f + 80.0f, 0.0f + 80.0f);
-	mEnemies[2]->SetIsActive(true);
 
 	mEnemies[2]->SetVelocity(olc::vf2d(1.0f, 0.0f) * 20.0f);
 
@@ -49,7 +45,6 @@ bool pgeCircleShootor::OnUserCreate()
 		tpBullet = new CBullet;
 		tpBullet->Create(5.0f);
 		tpBullet->SetPosition(ScreenWidth() * 0.5f, ScreenHeight() * 0.5f + 80.0f);
-		tpBullet->SetIsActive(false);
 		mBullets.push_back(tpBullet);
 	}
 
@@ -60,7 +55,6 @@ bool pgeCircleShootor::OnUserCreate()
 		tpBullet = new CBullet;
 		tpBullet->Create(5.0f);
 		tpBullet->SetPosition(ScreenWidth() * 0.5f, 0.0f + 80.0f);
-		tpBullet->SetIsActive(false);
 		mBulletsEnemy.push_back(tpBullet);
 		mBulletsEnemyAll.push_back(tpBullet);
 	}
@@ -72,7 +66,6 @@ bool pgeCircleShootor::OnUserCreate()
 		tpBullet = new CBullet;
 		tpBullet->Create(5.0f);
 		tpBullet->SetPosition(ScreenWidth() * 0.5f, 0.0f + 80.0f);
-		tpBullet->SetIsActive(false);
 		mBulletsEnemyAimed.push_back(tpBullet);
 		mBulletsEnemyAll.push_back(tpBullet);
 	}
@@ -84,7 +77,6 @@ bool pgeCircleShootor::OnUserCreate()
 		tpBullet = new CBullet;
 		tpBullet->Create(5.0f);
 		tpBullet->SetPosition(ScreenWidth() * 0.5f + 80.0f, 0.0f + 80.0f);
-		tpBullet->SetIsActive(false);
 		mBulletsEnemyCircled.push_back(tpBullet);
 		mBulletsEnemyAll.push_back(tpBullet);
 	}

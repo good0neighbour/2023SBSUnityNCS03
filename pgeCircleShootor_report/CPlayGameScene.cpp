@@ -11,6 +11,19 @@ void CPlayGameScene::Execute()
 	mIsPlayerMortal = true;
 	mIsGameOver = false;
 	GAME->ResetScore();
+	GAME->mActor->SetIsActive(true);
+	for (auto tEnemy : GAME->mEnemies)
+	{
+		tEnemy->SetIsActive(true);
+	}
+	for (auto tBullet : GAME->mBulletsEnemyAll)
+	{
+		tBullet->SetIsActive(false);
+	}
+	for (auto tBullet : GAME->mBullets)
+	{
+		tBullet->SetIsActive(false);
+	}
 }
 void CPlayGameScene::Update(float fElapsedTime)
 {
@@ -240,6 +253,7 @@ void CPlayGameScene::Update(float fElapsedTime)
 	{
 		(*t)->Update(fElapsedTime);
 	}
+
 
 	//render
 	GAME->Clear(olc::VERY_DARK_BLUE);

@@ -1,6 +1,7 @@
 #pragma once
 
 #define GAME pgeCircleShootor::GetInstance()
+#define MAX_RECORD 5
 
 #include "olcPixelGameEngine.h"
 #include "CStatus.h"
@@ -21,15 +22,15 @@ private:
 	unsigned int mCurScore = 0;
 	unsigned int mScores[5] =
 	{
-		255, 120, 95, 55, 20
+		255, 100, 55, 20, 10
 	};
 	char mNames[5][3] =
 	{
-		'B', 'A', 'D',
-		'A', 'A', 'S',
-		'M', 'D', 'R',
-		'F', 'K', 'R',
-		'A', 'B', 'C'
+		'A', 'B', 'C',
+		'D', 'E', 'F',
+		'G', 'H', 'I',
+		'J', 'K', 'L',
+		'M', 'N', 'O'
 	};
 
 private:
@@ -79,6 +80,10 @@ public:
 	{
 		mCoin--;
 	}
+	inline void CoinReset()
+	{
+		mCoin = 0;
+	}
 	inline const unsigned int GetCoinNum()
 	{
 		return mCoin;
@@ -95,9 +100,23 @@ public:
 	{
 		return mCurScore;
 	}
+	inline void SetScoreRecord(int tIndex, int tValue)
+	{
+		mScores[tIndex] = tValue;
+	}
 	inline const unsigned int GetScoreRecord(int tIndex)
 	{
 		return mScores[tIndex];
+	}
+	inline void SetNameCharacter(int tIndex, int tOrder, char tValue)
+	{
+		mNames[tIndex][tOrder] = tValue;
+	}
+	inline void SetNameCharacter(int tIndex, char tFirst, char tMiddle, char tLast)
+	{
+		mNames[tIndex][0] = tFirst;
+		mNames[tIndex][1] = tMiddle;
+		mNames[tIndex][2] = tLast;
 	}
 	inline const char GetNameCharacter(int tIndex, int tOrder)
 	{

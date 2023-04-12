@@ -1996,7 +1996,7 @@ namespace olc
 		if (platform->ApplicationStartUp() != olc::OK) return olc::FAIL;
 
 		// Construct the window
-		if (platform->CreateWindowPane({ 100,30 }, vWindowSize, bFullScreen) != olc::OK) return olc::FAIL;
+		if (platform->CreateWindowPane({ 200,100 }, vWindowSize, bFullScreen) != olc::OK) return olc::FAIL;
 		olc_UpdateWindowSize(vWindowSize.x, vWindowSize.y);
 
 		// Start the thread

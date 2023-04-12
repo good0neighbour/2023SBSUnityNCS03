@@ -4,7 +4,7 @@
 
 void CTitleScene::Execute()
 {
-
+	GAME->CoinReset();
 }
 void CTitleScene::Update(float fElapsedTime)
 {
@@ -32,6 +32,7 @@ void CTitleScene::Update(float fElapsedTime)
 	{
 		mTime += fElapsedTime;
 	}
+
 
 	//render
 	GAME->Clear(olc::DARK_YELLOW);
