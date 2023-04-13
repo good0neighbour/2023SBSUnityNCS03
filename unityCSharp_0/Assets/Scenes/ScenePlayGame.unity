@@ -213,7 +213,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 432195711}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.03, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -326,6 +326,9 @@ GameObject:
   - component: {fileID: 858630248}
   - component: {fileID: 858630249}
   - component: {fileID: 858630250}
+  - component: {fileID: 858630251}
+  - component: {fileID: 858630252}
+  - component: {fileID: 858630253}
   m_Layer: 0
   m_Name: instExam
   m_TagString: Untagged
@@ -379,9 +382,45 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 858630246}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 74b0a8b935c22ff43b78b8068f81b039, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &858630251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858630246}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2a8ce2b53052c043868b7263e78e08a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &858630252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858630246}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7046d38592f8fb645bbb334d13dfed3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &858630253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858630246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9796c42a6874eeb4486798ee7a9f717e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &963194225
