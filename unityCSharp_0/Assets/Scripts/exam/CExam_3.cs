@@ -11,7 +11,18 @@
 
 
 
-    확정배정
+    확정배정 define assignment policy
+
+        반드시 초기화하는 정책
+
+        예외의 경우
+            i) 지역변수의 경우
+                지역변수의 값을 get 읽으려면 그 전에 반드시 임의의 값이 set배정되어야만 한다.
+
+            ii) 메소드(함수)를 호출할 때는 반드시 인수를 지정해야 한다
+
+        그외에 모든 변수(멤버변수, 배열의 원소)는 런타임이 자동으로 모두 초기화한다
+            만약 참조타입의 변수라면 null로 그외의 경우는 0으로 초기화한다
 
 
 */
@@ -24,18 +35,35 @@ using UnityEngine;
 //StringBuilder클래스를 사용하기 위해
 using System.Text;
 
+class CTest
+{
+    public int mValue = 0;  //값타입, 멤버변수
+}
+
 public class CExam_3 : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
         //step_0
-        int tResult = 0;    //기본타입들은 값 타입으로 취급한다
+        int tResult = 0;    //기본타입들은 '값 타입'으로 취급한다
         tResult = DoFactorial(3);
         Debug.Log($"DoFactorial {tResult.ToString()}");
 
 
+        int tA = 3; //값타입, 지역변수-->스택
+        int tB = new int(); //값타입, 지역변수 --> 스택
+        tB = 2;
+
+        tResult = tA + tB;
+        Debug.Log($"tResult: {tResult}");
+
+
+
+
         //step_1
+        //클래스는 '참조 타입'으로 취급한다
+        //참조 타입의 객체는 힙에 있다.
         StringBuilder tRef_0 = new StringBuilder("object0");
         Debug.Log(tRef_0);
 
@@ -43,6 +71,30 @@ public class CExam_3 : MonoBehaviour
         StringBuilder tRef_2 = tRef_1;
         Debug.Log(tRef_2);
 
+
+        //step_2
+        //CTest는 참조타입, 이 타입의 객체는 힙에 있다.
+        CTest tTest = new CTest();
+        tTest.mValue = 777; //그러므로, mValue는 힙에 있다.
+        Debug.Log($"tTest.mValue: {tTest.mValue}");
+
+
+
+
+        //확정배정
+        int[] tInts = new int[3];
+        //초기화를 명시적으로 하지 않았다.
+
+        for(int ti = 0; ti < tInts.Length; ti++)
+        {
+            Debug.Log($"element: {tInts[ti]}");
+        }
+
+
+        int tX;
+        tX = 23;    //지역변수는 (set)설정해줘야 사용(get)가능하다
+
+        Debug.Log(tX.ToString());
 
     }
 
