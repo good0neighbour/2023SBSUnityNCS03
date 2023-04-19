@@ -23,6 +23,12 @@ struct SMatrix3x3
     float m[3][3];
 };
 
+//3by1 열벡터를 가정한다
+struct SVec
+{
+    float v[3][1];
+};
+
 //행렬 출력
 void DisplayMatrix(SMatrix3x3& tMat)
 {
@@ -35,8 +41,23 @@ void DisplayMatrix(SMatrix3x3& tMat)
         cout << endl;
     }
 }
+//열벡터 출력
+void DisplayVec(SVec& tV)
+{
+    for (int tRow = 0; tRow < 3; ++tRow)
+    {
+        cout << tV.v[tRow][0] << endl;
+    }
+}
+
+//영벡터
+void ZeroV(SVec& tV)
+{
+    tV.v[0][0] = tV.v[1][0] = tV.v[2][0] = 0.0f;
+}
 
 
+//영행렬
 void Zero(SMatrix3x3& tMat)
 {
     for (int tRow = 0; tRow < 3; ++tRow)
@@ -120,10 +141,16 @@ float Invert(SMatrix3x3& tResult, SMatrix3x3& tM)
     return tDet;
 }
 
-
+void MultiplyMatrixVec(SVec& tResult, SMatrix3x3& tM, SVec& tV)
+{
+    tResult.v[0][0] = tM.m[0][0] * tV.v[0][0] + tM.m[0][1] * tV.v[1][0] + tM.m[0][2] * tV.v[2][0];
+    tResult.v[1][0] = tM.m[1][0] * tV.v[0][0] + tM.m[1][1] * tV.v[1][0] + tM.m[1][2] * tV.v[2][0];
+    tResult.v[2][0] = tM.m[2][0] * tV.v[0][0] + tM.m[2][1] * tV.v[1][0] + tM.m[2][2] * tV.v[2][0];
+}
 
 int main()
 {
+    //step_0
     SMatrix3x3 tMatA;
     //영행렬로 설정
     Zero(tMatA);
@@ -139,8 +166,14 @@ int main()
     Zero(tMatResult);
 
     /*
-        |1 0||1 1|  =   |1 1|
-        |1 2||0 0|      |1 1|
+        행렬의 곱셈은 교환법칙이 성립하지 않는다.
+        
+        |1 0||1 1| = |1 1|
+        |1 2||0 0|   |1 1|
+        
+
+        |1 1||1 0| = |2 2|
+        |0 0||1 2|   |0 0|
     */
     //X행렬
     SMatrix3x3 tX =
@@ -161,7 +194,73 @@ int main()
     MultiplyMatrix(tMatResult, tX, tY);
     DisplayMatrix(tMatResult);
 
+    cout << endl;
+    MultiplyMatrix(tMatResult, tY, tX);
+    DisplayMatrix(tMatResult);
 
+    //step_1
+
+    //행렬식 구하기
+    SMatrix3x3 tMatB =
+    {
+        1.0f, 2.0f, 3.0f,
+        4.0f, 5.0f, 6.0f,
+        7.0f, 8.0f, 9.0f
+    };
+
+    float tDet = Determinent(tMatB);
+    cout << endl;
+    cout << "tMatB의 행렬식: " << tDet << endl;
+
+    //step_2
+    //역행렬
+    SMatrix3x3 tMatCInv;    //역행렬
+    Zero(tMatCInv);
+    //원래행렬
+    SMatrix3x3 tMatC =
+    {
+        1.0f, -1.0f, 1.0f,
+        0.0f, 2.0f, 1.0f,
+        1.0f, 3.0f, 1.0f
+    };
+
+    float tDet_0 = Invert(tMatCInv, tMatC);
+    cout << endl;
+    cout << "tMatC의 행렬식: " << tDet_0 << endl;
+    cout << endl;
+    cout << "tMatC의 역행렬: " << endl;
+    DisplayMatrix(tMatCInv);
+
+    //step_3
+    //행렬과 벡터(행렬)의 곱셈
+
+    //열벡터는 정방행렬의 뒤에 곱한다
+    //행벡터는 정방행렬의 앞에 곱한다
+    //왜냐하면, 행렬의 곱셈의 규칙이 그렇기 때문이다.
+    //( 즉, 앞에 행렬의 열과 뒤의 행렬의 행 수가 같아야 하기 때문이다 )
+
+    //여기서는 열벡터를 가정한다
+    SVec tResultV;  //결과 벡터
+    ZeroV(tResultV);
+
+    SMatrix3x3 tN =
+    {
+        1.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 3.0f,
+        0.0f, 0.0f, 1.0f
+    };
+    //원래 벡터
+    SVec tVec =
+    {
+        1.0f,
+        2.0f,
+        1.0f
+    };
+
+    MultiplyMatrixVec(tResultV, tN, tVec);
+
+    cout << endl;
+    DisplayVec(tResultV);
 
     return 0;
 }
