@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class CRyuMgrMono : MonoBehaviour
 {
+    //데이터를 전역적으로 관리한다고 가정
+    public int mTestExp = 1024;
+
     private static CRyuMgrMono mpInst = null;
     //선언 시 할당할 것이 아니다.
     //생성자에서 할당할 것도 아니다.
@@ -23,6 +26,26 @@ public class CRyuMgrMono : MonoBehaviour
 
             return mpInst;
         }
+    }
+
+    //게임오브젝트가 생성되면 가장 먼저 호출되는 이벤트 함수
+    //( MonoVehaviour의 생성자 역할 정도를 한다라고 보면 된다 )
+    private void Awake()
+    {
+        if(null == mpInst)
+        {
+            mpInst = this;
+        }
+        else if(null != mpInst)
+        {
+            //Destroy
+            //유니티에서 준비해둔, 게임오브젝트를 소멸 시키는 함수
+            Destroy(this.gameObject);
+        }
+
+        //DontDestroyOnLoad
+        //유니티에서 준비해둔, 게임오브젝트를 유지시키는 함수( 이를테면 장면 전환시에도 삭제하지 않고 유지 )
+        DontDestroyOnLoad(this.gameObject);
     }
 
 
