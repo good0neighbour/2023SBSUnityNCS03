@@ -347,6 +347,7 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Scripts/CExam_0.cs"
 "Assets/Scripts/CExam_1.cs"
+"Assets/Scripts/CExam_2.cs"
 -langversion:9.0
 
 /deterministic
