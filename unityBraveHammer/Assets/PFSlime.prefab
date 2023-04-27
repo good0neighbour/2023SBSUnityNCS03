@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 666478385008614808}
   - component: {fileID: 9196695067906125646}
+  - component: {fileID: 6352499905084711093}
   m_Layer: 0
   m_Name: PFSlime
-  m_TagString: Untagged
+  m_TagString: tagEnemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45,6 +46,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4aa8582bf558548a7351d0e19fa16e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &6352499905084711093
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 666478385008614811}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.7051758, y: 0.60528874, z: 0.6990971}
+  m_Center: {x: 0.050150484, y: 0.30069607, z: 0.10182067}
 --- !u!1001 &666478384046269687
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -107,3 +121,29 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400002, guid: ff26ffe51aaad490e9a4d79ef4cf5722, type: 3}
   m_PrefabInstance: {fileID: 666478384046269687}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &666478384046170709 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100002, guid: ff26ffe51aaad490e9a4d79ef4cf5722, type: 3}
+  m_PrefabInstance: {fileID: 666478384046269687}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &3941086249436057539
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 666478384046170709}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1dd5cb224ee47144f9ef1b69825e5cf6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
