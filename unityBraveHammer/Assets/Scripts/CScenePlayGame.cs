@@ -58,7 +58,10 @@ public class CScenePlayGame : MonoBehaviour
                     mpUIPlayGame.UpdateScore(mScore);
 
                     //슬라임의 데미지 애니메이션 수행
-                    mpGrid.mpCurrentSlime.DoAniDamage();
+                    //mpGrid.mpCurrentSlime.DoAniDamage();
+
+                    //tHit.collider.gameObject.GetComponent<CSlime>().DoAniDamage();
+                    tHit.collider.gameObject.GetComponent<CEnemy>().DoAniDamage();
                 }
             }
 

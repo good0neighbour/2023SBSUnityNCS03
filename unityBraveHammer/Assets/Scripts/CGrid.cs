@@ -8,10 +8,14 @@ public class CGrid : MonoBehaviour
 
 
 
-    public CSlime PFSlime = null;
-
+    //public CSlime PFSlime = null;
     //private CSlime mpCurrentSlime = null;
-    public CSlime mpCurrentSlime = null;
+    
+    //적의 종류는 2종류
+    public CEnemy[] PFEnemy = new CEnemy[2];
+
+    private CEnemy mpCurSlime = null;
+
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +23,7 @@ public class CGrid : MonoBehaviour
         //슬라임 한 마리 동적 생성
         //mpCurrentSlime = Instantiate<CSlime>(PFSlime, Vector3.zero, Quaternion.identity);
 
-        InvokeRepeating("OnTimerEnemyAppear", 2.0f, 20.0f);
+        InvokeRepeating("OnTimerEnemyAppear", 2.0f, 5.0f);
     }
 
     // Update is called once per frame
@@ -44,14 +48,19 @@ public class CGrid : MonoBehaviour
 
 
         //한 순간에 하나의 슬라임만 존재하도록 하기 위해
-        if (null != mpCurrentSlime)
+        if (null != mpCurSlime)
         {
             //Destroy '유니티의 게임오브젝트'를 삭제하는 함수다.
-            Destroy(mpCurrentSlime.gameObject);
+            Destroy(mpCurSlime.gameObject);
         }
 
         //슬라임 한 마리 동적 생성
         //Instantiate '유니티의 게임오브젝트'를 동적으로 생성하는 함수다.( new로 생성하지 않는다 )
-        mpCurrentSlime = Instantiate<CSlime>(PFSlime, tPosSpawn, Quaternion.identity);
+        //mpCurrentSlime = Instantiate<CSlime>(PFSlime, tPosSpawn, Quaternion.identity);
+
+        //적 종류를 랜덤하게 설정
+        int tEnemyType = Random.Range(0, PFEnemy.Length);
+        //랜덤하게 결정된 종류대로 적 생성
+        mpCurSlime = Instantiate<CEnemy>(PFEnemy[tEnemyType], tPosSpawn, Quaternion.identity);
     }
 }
