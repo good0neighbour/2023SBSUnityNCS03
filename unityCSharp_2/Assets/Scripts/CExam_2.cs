@@ -41,6 +41,15 @@ public class CExam_2 : MonoBehaviour
         tStack.Push(1);
         tStack.Push(777);
         tStack.Push(9);
+        //ToArray도 잠깐 써보자
+        int[] tInts = tStack.ToArray();
+        Debug.Log("=====ToArray=====");
+        foreach (var t in tInts)
+        {
+            Debug.Log(t.ToString());
+        }
+        Debug.Log("=====//ToArray=====");
+
 
         while (tStack.Count > 0)
         {
@@ -50,6 +59,24 @@ public class CExam_2 : MonoBehaviour
 
             tStack.Pop();
         }
+
+        Debug.Log("=====Queue");
+
+        //Queue
+        Queue<int> tQueue = new Queue<int>();
+        tQueue.Enqueue(9);
+        tQueue.Enqueue(1024);
+        tQueue.Enqueue(768);
+
+        while (tQueue.Count > 0)
+        {
+            int t = tQueue.Peek();
+            Debug.Log(t.ToString());
+
+            tQueue.Dequeue();
+        }
+
+
 
     }
 
