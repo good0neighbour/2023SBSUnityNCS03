@@ -2,7 +2,7 @@
     자료구조DataStructure: 자료를 담는 구조물.
         구조에 따라 모두 특성이 다르다.
 
-    배열: 동일한 타입의 원소들의 연속적인 메모리 블럭
+    배열: 동일한 타입의 원소들의 '연속'적인 메모리 블럭
     링크드리스트: '노드Node'가 '데이터'와 '링크link'를 가지고, 각각의 링크에 의해 '선형으로(한줄로)' '연결'되어 있는 자료
 
 
@@ -59,6 +59,7 @@
         키는 중복을 허용하지 않는다
 
         <-- 원소 추가 시 자동으로 정렬된 상태가 된다. 이것은 이진탐색트리의 특징이다.
+            ( 그러므로 중위순회하면 정렬된 형태로 나온다 )
 
 */
 
@@ -94,6 +95,38 @@ public class CExam_3 : MonoBehaviour
         //<-- 키를 사용한 검색 O(1)
         Debug.Log(tDic.ContainsValue(1).ToString());
         //<-- 값를 사용한 검색 O(n)
+
+
+
+
+
+        Debug.Log("=====SortedDictionary");
+
+
+        SortedDictionary<string, int> tSortedD = new SortedDictionary<string, int>();
+
+        tSortedD.Add("a", 11);
+        tSortedD.Add("c", 3333);
+        tSortedD.Add("b", 222);
+
+        //중위순회하여 열거하기 때문에 정렬된 형태로 나온다
+        foreach (var t in tSortedD)
+        {
+            Debug.Log($"key: {t.Key}, value: {t.Value.ToString()}");
+        }
+        //검색 시간복잡도는 O(log n)
+        Debug.Log(tSortedD["c"].ToString());
+        //검색 시간복잡도는 O(log n)
+        Debug.Log(tSortedD.ContainsKey("d").ToString());
+        //시간복잡도는 O(log n), 삭제 자체는 O(1)
+        tSortedD.Remove("a");
+
+        Debug.Log("remove=====");
+        foreach (var t in tSortedD)
+        {
+            Debug.Log($"key: {t.Key}, value: {t.Value.ToString()}");
+        }
+
     }
 
     // Update is called once per frame
