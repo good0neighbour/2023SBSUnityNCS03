@@ -14,6 +14,10 @@ public class CListItems : MonoBehaviour
     private List<CSlotItem> mListSlots = new List<CSlotItem>();
 
 
+    //자신을 포함한 게임오브젝트
+    CDxItemInventory mpDxItemInventory = null;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +28,11 @@ public class CListItems : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void SetDxItemInventory(CDxItemInventory t)
+    {
+        mpDxItemInventory = t;
     }
 
     public void BuildRyu()

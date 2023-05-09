@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class CEnemy : MonoBehaviour
 {
+    public GameObject PFExplosion = null;
+    public CItem PFItem = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +52,12 @@ public class CEnemy : MonoBehaviour
             Destroy(gameObject);
             //탄환제거( 메모리 해지 )
             Destroy(collision.gameObject);
+
+            //폭발 애니메이션 효과 만들기
+            Instantiate<GameObject>(PFExplosion, this.transform.position, Quaternion.identity);
+
+            //아이템 생성
+            Instantiate<CItem>(PFItem, this.transform.position, Quaternion.identity);
         }
     }
 
