@@ -26,6 +26,16 @@ public class CSlotItem : MonoBehaviour
     private Button mBtnUse = null;
 
 
+
+
+
+    //자신이 속한 소유자 List UI
+    CListItems mList = null;
+
+    //아이템의 개수
+    int mItemCount = 0;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,11 +56,48 @@ public class CSlotItem : MonoBehaviour
         //build
         if (null != mItemData)
         {
-            mTxtName.text = mItemData.mName;
+            //개수도 표시
+            string t = $"{mItemData.mName} x {mItemCount.ToString()}";
+            //mTxtName.text = mItemData.mName;
+            mTxtName.text = t;
             mTxtDesc.text = mItemData.mDesc;
 
             //mImgItem.sprite = 
         }
 
     }
+
+    //자신이 속한 소유자를 지정한다.
+    public void SetList(CListItems tList)
+    {
+        mList = tList;
+    }
+
+    //아이템 정보 얻기
+    public CItemData GetItemData()
+    {
+        return mItemData;
+    }
+
+    //아이템 정보 설정
+    public void SetItemData(CItemData t)
+    {
+        mItemData = t;
+    }
+
+    //아이템의 개수 설정
+    public void SetItemCount(int tCount)
+    {
+        mItemCount = tCount;
+    }
+
+    //버튼 클릭 시 행할 동작 이벤트 핸들러
+    public void OnClickBtnUse()
+    {
+        //해당 아이템 정보를 넘겨 처리를 '위임'한다
+        mList.DoUseItem(mItemData);
+    }
+
+
+
 }
