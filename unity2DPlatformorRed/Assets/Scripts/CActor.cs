@@ -27,18 +27,21 @@ public class CActor : MonoBehaviour
     }
 
 
+
     // Start is called before the first frame update
     void Start()
     {
         
     }
-
+    float tH;
+    //렌더링에 관한 갱신 이벤트 함수
     // Update is called once per frame
     void Update()
     {
         /*
             게임엔진에서 일반적으로 물체의 이동을 만드는 방식은
                 대개 다음과 같다.
+
             i) 좌표를 직접 지정
             ii) 제공되는 이동 함수를 사용하는 방식
             iii) F = ma에 의한 방식
@@ -47,13 +50,36 @@ public class CActor : MonoBehaviour
         */
 
         //축입력 기반
-        float tH = Input.GetAxis("Horizontal");
+        tH = Input.GetAxis("Horizontal");
+        //상방 화살표 입력에 기반한 점프, 물리엔진의 기능 기반
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+        {
+            Vector3 tJumpForce = Vector3.up * 12f;
+            mRigidBody.AddForce(tJumpForce, ForceMode2D.Impulse);
+        }
 
+        //스페이스 바 입력에 기반한 탄환발사
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GameObject tBullet = Instantiate<GameObject>(PFBullet, this.transform.position, Quaternion.identity);
 
+            //만약 이 검색이 싫다면, 미리 CBullet을 만들고 해당 스크립트에서 연동해두자.
+            Vector3 tBulletForce = mDirFire * 20f;  //주인공 캐릭터의 방향에 따라 발사방향 결정
+            tBullet.GetComponent<Rigidbody2D>().AddForce(tBulletForce, ForceMode2D.Impulse);
+        }
+
+        //이동변환 함수를 이용한 이동
         //시간 기반 진행, x축 이동
-        Vector3 tVelocity = Vector3.right * tH * mScalarSpeed * Time.deltaTime;
+        //Vector3 tVelocity = Vector3.right * tH * mScalarSpeed * Time.deltaTime;
+        //this.transform.Translate(tVelocity, Space.Self);
 
-        this.transform.Translate(tVelocity, Space.Self);
+        //물리작용에 근거한 이동 코드
+        //<-- 시간단위 1초에 기반한 코드이므로 Time.deltaTime을 제거했다.
+        Vector3 tVelocity = Vector3.right * tH * mScalarSpeed;  //<--x축에 힘 성분 적용
+        tVelocity.y = mRigidBody.velocity.y;                //<--y축에 힘 성분 적영
+
+        //강체의 속도를 직접 지정하자.
+        this.mRigidBody.velocity = tVelocity;
 
 
         //벡터의 내적을 이용한 두 벡터의 위치관계의 대수적 판단
@@ -80,21 +106,20 @@ public class CActor : MonoBehaviour
 
 
 
-        //상방 화살표 입력에 기반한 점프, 물리엔진의 기능 기반
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
-        {
-            Vector3 tJumpForce = Vector3.up * 10f;
-            mRigidBody.AddForce(tJumpForce, ForceMode2D.Impulse);
-        }
+        
 
-        //스페이스 바 입력에 기반한 탄환발사
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            GameObject tBullet = Instantiate<GameObject>(PFBullet, this.transform.position, Quaternion.identity);
-
-            //만약 이 검색이 싫다면, 미리 CBullet을 만들고 해당 스크립트에서 연동해두자.
-            Vector3 tBulletForce = mDirFire * 20f;  //주인공 캐릭터의 방향에 따라 발사방향 결정
-            tBullet.GetComponent<Rigidbody2D>().AddForce(tBulletForce, ForceMode2D.Impulse);
-        }
     }
+
+    //물리 작용에 관한 갱신 이벤트 함수
+
+    //편법
+    //물리작용에 관한 갱신 주기와 이동변환 갱신 주기를 맞춰, 옆 벽면에 덜덜거리는 현상을 해결할 수도 있다.
+    //하지만, 편법이다.
+    private void FixedUpdate()
+    {
+        //Vector3 tVelocity = Vector3.right * tH * mScalarSpeed * Time.deltaTime;
+        //this.transform.Translate(tVelocity, Space.Self);
+    }
+
+
 }
