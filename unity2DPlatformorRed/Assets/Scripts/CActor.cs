@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class CActor : MonoBehaviour
 {
+    // 유니티 에디터 노출 변수
     [SerializeField]
     GameObject PFBullet = null;
 
+    //해당 클래스 내에서 사용하기 위해 멤버변수로 선언
+    CUIPlayGame mUI = null;
+
+
+    [SerializeField]
+    GameObject mFirePos = null; //탄환 발사 위치
 
     [SerializeField]
     float mScalarSpeed = 2.0f;
@@ -31,8 +38,12 @@ public class CActor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        //step_1
+        //시작?시 검색하므로, 매번 검색하는 경우보다 낫다.
+        //mUI = FindObjectOfType<CUIPlayGame>();
     }
+
+
     float tH;
     //렌더링에 관한 갱신 이벤트 함수
     // Update is called once per frame
@@ -61,7 +72,10 @@ public class CActor : MonoBehaviour
         //스페이스 바 입력에 기반한 탄환발사
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            GameObject tBullet = Instantiate<GameObject>(PFBullet, this.transform.position, Quaternion.identity);
+            GameObject tBullet = Instantiate<GameObject>(PFBullet,
+                //this.transform.position,
+                mFirePos.transform.position,
+                Quaternion.identity);
 
             //만약 이 검색이 싫다면, 미리 CBullet을 만들고 해당 스크립트에서 연동해두자.
             Vector3 tBulletForce = mDirFire * 20f;  //주인공 캐릭터의 방향에 따라 발사방향 결정
@@ -119,6 +133,43 @@ public class CActor : MonoBehaviour
     {
         //Vector3 tVelocity = Vector3.right * tH * mScalarSpeed * Time.deltaTime;
         //this.transform.Translate(tVelocity, Space.Self);
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("tagMovePlatform"))
+        {
+            //충돌이 시작되는 시점에
+            //이동플랫폼으로 부모로 하여 transform의 계층구조를 하위에 두겠다.
+            this.transform.SetParent(collision.gameObject.transform);
+
+
+            //UI갱신
+            //step_0
+            //FindObjectOfType 타입으로 '검색'해서 해당 게임오브젝트를 찾아준다.
+            //씬그래프(실제로는 트리자료구조)를 검색해야 되는 비용이 든다.
+            //      추정컨데 O(n)
+            //CUIPlayGame tUI = FindObjectOfType<CUIPlayGame>();
+            //if (null != tUI)
+            //{
+            //    tUI.BuildUI();
+            //}
+
+            //step_1
+            //mUI.BuildUI();
+
+            //step_2
+            //전역적인 성격을 가지는 델리게이트를 사용하여 간접호출하였다
+            //<-- 검색 비용이 들지 않는다
+            CUIPlayGame.mAction();  //간접호출
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        //충돌이 종료되는 시점에
+        //이동플랫폼으로 부모로 하여 transform의 계층구조를 제거하겠다.
+        this.transform.SetParent(null);
     }
 
 
