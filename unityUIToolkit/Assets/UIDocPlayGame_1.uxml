@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/ryu.uss?fileID=7433441132597879392&amp;guid=591c5de0bd10bc9428df298709b53a20&amp;type=3#ryu" />
     <ui:VisualElement name="bg" style="width: 100%; height: 100%; align-items: center; justify-content: center; flex-direction: column;">
-        <ui:Button text="TEST" display-tooltip-when-elided="true" class="btnTest" />
+        <ui:Button text="TEST" display-tooltip-when-elided="true" name="instBtnTest" class="btnTest" />
     </ui:VisualElement>
 </ui:UXML>

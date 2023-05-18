@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/ryu.uss?fileID=7433441132597879392&amp;guid=591c5de0bd10bc9428df298709b53a20&amp;type=3#ryu" />
+    <ui:VisualElement style="width: 100%; height: 100%; background-color: rgba(156, 199, 255, 0.48); flex-direction: column; flex-wrap: nowrap; align-items: flex-end; justify-content: flex-start;">
+        <ui:Button display-tooltip-when-elided="true" name="instBtnClose" style="width: 20%; height: 12%; align-items: stretch; background-image: url(&apos;project://database/Packages/com.unity.collab-proxy/Editor/PlasticSCM/Assets/Images/d_iconplasticnotifyconflict@2x.png?fileID=2800000&amp;guid=23743f0c0ed1e6546808a5d645c2a6a5&amp;type=3#d_iconplasticnotifyconflict@2x&apos;); background-color: rgb(0, 0, 0);" />
+        <ui:VisualElement name="instOneSlot" style="background-color: rgb(0, 0, 116); width: 100%; height: 100%;" />
+    </ui:VisualElement>
+</ui:UXML>
