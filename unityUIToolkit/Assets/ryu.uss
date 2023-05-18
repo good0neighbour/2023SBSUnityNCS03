@@ -1,0 +1,19 @@
+.btnTest {
+    width: 50%;
+    height: 20%;
+    font-size: 70px;
+}
+
+.btnTest:hover {
+    width: 50%;
+    height: 20%;
+    font-size: 70px;
+    scale: 1.2 1.2;
+}
+
+.btnTest:active {
+    width: 50%;
+    height: 20%;
+    font-size: 70px;
+    background-color: rgba(74, 63, 40, 255);
+}
