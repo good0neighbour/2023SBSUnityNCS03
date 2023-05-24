@@ -345,9 +345,12 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.VSCode.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
-"Assets/Scenes/CGrid.cs"
-"Assets/Scenes/CScenePlayGame.cs"
-"Assets/Scenes/CUIPlayGame.cs"
+"Assets/0_RSPRed_prototype/ForStateRSP.cs"
+"Assets/0_RSPRed_prototype/Script/CForCollision.cs"
+"Assets/0_RSPRed_prototype/Script/CGrid.cs"
+"Assets/0_RSPRed_prototype/Script/CScenePlayGame.cs"
+"Assets/0_RSPRed_prototype/Script/CUIPlayGame.cs"
+"Assets/0_RSPRed_prototype/Script/CUnit.cs"
 -langversion:9.0
 
 /deterministic

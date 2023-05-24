@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/ScenePlayGame.unity
+- path: Assets/1_AnimationRetarget/SceneAniRetarget.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
