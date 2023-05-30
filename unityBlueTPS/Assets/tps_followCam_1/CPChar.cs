@@ -19,6 +19,15 @@ public class CPChar : MonoBehaviour
     [SerializeField]
     float GRAVITY = -9.8f;  //중력가속도(속력)
 
+
+    //캐릭터 컨트롤러의 isGrounded관찰용도
+    [SerializeField]
+    bool mIsGrounded = false;
+
+    [SerializeField]
+    float mJumpPower = 0.0f; //점프 힘(속력, 속도의 y성분만 취급하고 있다고 가정)
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,7 +44,8 @@ public class CPChar : MonoBehaviour
 
         if (mCharController.isGrounded)
         {
-            //was...touching ground..when last moving
+            //was...touching ground..when last moving?
+            mIsGrounded = true;
 
             //zx평면에서의 이동
             float tV = Input.GetAxis("Vertical");   //[-1, 1] 연속적인 값
@@ -57,23 +67,40 @@ public class CPChar : MonoBehaviour
                 Szx = Szx + Vzx * t
             */
             mVecDir = mVecDir * mScarlarSpeed;
+
+            //점프
+            //if (Input.GetKeyUp(KeyCode.Space))
+            //{
+            //    Debug.Log("Jump Begin");
+
+            //    mVecDir.y = mJumpPower;
+            //}
         }
         else
         {
+            mIsGrounded = false;
             //y축 중력가속도 운동
-
+        
             //속도 결정
             /*
                 오일러 축차적 방법에 의한 속도, 위치 구하기
-
+        
                 Ay = GRAVITY
                 Vy = Vy + Ay * t
                 Sy = Sy + Vy * t
             */
-
+        
             mVecDir.y = mVecDir.y + GRAVITY * Time.deltaTime;
         }
 
+
+        //점프
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            Debug.Log("Jump Begin");
+
+            mVecDir.y = mJumpPower;
+        }
 
         //결정된 속도로 이동, 시간기반 진행( CharacterController컴포넌트의 기능을 이용 )
         mCharController.Move(mVecDir * Time.deltaTime);
