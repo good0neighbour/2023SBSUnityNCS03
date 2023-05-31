@@ -18,28 +18,58 @@ public class CFollowCam_1 : MonoBehaviour
     [SerializeField]
     float mArmLength = 0.0f;
 
+    bool mIsCameraRotation = false;
+
 
     // Start is called before the first frame update
     void Start()
     {
         //유니티 에디터에서 설정한 값을 계산하여 기억해둔다.
-        //임의의 벡터 = 목적지점 - 시작지점
-        mOffset = this.transform.position - mPChar.transform.position;
+        //  임의의 벡터 = 목적지점 - 시작지점
+        //mOffset = this.transform.position - mPChar.transform.position;
+        //mYVal = this.transform.rotation.eulerAngles.x;  //오일러각 x축 회전축 degree
+
+        //카메라 암 길이 설정
+        mOffset = new Vector3(0f, 0f, -1f * mArmLength);
+        mYVal = 30f;    //x축 회전축으로 하는 각도 설정( degree )
+        mYVal = this.transform.rotation.eulerAngles.x;  //오일러각 x축 회전축 degree
+
+        //설정된 회전값을 한번 적용
+        this.transform.rotation = Quaternion.Euler(mYVal, mXVal, 0f);
+
+        mIsCameraRotation = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float tMouseX = Input.GetAxis("Mouse X");
-        float tMouseY = Input.GetAxis("Mouse Y");
+        if (Input.GetMouseButtonDown(1))
+        {
+            mIsCameraRotation = true;
+        }
 
-        mXVal = mXVal + tMouseX;
-        mYVal = mYVal + tMouseY;
+        if (Input.GetMouseButtonUp(1))
+        {
+            mIsCameraRotation = false;
+        }
 
-        //Quaternion 사원수 <-- 네 개의 항을 결합하여 만든 수체계
-        //Quaternion vs Euler
-        this.transform.rotation = Quaternion.Euler(mYVal, mXVal, 0f);
-        //<-- 마우스 입력에 기반하여 카메라의 x축 회전( mouse y 입력값에 대응 ), y축 회전( mouse x 입력값에 대응 )을 하려고 하는 것이다
+        //마우스 오른쪽 버튼이 눌려있는 경우에만, 카메라의 회전 동작을 하도록 한다
+        if (mIsCameraRotation)
+        {
+            float tMouseX = Input.GetAxis("Mouse X");   //[-1, 1]
+            float tMouseY = Input.GetAxis("Mouse Y");   //[[-1, 1]
+
+            mXVal = mXVal + tMouseX;
+            mYVal = mYVal + tMouseY * (-1.0f);
+            //윈도우 좌표계 기준으로는 y축 양의 방향이 아래쪽인데
+            //유니티의 좌표계는 y축 양의 방향이 위쪽이므로
+            //-1을 곱해주어 맞췄다.
+
+            //Quaternion 사원수 <-- 네 개의 항을 결합하여 만든 수체계
+            //Quaternion vs Euler
+            this.transform.rotation = Quaternion.Euler(mYVal, mXVal, 0f);
+            //<-- 마우스 입력에 기반하여 카메라의 x축 회전( mouse y 입력값에 대응 ), y축 회전( mouse x 입력값에 대응 )을 하려고 하는 것이다
+        }
     }
 
     private void LateUpdate()

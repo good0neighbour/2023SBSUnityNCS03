@@ -14,6 +14,9 @@ enum E_IN_AIR
 
 public class CPChar_1 : MonoBehaviour
 {
+    //카메라 오브젝트
+    [SerializeField]
+    CFollowCam_1 mCamera = null;
 
     //캐릭터의 이동을 담당하는 컴포넌트
     [SerializeField]
@@ -129,7 +132,19 @@ public class CPChar_1 : MonoBehaviour
 
         
 
+
         //결정된 속도로 이동, 시간기반 진행( CharacterController컴포넌트의 기능을 이용 )
         mCharController.Move(mVecDir * Time.deltaTime);
+
+
+        //카메라가 바라보는 방향으로 이동하기 위해 캐릭터의 방향 설정
+        //==============
+        Vector3 tOffset = mCamera.transform.forward;
+        tOffset.y = 0f; //zx평면에서의 방향만 고려하겠다.
+        //응시점 구하기 = 캐릭터의 현재위치 + 카메라의 전방 방향( 크기는 1 )
+        Vector3 tLookAtPosition = this.transform.position + tOffset;
+        //캐릭터가 응시점을 바라보게 한다.
+        this.transform.LookAt(tLookAtPosition);
+        //==============
     }
 }
