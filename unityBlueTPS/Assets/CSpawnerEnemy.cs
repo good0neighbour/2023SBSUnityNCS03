@@ -8,7 +8,8 @@ public class CSpawnerEnemy : MonoBehaviour
     [SerializeField]
     GameObject PFEnemy = null;
 
-    //코루틴 함수: IEnumerator리턴타입 + 반복제어구조 + yield return
+    //코루틴 함수를 이용한 '별도의 실행흐름 개념' 만들기:
+    //                  IEnumerator리턴타입 + 반복제어구조 + yield return
     IEnumerator OnSpawnEnemy()
     {
         for(; ; )
