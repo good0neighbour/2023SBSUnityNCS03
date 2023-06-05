@@ -145,13 +145,38 @@ public class CSlime : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (STATE.WITH_NONE == mState)
         if (STATE.WITH_NONE != mState)
         {
             //Slerp: Sphere Linear interpolation 구면 선형 보간
             this.transform.rotation = Quaternion.Slerp(mStart, mEnd, mInterpolatePoint);
+            /*
+                Lerp Linear Interpolation
+                선형보간
+                직선의 방정식(일차함수)을 사용하여 임의의 두 점 사이의 한 점을 구한다.
+                두 값을 알 때 그 사이의 근사치를 구하기 위한 방법이다.
 
-            //mInterpolatePoint += TimeoutException.deltaTime;
+                Slerp Sphere Linear Interpolation
+                구면 선형 보간
+
+                선형보간의 식으로 원의 둘레 중 일부인 호를 사용하여 표현하는 것이다
+                원의 호의 개념이 들어가므로
+                각도가 수식에 포함된다.
+
+                원의 호는 곡선이므로
+                기울기가 변한다
+                그러므로 좀더 부드러운?(일반적인 선형보간보다는 좀더 다이나믹한) 변화를 표현가능하다
+
+
+                구면선형보간은 다음 식을 사용하여 구현된다
+
+                P = ( sin( (1 - t)Theta) * P0 + sin(t * Theta) * P1 ) / sinTheta
+
+                    <-- 각도에 관한 수식
+                    <-- [0, 1]로의 정규화를 위해 sin 적용
+
+            */
+
+
             mInterpolatePoint += Time.deltaTime;
         }
     }
