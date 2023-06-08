@@ -4,14 +4,17 @@ using UnityEngine;
 
 /*
 
-    '목표지점에 도달'하는
+    '목표지점에 도달하면 공격을 수행'하는
 
     인공지능을
     행동트리 기반으로 구현하자.
 
+
+
+        Selector를 이용해보자.
 */
 
-public class CRyuAgent_step_0 : MonoBehaviour
+public class CRyuAgent_step_2 : MonoBehaviour
 {
 
     [SerializeField]
@@ -28,10 +31,17 @@ public class CRyuAgent_step_0 : MonoBehaviour
     {
         //행동트리를 구축
 
-        //level 2
+        //level 3
         ActionNode tANMove = new ActionNode(DoMove);
+        List<Node> tLevel_3 = new List<Node>();
+        tLevel_3.Add(tANMove);
+
+        //level 2
+        Selector mSelectArrived = new Selector(tLevel_3);
+        ActionNode tANAttack = new ActionNode(DoAttack);
         List<Node> tLevel_2 = new List<Node>();
-        tLevel_2.Add(tANMove);
+        tLevel_2.Add(mSelectArrived);
+        tLevel_2.Add(tANAttack);
 
         //level 1
         mRootNode = new Sequence(tLevel_2);
@@ -63,6 +73,18 @@ public class CRyuAgent_step_0 : MonoBehaviour
             return NodeStates.FAILURE;
         }
     }
+
+
+    NodeStates DoAttack()
+    {
+        // 공격동작
+        Debug.Log("<color='blue'>Do Attack</color>");
+
+        return NodeStates.SUCCESS;
+    }
+
+
+
 
     //기즈모(게임세계 편집을 위한 UI도구)는 여기에서 렌더링한다
     private void OnDrawGizmos()
