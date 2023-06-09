@@ -56,12 +56,53 @@ public class CEnemyAgent : MonoBehaviour
 
 
         //행동트리 구축
-
+        BuildBTs();
     }
+
+    void BuildBTs()
+    {
+        //행동트리를 구축
+
+        //level 4
+        ActionNode tANAvoid = new ActionNode(DoAvoid);
+        ActionNode tANFollow = new ActionNode(DoFollow);
+
+        //level 3
+        //level_3_0
+        ActionNode tANIsGrenade = new ActionNode(DoIsGrenade);
+        Inverter tNotAvoid = new Inverter(tANAvoid);
+        List<Node> tLevel_3_0 = new List<Node>();
+        tLevel_3_0.Add(tANIsGrenade);
+        tLevel_3_0.Add(tNotAvoid);
+
+        //level_3_1
+        ActionNode tANIsArrived = new ActionNode(DoIsArrived);
+        Inverter tNotFollow = new Inverter(tANFollow);
+        List<Node> tLevel_3_1 = new List<Node>();
+        tLevel_3_1.Add(tANIsArrived);
+        tLevel_3_1.Add(tNotFollow);
+
+        //level 2
+        Selector mSelectAvoid = new Selector(tLevel_3_0);
+        Selector mSelectFollow = new Selector(tLevel_3_1);
+        ActionNode tANThrowGrenade = new ActionNode(DoThrowGrenade);
+        List<Node> tLevel_2 = new List<Node>();
+        tLevel_2.Add(mSelectAvoid);
+        tLevel_2.Add(mSelectFollow);
+        tLevel_2.Add(tANThrowGrenade);
+
+        //level 1
+        mRootNode = new Sequence(tLevel_2);
+    }
+
+
 
     // Update is called once per frame
     void Update()
     {
+        mRootNode.Evaluate();
+
+
         //if (mNavMeshAgent)
         //{
         //    if (mNavMeshAgent.enabled)
@@ -76,6 +117,8 @@ public class CEnemyAgent : MonoBehaviour
     {
         if(mIsGrenade)
         {
+            Debug.Log("Is Grenade, true");
+
             return NodeStates.SUCCESS;
         }
         else
@@ -84,10 +127,16 @@ public class CEnemyAgent : MonoBehaviour
         }
     }
 
-    NodeStates DoIsArrive()
+    NodeStates DoIsArrived()
     {
-        if(true)
+        //if (true)
+        if (Vector3.Distance(this.transform.position, mTargetPosition) <= mDetectedRadius)
         {
+            Debug.Log("Is Arrived, true");
+
+            mNavMeshAgent.enabled = false;
+
+
             return NodeStates.SUCCESS;
         }
         else
@@ -98,18 +147,43 @@ public class CEnemyAgent : MonoBehaviour
 
     NodeStates DoAvoid()
     {
+        Debug.Log("DoAvoid");
+
+        mNavMeshAgent.enabled = true;
+        mNavMeshAgent.SetDestination(mSpawnAnyPosition);
+
+        
+
+
         return NodeStates.SUCCESS;
     }
 
     NodeStates DoFollow()
     {
+        Debug.Log("DoFollow");
+        mNavMeshAgent.SetDestination(mTargetPosition);
+
         return NodeStates.SUCCESS;
     }
 
     NodeStates DoThrowGrenade()
     {
+        Debug.Log("<color='red'>Do Throw Grenade</color>");
+
+        mIsGrenade = false;
+
         return NodeStates.SUCCESS;
     }
 
 
+    private void OnDrawGizmos()
+    {
+        ////목적지점을 기즈모를 이용하여 표시
+        //Gizmos.color = new Color(1f, 1f, 0f, 1f);
+        //Gizmos.DrawWireCube(mTargetPosition, Vector3.one * 0.5f);
+
+        //탐지범위를 기즈모를 이용하여 표시
+        Gizmos.color = new Color(1f, 0f, 0f, 1f);
+        Gizmos.DrawWireSphere(this.transform.position, mDetectedRadius);
+    }
 }

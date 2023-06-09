@@ -37,7 +37,6 @@ public class CRyuAgent_step_4 : MonoBehaviour
 
         //level 4
         ActionNode tANMove = new ActionNode(DoMove);
-
         ActionNode tANDetect = new ActionNode(DoDetect);
 
         //level 3
