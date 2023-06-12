@@ -14,6 +14,29 @@ enum E_IN_AIR
 
 public class CPChar_1 : MonoBehaviour
 {
+    //프리팹 링크: 일반 탄환
+    [SerializeField]
+    GameObject PFBullet = null;
+
+    //라이플
+    [SerializeField]
+    GameObject mRifle = null;
+
+    //라이플을 잡는 더미dummy오브젝트
+    [SerializeField]
+    GameObject mGrab = null;
+
+    //탄환 발사 위치 기억
+    [SerializeField]
+    GameObject mPosFire = null;
+
+
+
+    [SerializeField]
+    Animator mAnimator = null;
+
+
+
     //카메라 오브젝트
     [SerializeField]
     CFollowCam_1 mCamera = null;
@@ -48,6 +71,20 @@ public class CPChar_1 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //라이플을 오른손에 부착한다
+        mRifle.transform.SetParent(mGrab.transform);
+        mRifle.transform.localPosition = Vector3.zero;
+        mRifle.transform.localRotation = Quaternion.identity;
+        //발사위치 설정
+        mPosFire = mRifle.GetComponent<CRifle>().mPosFire;
+
+
+
+
+
+        mAnimator = GetComponent<Animator>();
+
+
         if (mCharController.isGrounded)
         {
             mInAir = E_IN_AIR.IN_GROUND;
@@ -146,5 +183,49 @@ public class CPChar_1 : MonoBehaviour
         //캐릭터가 응시점을 바라보게 한다.
         this.transform.LookAt(tLookAtPosition);
         //==============
+
+
+
+
+        //애니메이션 제어
+        Vector3 tZXVec = mVecDir;
+        tZXVec.y = 0f;
+        float tMag = tZXVec.magnitude; //속도의 크기(속력)을 얻음
+        mAnimator.SetFloat("fSpeed", tMag);
+
+        test_fSpeed = 0f;
+
+
+
+        //왼쪽 마우스 버튼을 클릭하면 일반탄환 발사
+        if (Input.GetMouseButtonDown(0))
+        {
+            //일반탄환 발사
+            /*
+                발사 시작지점 설정
+                속도 설정
+                활성화한다(이미 동적생성되었다)
+            */
+            GameObject tBullet = Instantiate<GameObject>(PFBullet, mPosFire.transform.position, mPosFire.transform.rotation);
+
+            tBullet.GetComponent<Rigidbody>().AddForce(tBullet.transform.forward * -10f, ForceMode.Impulse);
+
+            //애니메이션 제어
+            //1번 애니메이션 레이어의 가중치를 1으로 설정
+            mAnimator.SetLayerWeight(1, 1f);
+            mAnimator.Play(0, 1, 0f);
+            //<-- 임의의 애니메이션 레이어에, 임의의 상태의 애니메이션을, 정규화된 시간0부터 플레이
+        }
+
+    }
+
+    //화면에서 관찰하기 위해 추가
+    float test_fSpeed = 0f;
+    private void OnGUI()
+    {
+        GUI.color = Color.red;
+
+        string tString = $"fSpeed: {test_fSpeed.ToString()}";
+        GUI.Label(new Rect(100f, 300f, 500f, 100f), tString);
     }
 }
