@@ -105,6 +105,8 @@ public class CRyuEnemyAgent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        mTargetPosition = mTarget.transform.position;
+
         mRootNode.Evaluate();
         //float tSpeed = mNavMeshAgent.velocity.magnitude;
         //mAnimator.SetFloat("fSpeed", tSpeed);
@@ -185,6 +187,15 @@ public class CRyuEnemyAgent : MonoBehaviour
 
         //수류탄 생성과 투척
         //this.GetComponent<CRyuEnemyPara>().DoFire();
+
+        //대상을 바라보게 회전한다
+        //Vector3 tDir = mTarget.transform.position - this.transform.position;
+        //Quaternion tA = Quaternion.LookRotation(this.transform.forward);
+        //Quaternion tB = Quaternion.LookRotation(tDir.normalized);
+        //두 사원수 간에 구면선형보간
+        //this.transform.rotation = Quaternion.Slerp(tA, tB, 10f * Time.deltaTime);
+        Vector3 tDir = mTarget.transform.position - this.transform.position;
+        this.transform.rotation = Quaternion.LookRotation(tDir.normalized);
 
 
         return NodeStates.SUCCESS;

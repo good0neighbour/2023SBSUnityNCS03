@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class ForStateExitThrow : StateMachineBehaviour
 {
+    //수류탄 생성과 투척 여부
+    bool mIsEnableThrow = false;
+
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        mIsEnableThrow = true;
+    }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -18,9 +21,13 @@ public class ForStateExitThrow : StateMachineBehaviour
         //원래 애니메이션 길이를 정규화된 시간 비율로 연산하여 지금 애니메이션 시간을 구한다
         float tCurTime = animator.GetComponent<CRyuEnemyAgent>().mAniClipThrow.length * stateInfo.normalizedTime;
 
+        if (tCurTime >= 1.8f && mIsEnableThrow)
+        {
+            //수류탄 생성과 투척
+            animator.GetComponent<CRyuEnemyPara>().DoFire();
 
-        //수류탄 생성과 투척
-        //this.GetComponent<CRyuEnemyPara>().DoFire();
+            mIsEnableThrow = false;
+        }
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
