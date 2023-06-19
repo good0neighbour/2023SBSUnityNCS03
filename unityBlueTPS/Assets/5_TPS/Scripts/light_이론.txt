@@ -8,3 +8,26 @@ Directional Light: 위치는 상관 없고 방향이 중요하다
 Point Light: 위치도 상관있다.
     광원의 위치로부터 멀리 떨어질 수록 빛의 강도가 약해진다
     이를 '감쇄attenuation'라고 한다
+
+
+
+forward 방식
+
+    3D월드 기준으로 조명의 연산을 수행하는 방식
+
+    <-- 기하단계
+
+    O(M * N)
+
+deferred 방식
+
+    픽셀을 기준으로 조명의 연산을 수행하는 방식
+
+    <-- 래스터라이즈 단계 이후
+
+    O(1)
+    입력자료 개수 N이 증가해도 연산해야 되는 픽셀의 개수는 일정하므로
+
+
+PostProcessing 중
+    Screen Space Reflections는 deferred에서만 작동한다.
