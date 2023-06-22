@@ -1,0 +1,39 @@
+using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+/*
+	created by pokpoongryu
+	
+    menu order - menu name - file name
+*/
+
+public class #SCRIPTNAME# : MonoBehaviour
+{
+    //protected CScenePlayGame mpScene = null;
+
+    void Start()
+    {
+
+    }
+    void Update()
+    {
+    }
+
+    public void CreateRyu()
+    {
+
+    }
+
+    public void BuildRyu()
+    {
+
+    }
+
+    //public void SetScene(CScenePlayGame tpScene)
+    //{
+    //        mpScene = tpScene;
+    //}
+}

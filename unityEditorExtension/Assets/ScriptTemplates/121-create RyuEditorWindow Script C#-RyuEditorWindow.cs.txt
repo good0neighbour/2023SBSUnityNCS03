@@ -1,0 +1,20 @@
+using UnityEngine;
+using UnityEditor;
+
+/*
+	created by pokpoongryu
+	
+    menu order - menu name - file name
+*/
+
+public class #SCRIPTNAME# : EditorWindow
+{
+    [MenuItem("Window/#SCRIPTNAME#")]
+    static void Open()
+    {
+        GetWindow<#SCRIPTNAME#> ();
+    }
+    void OnGUI ()
+    {
+    }
+}
