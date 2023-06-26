@@ -70,7 +70,8 @@ public class CDataMgr
             tInfo = new CDialogueInfo();
 
             tInfo.mId = System.Convert.ToInt32(tElement_0.ChildNodes[0].InnerText);
-            tInfo.mDialogue = tElement_0.ChildNodes[1].InnerText;
+            tInfo.mSpeakerName = tElement_0.ChildNodes[1].InnerText;
+            tInfo.mDialogue = tElement_0.ChildNodes[2].InnerText;
 
             mDialogueInfos.Add(tInfo);
         }

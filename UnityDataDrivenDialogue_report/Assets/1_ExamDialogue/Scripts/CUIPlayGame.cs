@@ -19,7 +19,7 @@ public class CUIPlayGame : MonoBehaviour
         CDataMgr.GetInst().CreateRyu();
 
         //첫 번째 대사 출력
-        mpTxtDialogue.text = CDataMgr.GetInst().mDialogueInfos[mCurIndex].mDialogue;
+        mpTxtDialogue.text = $"{CDataMgr.GetInst().mDialogueInfos[mCurIndex].mSpeakerName}\n{CDataMgr.GetInst().mDialogueInfos[mCurIndex].mDialogue}";
         //다음 대사를 위해 인덱스 증가
         if (mCurIndex < CDataMgr.GetInst().mDialogueInfos.Count - 1)
         {
@@ -38,7 +38,7 @@ public class CUIPlayGame : MonoBehaviour
         Debug.Log("next");
 
         //N번째 대사 출력
-        mpTxtDialogue.text = CDataMgr.GetInst().mDialogueInfos[mCurIndex].mDialogue;
+        mpTxtDialogue.text = $"{CDataMgr.GetInst().mDialogueInfos[mCurIndex].mSpeakerName}\n{CDataMgr.GetInst().mDialogueInfos[mCurIndex].mDialogue}";
         //다음 대사를 위해 인덱스 증가
         if (mCurIndex < CDataMgr.GetInst().mDialogueInfos.Count - 1)
         {

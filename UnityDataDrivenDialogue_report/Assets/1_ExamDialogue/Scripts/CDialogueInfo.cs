@@ -12,5 +12,6 @@ using UnityEngine;
 public class CDialogueInfo
 {
     public int mId = 0;             //대사 식별자
+    public string mSpeakerName = "";//이름
     public string mDialogue = "";   //대사
 }

@@ -56,6 +56,7 @@ public class CExamTool : EditorWindow
             CDialogueInfo tInfo = null;
             tInfo = new CDialogueInfo();
             tInfo.mId = mCurCount;
+            tInfo.mSpeakerName = $"인물{mCurCount.ToString()}";
             tInfo.mDialogue = $"{mCurCount.ToString()}번째 대화입니다.";
 
             //자료구조에 추가
@@ -126,6 +127,7 @@ public class CExamTool : EditorWindow
             //display id
             EditorGUILayout.LabelField(mDialogueInfos[ti].mId.ToString(), EditorStyles.helpBox);
             //display and edit dialogue
+            mDialogueInfos[ti].mSpeakerName = EditorGUILayout.TextField(mDialogueInfos[ti].mSpeakerName);
             mDialogueInfos[ti].mDialogue = EditorGUILayout.TextField(mDialogueInfos[ti].mDialogue);
         }
 
@@ -168,7 +170,8 @@ public class CExamTool : EditorWindow
             tInfo = new CDialogueInfo();
 
             tInfo.mId = System.Convert.ToInt32(tElement_0.ChildNodes[0].InnerText);
-            tInfo.mDialogue = tElement_0.ChildNodes[1].InnerText;
+            tInfo.mSpeakerName = tElement_0.ChildNodes[1].InnerText;
+            tInfo.mDialogue = tElement_0.ChildNodes[2].InnerText;
 
             mDialogueInfos.Add(tInfo);
         }
@@ -217,6 +220,11 @@ public class CExamTool : EditorWindow
             tElement_0 = null;
             tElement_0 = tDoc.CreateElement("mId");
             tElement_0.InnerText = tInfo.mId.ToString();
+            tElement.AppendChild(tElement_0);
+
+            tElement_0 = null;
+            tElement_0 = tDoc.CreateElement("mSpeakerName");
+            tElement_0.InnerText = tInfo.mSpeakerName.ToString();
             tElement.AppendChild(tElement_0);
 
             tElement_0 = null;
