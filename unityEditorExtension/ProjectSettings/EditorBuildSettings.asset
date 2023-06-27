@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/2_uee/2_uee_ScriptableObject.unity
-    guid: 0d1779791739f5442ada8be79aaf654b
+    path: Assets/DDDScriptableObject/SceneDDDScriptableObject.unity
+    guid: 130518dfd1a4a79408fd185735f35a49
   m_configObjects: {}
