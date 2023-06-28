@@ -322,8 +322,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c61e8a89e9e1904459e39a806a52cf9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mPositionOffset: {x: 0, y: 1, z: -5}
-  mLookAtOffset: {x: 1, y: 2, z: 0}
+  mPositionOffset: {x: 1, y: 2, z: -5}
+  mLookAtOffset: {x: 0, y: 1, z: 5}
   mActor: {fileID: 1731104573}
 --- !u!1001 &1731104568
 PrefabInstance:
