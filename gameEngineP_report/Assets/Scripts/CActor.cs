@@ -4,16 +4,24 @@ public class CActor : MonoBehaviour
 {
     [SerializeField] private float mMovingSwitchSpeedmult = 1.0f;
     private Animator mAnimator = null;
+    private CharacterController mCharacterController = null;
     private float mMovingForward = 0.0f;
     private float mMovingLeft = 0.0f;
+    private float mRotationY = 0.0f;
 
     private void Awake()
     {
         mAnimator = GetComponent<Animator>();
+        mCharacterController = GetComponent<CharacterController>();
+        mRotationY = transform.localRotation.eulerAngles.y;
     }
 
     private void Update()
     {
+        // 좌우 회전
+        mRotationY += Input.GetAxis("Mouse X");
+        transform.localRotation = Quaternion.Euler(0.0f, mRotationY, 0.0f);
+
         // 전후 움직임 애니메이션 동작
         if (Input.GetKey(KeyCode.W))
         {
@@ -129,5 +137,8 @@ public class CActor : MonoBehaviour
                     break;
             }
         }
+
+        // 주인공 전후좌우 이동
+        mCharacterController.Move(new Vector3());
     }
 }
