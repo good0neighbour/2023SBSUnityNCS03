@@ -1,0 +1,8 @@
+﻿  simpleSoftRender_step_2_proj.cpp
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_2_proj.cpp(272,21): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_2_proj.cpp(272,11): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_2_proj.cpp(271,21): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_2_proj.cpp(271,11): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_2_proj.cpp(270,21): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_2_proj.cpp(270,11): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  simpleSoftRender.vcxproj -> C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\x64\Debug\simpleSoftRender.exe

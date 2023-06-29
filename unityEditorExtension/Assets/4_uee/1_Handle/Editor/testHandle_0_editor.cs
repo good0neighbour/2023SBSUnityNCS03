@@ -25,12 +25,12 @@ public class testHandle_0_editor : Editor//<--Editor상속
     //step_1
     private void OnSceneGUI()
     {
-        //이동 툴 핸들
-
         //'씬뷰에서 아무 핸들 도구도 사용하지 않겠다'고 설정
         Tools.current = Tool.None;
 
         var tComponent = target as testHandle_0;
+
+        //이동 툴 핸들
 
         //리턴값으로 갱신하지 않으면 이동 불가
         //Handles.PositionHandle(tCompoment.transform.position, tCompoment.transform.rotation);
