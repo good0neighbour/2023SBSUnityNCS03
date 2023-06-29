@@ -4,6 +4,7 @@ public class CFollowCamera : MonoBehaviour
 {
     [SerializeField] private Vector3 mPositionOffset = Vector3.zero;
     [SerializeField] private Vector3 mLookAtOffset = Vector3.zero;
+    [Range(0f, 1f)]
     [SerializeField] private float mCameraWeight = 0.5f;
     [SerializeField] private Transform mActor = null;
     private float mRaidanToDegree = 180.0f / Mathf.PI;
@@ -26,8 +27,8 @@ public class CFollowCamera : MonoBehaviour
 
         if (0.0f > tGap.z)
         {
-            tX = 180.0f + tX;
             tZ = 180.0f;
+            tX = 180.0f + tX;
         }
         
         transform.localRotation = Quaternion.Euler(tX, tY * mRaidanToDegree, tZ);
