@@ -33,13 +33,11 @@ public class CRifle : MonoBehaviour
                     })
                 .Escape()
 
-                .Sequence()
-                    .Action(() =>
-                    {
-                        mEmission.rateOverTime = 0.0f;
-                        return CBehaviourTree.EStatus.SUCCEEDED;
-                    })
-                .Escape()
+                .Action(() =>
+                {
+                    mEmission.rateOverTime = 0.0f;
+                    return CBehaviourTree.EStatus.SUCCEEDED;
+                })
 
             .Escape();
     }

@@ -84,7 +84,7 @@ public class CActor : MonoBehaviour
 
     private void Update()
     {
-        #region'이동 및 회전
+        #region 이동 및 회전
         // 좌우 회전
         mRotationY += Input.GetAxis("Mouse X");
         transform.localRotation = Quaternion.Euler(0.0f, mRotationY, 0.0f);
