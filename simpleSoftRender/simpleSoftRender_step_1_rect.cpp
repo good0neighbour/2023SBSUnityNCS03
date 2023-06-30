@@ -2,7 +2,7 @@
 #include "olcPixelGameEngine.h"
 
 /*
-	step_2_rect
+	step_1_rect
 
 	software renderer를 심플하게 작성해보자.
 

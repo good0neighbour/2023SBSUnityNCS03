@@ -130,7 +130,7 @@
     <ClInclude Include="olcPixelGameEngine.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="simpleSoftRender_step_2_proj.cpp" />
+    <ClCompile Include="simpleSoftRender_step_3_faceculling.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

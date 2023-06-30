@@ -20,7 +20,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="simpleSoftRender_step_2_proj.cpp">
+    <ClCompile Include="simpleSoftRender_step_3_faceculling.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
