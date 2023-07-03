@@ -38,6 +38,8 @@ class Example : public olc::PixelGameEngine
 {
 	float mTheta = 0.0f;
 
+	SRyuVector3 mPosMainCamera;
+
 public:
 	Example()
 	{
@@ -48,6 +50,11 @@ public:
 public:
 	bool OnUserCreate() override
 	{
+		//카메라의 초기위치 설정
+		mPosMainCamera.x = 0.0f;
+		mPosMainCamera.y = 0.0f;
+		mPosMainCamera.z = 0.0f;
+
 		//test
 		SRyuTriangle t;	//삼각형을 하나 가정하자
 		SRyuVector3 tLineA;	//A벡터
@@ -305,7 +312,6 @@ public:
 			tNormal.y = tLineB.z * tLineA.x - tLineB.x * tLineA.z;
 			tNormal.z = tLineB.x * tLineA.y - tLineB.y * tLineA.x;
 
-
 			//외적벡터의 크기를 구하자
 			float tDotThis = tNormal.x * tNormal.x + tNormal.y * tNormal.y + tNormal.z * tNormal.z;
 			float tLength = sqrtf(tDotThis);
@@ -317,49 +323,79 @@ public:
 			//---시선벡터 view vector( camera vector )---
 			SRyuVector3 tViewVector;
 
+			//삼각형의 무게중심
+			SRyuVector3 tPosMid;	//<--목적지점으로 삼겠다
+			tPosMid.x = (t.p[0].x + t.p[1].x + t.p[2].x) / 3.0f;
+			tPosMid.y = (t.p[0].y + t.p[1].y + t.p[2].y) / 3.0f;
+			tPosMid.z = (t.p[0].z + t.p[1].z + t.p[2].z) / 3.0f;
+			//벡터의 뺄셈. 임의의 크기의 임의의 방향의 벡터 = 목적지점 - 시작지점
+			tViewVector.x = tPosMid.x - mPosMainCamera.x;
+			tViewVector.y = tPosMid.y - mPosMainCamera.y;
+			tViewVector.z = tPosMid.z - mPosMainCamera.z;
+
+			float tDotView = tViewVector.x * tViewVector.x + tViewVector.y * tViewVector.y + tViewVector.z * tViewVector.z;
+			float tLengthView = sqrtf(tDotView);
+			//외적벡터의 정규화
+			tViewVector.x = tViewVector.x / tLengthView;
+			tViewVector.y = tViewVector.y / tLengthView;
+			tViewVector.z = tViewVector.z / tLengthView;
+
+			//법선벡터 dot 시선벡터 하여 두 벡터의 위치관계를 대수적으로 판단하자.
+			float tDotResult = tNormal.x * tViewVector.x + tNormal.y * tViewVector.y + tNormal.z * tViewVector.z;
+
+
 
 
 			//은면(후면)이 아니면 렌더링한다( 은면(후면)이면 렌더링하지 않는다 )
+			if (tDotResult >= 0.0f) //<--후면 컬링 cull back
+			//if (tDotResult < 0.0f)//<--전면 컬링 cull front
+			{
+				//투영변환 행렬 적용
+				MultiplyMatrixVector(tMeshTranslate.tris[ti].p[0], tMeshProj.tris[ti].p[0], tMatProj);
+				MultiplyMatrixVector(tMeshTranslate.tris[ti].p[1], tMeshProj.tris[ti].p[1], tMatProj);
+				MultiplyMatrixVector(tMeshTranslate.tris[ti].p[2], tMeshProj.tris[ti].p[2], tMatProj);
+
+				//뷰포트 변환
+				//스크린 공간의 가운데를 원점으로 삼는다
+				tMeshProj.tris[ti].p[0].x += 1.0f;
+				tMeshProj.tris[ti].p[0].y += 1.0f;
+
+				tMeshProj.tris[ti].p[1].x += 1.0f;
+				tMeshProj.tris[ti].p[1].y += 1.0f;
+
+				tMeshProj.tris[ti].p[2].x += 1.0f;
+				tMeshProj.tris[ti].p[2].y += 1.0f;
+				//정규 뷰 볼륨의 근평면에 각각의 축의 부호방향으로 스케일업한다.
+				//<--스크린 공간 전체를 뷰포트로 보고 정규 뷰 볼륨의 근평면에 대응시켰다.
+				tMeshProj.tris[ti].p[0].x *= 0.5f * ScreenWidth();
+				tMeshProj.tris[ti].p[0].y *= 0.5f * ScreenHeight();
+
+				tMeshProj.tris[ti].p[1].x *= 0.5f * ScreenWidth();
+				tMeshProj.tris[ti].p[1].y *= 0.5f * ScreenHeight();
+
+				tMeshProj.tris[ti].p[2].x *= 0.5f * ScreenWidth();
+				tMeshProj.tris[ti].p[2].y *= 0.5f * ScreenHeight();
 
 
-
-			//투영변환 행렬 적용
-			MultiplyMatrixVector(tMeshTranslate.tris[ti].p[0], tMeshProj.tris[ti].p[0], tMatProj);
-			MultiplyMatrixVector(tMeshTranslate.tris[ti].p[1], tMeshProj.tris[ti].p[1], tMatProj);
-			MultiplyMatrixVector(tMeshTranslate.tris[ti].p[2], tMeshProj.tris[ti].p[2], tMatProj);
-
-			//뷰포트 변환
-			//스크린 공간의 가운데를 원점으로 삼는다
-			tMeshProj.tris[ti].p[0].x += 1.0f;
-			tMeshProj.tris[ti].p[0].y += 1.0f;
-
-			tMeshProj.tris[ti].p[1].x += 1.0f;
-			tMeshProj.tris[ti].p[1].y += 1.0f;
-
-			tMeshProj.tris[ti].p[2].x += 1.0f;
-			tMeshProj.tris[ti].p[2].y += 1.0f;
-			//정규 뷰 볼륨의 근평면에 각각의 축의 부호방향으로 스케일업한다.
-			//<--스크린 공간 전체를 뷰포트로 보고 정규 뷰 볼륨의 근평면에 대응시켰다.
-			tMeshProj.tris[ti].p[0].x *= 0.5f * ScreenWidth();
-			tMeshProj.tris[ti].p[0].y *= 0.5f * ScreenHeight();
-
-			tMeshProj.tris[ti].p[1].x *= 0.5f * ScreenWidth();
-			tMeshProj.tris[ti].p[1].y *= 0.5f * ScreenHeight();
-
-			tMeshProj.tris[ti].p[2].x *= 0.5f * ScreenWidth();
-			tMeshProj.tris[ti].p[2].y *= 0.5f * ScreenHeight();
+				//래스터라이즈
+				DrawTriangle(
+					tMeshProj.tris[ti].p[0].x, tMeshProj.tris[ti].p[0].y,
+					tMeshProj.tris[ti].p[1].x, tMeshProj.tris[ti].p[1].y,
+					tMeshProj.tris[ti].p[2].x, tMeshProj.tris[ti].p[2].y
+				);
+			}
 
 		}
 
 		//---래스터라이즈단계---
-		for (auto t : tMeshProj.tris)
+		/*for (auto t : tMeshProj.tris)
 		{
 			DrawTriangle(
 				t.p[0].x, t.p[0].y,
 				t.p[1].x, t.p[1].y,
 				t.p[2].x, t.p[2].y
 				);
-		}
+		}*/
 
 
 		return true;

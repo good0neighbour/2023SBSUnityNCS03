@@ -70,8 +70,3 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
-
-# Custom
-/Assets/Models/Ch15_nonPBR.fbx
-/Assets/Models/Basic Shooter Pack/Ch15_nonPBR.fbx
-/Assets/2_BlendTree/Basic Shooter Pack/Ch15_nonPBR.fbx
