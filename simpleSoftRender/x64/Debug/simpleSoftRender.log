@@ -1,11 +1,16 @@
-﻿  simpleSoftRender_step_4_light_shading.cpp
-C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_4_light_shading.cpp(415,56): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_4_light_shading.cpp(415,29): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_4_light_shading.cpp(414,56): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_4_light_shading.cpp(414,29): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_4_light_shading.cpp(413,68): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_4_light_shading.cpp(413,41): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_4_light_shading.cpp(467,25): warning C4244: '=': 'float'에서 'uint8_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_4_light_shading.cpp(468,25): warning C4244: '=': 'float'에서 'uint8_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_4_light_shading.cpp(469,25): warning C4244: '=': 'float'에서 'uint8_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  simpleSoftRender.vcxproj -> C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\x64\Debug\simpleSoftRender.exe
+﻿  simpleSoftRender_step_7_camera.cpp
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(569,22): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(569,12): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(568,22): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(568,12): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(567,33): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(567,23): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(575,21): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(575,11): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(574,21): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(574,11): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(573,21): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(573,11): warning C4244: '인수': 'float'에서 'int32_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(611,25): warning C4244: '=': 'float'에서 'uint8_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(612,25): warning C4244: '=': 'float'에서 'uint8_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\simpleSoftRender\simpleSoftRender_step_7_camera.cpp(613,25): warning C4244: '=': 'float'에서 'uint8_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.

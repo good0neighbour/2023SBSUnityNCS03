@@ -39,7 +39,7 @@ struct SRyuMesh
 	{
 		//input file system ( memory <-- disk )
 		ifstream tFile(tFilename);
-		if (tFile.is_open())
+		if (!tFile.is_open())
 		{
 			//파일 열기에 실패
 			return false;
@@ -66,15 +66,26 @@ struct SRyuMesh
 			//정점 데이터를 기록하고 있는 한 줄 텍스트 정보
 			if ('v' == tLine[0])
 			{
+				SRyuVector3 tPos;
 
+				//파싱하여 의도한 데이터를 얻어낸다.
+				tStr >> tJunk >> tPos.x >> tPos.y >> tPos.z;
+
+				//정점 데이터를 목록에 담아둔다.
+				tVertices.push_back(tPos);
 			}
 			//면(삼각형)을 기록하고 있는 한 줄 텍스트 정보
 			if ('f' == tLine[0])
 			{
+				//삼각형을 이룰 인덱스 정보
+				int tFace[3];
 
+				//파싱하여 의도한 데이터를 얻어낸다.
+				tStr >> tJunk >> tFace[0] >> tFace[1] >> tFace[2];
+
+				//인덱스에 기반하여 삼각형 정보를 구축하여 자료구조에 담아둔다.
+				this->tris.push_back({ tVertices[tFace[0] - 1], tVertices[tFace[1] - 1], tVertices[tFace[2] - 1] });
 			}
-
-
 		}
 
 		return true;
@@ -91,6 +102,9 @@ class Example : public olc::PixelGameEngine
 	float mTheta = 0.0f;
 
 	SRyuVector3 mPosMainCamera;
+
+
+	SRyuMesh tMesh;
 
 public:
 	Example()
@@ -150,6 +164,8 @@ public:
 		printf("tNormal: %f, %f, %f\n", tNormal.x, tNormal.y, tNormal.z);
 
 
+		tMesh.LoadFromObjFile("Resources/cube_888.obj");
+
 		// Called once at the start, so create things here
 		return true;
 	}
@@ -160,35 +176,36 @@ public:
 
 		//---렌더링 파이프라인---
 		//색상 정보는 기입하지 않았다.( 기본은 검정색 )
-		SRyuMesh tMesh;
-		tMesh.tris =
-		{
-			//윈도우 좌표계 기준: 정점 나열 순서는 CCW Count Clock Wise 반시계방향
-			//( 수학에서 좌표계 기준: 정점 나열 순서는 CW Clock Wise 시계방향 )
-			//south
-			{ 0.0f, 0.0f, 0.0f,			0.0f, 1.0f, 0.0f,		1.0f, 1.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f,			1.0f, 1.0f, 0.0f,		1.0f, 0.0f, 0.0f },
+		//SRyuMesh tMesh;
+		
+		//tMesh.tris =
+		//{
+		//	//윈도우 좌표계 기준: 정점 나열 순서는 CCW Count Clock Wise 반시계방향
+		//	//( 수학에서 좌표계 기준: 정점 나열 순서는 CW Clock Wise 시계방향 )
+		//	//south
+		//	{ 0.0f, 0.0f, 0.0f,			0.0f, 1.0f, 0.0f,		1.0f, 1.0f, 0.0f },
+		//	{ 0.0f, 0.0f, 0.0f,			1.0f, 1.0f, 0.0f,		1.0f, 0.0f, 0.0f },
 
-			//east
-			{ 1.0f, 0.0f, 0.0f,			1.0f, 1.0f, 0.0f,		1.0f, 1.0f, 1.0f },
-			{ 1.0f, 0.0f, 0.0f,			1.0f, 1.0f, 1.0f,		1.0f, 0.0f, 1.0f },
+		//	//east
+		//	{ 1.0f, 0.0f, 0.0f,			1.0f, 1.0f, 0.0f,		1.0f, 1.0f, 1.0f },
+		//	{ 1.0f, 0.0f, 0.0f,			1.0f, 1.0f, 1.0f,		1.0f, 0.0f, 1.0f },
 
-			//north
-			{ 1.0f, 0.0f, 1.0f,			1.0f, 1.0f, 1.0f,		0.0f, 1.0f, 1.0f },
-			{ 1.0f, 0.0f, 1.0f,			0.0f, 1.0f, 1.0f,		0.0f, 0.0f, 1.0f },
+		//	//north
+		//	{ 1.0f, 0.0f, 1.0f,			1.0f, 1.0f, 1.0f,		0.0f, 1.0f, 1.0f },
+		//	{ 1.0f, 0.0f, 1.0f,			0.0f, 1.0f, 1.0f,		0.0f, 0.0f, 1.0f },
 
-			//west
-			{ 0.0f, 0.0f, 1.0f,			0.0f, 1.0f, 1.0f,		0.0f, 1.0f, 0.0f },
-			{ 0.0f, 0.0f, 1.0f,			0.0f, 1.0f, 0.0f,		0.0f, 0.0f, 0.0f },
+		//	//west
+		//	{ 0.0f, 0.0f, 1.0f,			0.0f, 1.0f, 1.0f,		0.0f, 1.0f, 0.0f },
+		//	{ 0.0f, 0.0f, 1.0f,			0.0f, 1.0f, 0.0f,		0.0f, 0.0f, 0.0f },
 
-			//top 
-			{ 0.0f, 1.0f, 0.0f,			0.0f, 1.0f, 1.0f,		1.0f, 1.0f, 1.0f },
-			{ 0.0f, 1.0f, 0.0f,			1.0f, 1.0f, 1.0f,		1.0f, 1.0f, 0.0f },
+		//	//top 
+		//	{ 0.0f, 1.0f, 0.0f,			0.0f, 1.0f, 1.0f,		1.0f, 1.0f, 1.0f },
+		//	{ 0.0f, 1.0f, 0.0f,			1.0f, 1.0f, 1.0f,		1.0f, 1.0f, 0.0f },
 
-			//bottom
-			{ 0.0f, 0.0f, 1.0f,			0.0f, 0.0f, 0.0f,		1.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 1.0f,			1.0f, 0.0f, 0.0f,		1.0f, 0.0f, 1.0f }
-		};
+		//	//bottom
+		//	{ 0.0f, 0.0f, 1.0f,			0.0f, 0.0f, 0.0f,		1.0f, 0.0f, 0.0f },
+		//	{ 0.0f, 0.0f, 1.0f,			1.0f, 0.0f, 0.0f,		1.0f, 0.0f, 1.0f }
+		//};
 
 		//--기하단계--
 
@@ -470,11 +487,12 @@ public:
 					tMeshProj.tris[ti].p[2].x, tMeshProj.tris[ti].p[2].y,
 					tMeshProj.tris[ti].color);
 
-				/*DrawTriangle(
+				DrawTriangle(
 					tMeshProj.tris[ti].p[0].x, tMeshProj.tris[ti].p[0].y,
 					tMeshProj.tris[ti].p[1].x, tMeshProj.tris[ti].p[1].y,
-					tMeshProj.tris[ti].p[2].x, tMeshProj.tris[ti].p[2].y
-				);*/
+					tMeshProj.tris[ti].p[2].x, tMeshProj.tris[ti].p[2].y,
+					olc::BLACK
+				);
 			}
 
 		}

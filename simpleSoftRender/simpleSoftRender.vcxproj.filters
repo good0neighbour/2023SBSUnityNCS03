@@ -20,7 +20,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="simpleSoftRender_step_5_loadmodel.cpp">
+    <ClCompile Include="simpleSoftRender_step_7_camera.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
