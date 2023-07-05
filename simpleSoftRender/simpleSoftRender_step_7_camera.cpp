@@ -132,14 +132,58 @@ SMat4x4 MatrixPointAt(SRyuVector3& pos, SRyuVector3& target, SRyuVector3& up)
 	Normalize(newForward);
 
 	SRyuVector3 projectionUpOnNewForward = dotProduct(up, newForward) * newForward;
-	SRyuVector3 newUp = up _ projectionUpOnNewForward;
+	SRyuVector3 newUp = up - projectionUpOnNewForward;
 	Normalize(newUp);
 
 	SRyuVector3 newRight = crossProduct(newUp, newForward);
 
 	SMat4x4 t = { 0.0f };
+
+	t.m[0][0] = newRight.x;
+	t.m[1][0] = newRight.y;
+	t.m[2][0] = newRight.z;
+	t.m[0][1] = newUp.x;
+	t.m[1][1] = newUp.y;
+	t.m[2][1] = newUp.z;
+	t.m[0][2] = newForward.x;
+	t.m[1][2] = newForward.y;
+	t.m[2][2] = newForward.z;
+	t.m[3][0] = pos.x;
+	t.m[3][1] = pos.y;
+	t.m[3][2] = pos.z;
+	t.m[3][3] = 1.0f;
+
 	return t;
 }
+
+SMat4x4 quickInverse(SMat4x4& m)
+{
+	SMat4x4 inv = { 0.0f };
+
+	inv.m[0][0] = m.m[0][0];
+	inv.m[1][0] = m.m[1][0];
+	inv.m[2][0] = m.m[2][0];
+	inv.m[3][0] = -(m.m[3][0] * m.m[0][0] + m.m[3][1] * m.m[1][0] + m.m[3][2] * m.m[2][0]);
+	inv.m[0][1] = m.m[0][1];
+	inv.m[1][1] = m.m[1][1];
+	inv.m[2][1] = m.m[2][1];
+	inv.m[3][1] = -(m.m[3][0] * m.m[0][1] + m.m[3][1] * m.m[1][1] + m.m[3][2] * m.m[2][1]);
+	inv.m[0][2] = m.m[0][2];
+	inv.m[1][2] = m.m[1][2];
+	inv.m[2][2] = m.m[2][2];
+	inv.m[3][2] = -(m.m[3][0] * m.m[0][2] + m.m[3][1] * m.m[1][2] + m.m[3][2] * m.m[2][2]);
+	inv.m[3][3] = 1.0f;
+
+	return inv;
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -226,7 +270,8 @@ class Example : public olc::PixelGameEngine
 {
 	float mTheta = 0.0f;
 
-	SRyuVector3 mPosMainCamera;
+	SRyuVector3 mPosMainCamera;//카메라의 위치
+	SRyuVector3 mDirLook;//바라보는 방향
 
 
 	SRyuMesh tMesh;
@@ -245,6 +290,11 @@ public:
 		mPosMainCamera.x = 0.0f;
 		mPosMainCamera.y = 0.0f;
 		mPosMainCamera.z = 0.0f;
+
+		//전방을 바라봄
+		mDirLook.x = 0.0f;
+		mDirLook.y = 0.0f;
+		mDirLook.z = 1.0f;
 
 		//test
 		SRyuTriangle t;	//삼각형을 하나 가정하자
@@ -297,6 +347,37 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
+		//input
+		if (GetKey(olc::Key::LEFT).bHeld)
+		{
+			mPosMainCamera.x = mPosMainCamera.x - 50.0f * fElapsedTime;
+		}
+		if (GetKey(olc::Key::RIGHT).bHeld)
+		{
+			mPosMainCamera.x = mPosMainCamera.x + 50.0f * fElapsedTime;
+		}
+
+		if (GetKey(olc::Key::UP).bHeld)
+		{
+			mPosMainCamera.y = mPosMainCamera.y - 50.0f * fElapsedTime;
+		}
+		if (GetKey(olc::Key::DOWN).bHeld)
+		{
+			mPosMainCamera.y = mPosMainCamera.y + 50.0f * fElapsedTime;
+		}
+
+		if (GetKey(olc::Key::W).bHeld)
+		{
+			mPosMainCamera.z = mPosMainCamera.z - 50.0f * fElapsedTime;
+		}
+		if (GetKey(olc::Key::S).bHeld)
+		{
+			mPosMainCamera.z = mPosMainCamera.z + 50.0f * fElapsedTime;
+		}
+
+
+
+		//render
 		this->Clear(olc::VERY_DARK_BLUE);
 
 		//---렌더링 파이프라인---
@@ -421,10 +502,29 @@ public:
 
 		
 		//뷰변환
+		//월드 좌표계의 상방벡터
+		SRyuVector3 tDirUp = { 0.0f, 1.0f, 0.0f };
+		//바라보는 지점
+		SRyuVector3 tPosTarget = mPosMainCamera + mDirLook;
+
+		SMat4x4 tMatViewInverse = MatrixPointAt(mPosMainCamera, tPosTarget, tDirUp);
+		SMat4x4 tMatView =  quickInverse(tMatViewInverse);
 
 
-		//투영변환
+		//이동변환 변환 행렬을 적용한 결과 정점
+		SRyuMesh tMeshView;
+		tMeshView.tris = tMeshTranslate.tris;
+
+		for (int ti = 0; ti < tMeshTranslate.tris.size(); ++ti)
+		{
+			MultiplyMatrixVector(tMeshTranslate.tris[ti].p[0], tMeshView.tris[ti].p[0], tMatView.m);
+			MultiplyMatrixVector(tMeshTranslate.tris[ti].p[1], tMeshView.tris[ti].p[1], tMatView.m);
+			MultiplyMatrixVector(tMeshTranslate.tris[ti].p[2], tMeshView.tris[ti].p[2], tMatView.m);
+		}
 		
+		
+		//투영변환
+		//아주 정직한 버전
 		//float tNear = 0.7f;
 		//float tFar = 1.0;
 		//float tR = 1.0f * 0.5f;
@@ -490,12 +590,12 @@ public:
 
 		//투영 변환 행렬을 적용한 결과 정점
 		SRyuMesh tMeshProj;
-		tMeshProj.tris = tMeshTranslate.tris;
+		tMeshProj.tris = tMeshView.tris;
 
-		for (int ti = 0; ti < tMeshTranslate.tris.size(); ++ti)
+		for (int ti = 0; ti < tMeshView.tris.size(); ++ti)
 		{
 			//---임의의 삼각형의 법선 벡터 구하기 ---
-			SRyuTriangle t = tMeshTranslate.tris[ti];	//삼각형을 하나 가정하자
+			SRyuTriangle t = tMeshView.tris[ti];	//삼각형을 하나 가정하자
 			SRyuVector3 tLineA;	//A벡터
 			SRyuVector3 tLineB;	//B벡터
 
@@ -583,9 +683,9 @@ public:
 			//if (tDotResult < 0.0f)//<--전면 컬링 cull front
 			{
 				//투영변환 행렬 적용
-				MultiplyMatrixVector(tMeshTranslate.tris[ti].p[0], tMeshProj.tris[ti].p[0], tMatProj);
-				MultiplyMatrixVector(tMeshTranslate.tris[ti].p[1], tMeshProj.tris[ti].p[1], tMatProj);
-				MultiplyMatrixVector(tMeshTranslate.tris[ti].p[2], tMeshProj.tris[ti].p[2], tMatProj);
+				MultiplyMatrixVector(tMeshView.tris[ti].p[0], tMeshProj.tris[ti].p[0], tMatProj);
+				MultiplyMatrixVector(tMeshView.tris[ti].p[1], tMeshProj.tris[ti].p[1], tMatProj);
+				MultiplyMatrixVector(tMeshView.tris[ti].p[2], tMeshProj.tris[ti].p[2], tMatProj);
 
 				//색상정보도 다음 렌더링 단계로 전달
 				tMeshProj.tris[ti].color = t.color;

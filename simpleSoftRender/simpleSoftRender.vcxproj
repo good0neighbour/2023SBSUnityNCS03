@@ -130,7 +130,7 @@
     <ClInclude Include="olcPixelGameEngine.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="simpleSoftRender_step_7_camera.cpp" />
+    <ClCompile Include="simpleSoftRender_step_8_frusturum_clip.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
