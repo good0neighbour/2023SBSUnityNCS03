@@ -28,7 +28,7 @@ struct SRyuVector3
 };
 
 //벡터의 덧셈
-SRyuVector3 operator+(SRyuVector3& p, SRyuVector3& q)
+SRyuVector3 operator+(const SRyuVector3& p, const SRyuVector3& q)
 {
 	SRyuVector3 t;
 
@@ -38,7 +38,7 @@ SRyuVector3 operator+(SRyuVector3& p, SRyuVector3& q)
 
 	return t;
 }
-SRyuVector3 operator-(SRyuVector3& p, SRyuVector3& q)
+SRyuVector3 operator-(const SRyuVector3& p, const SRyuVector3& q)
 {
 	SRyuVector3 t;
 
@@ -522,8 +522,23 @@ public:
 			MultiplyMatrixVector(tMeshTranslate.tris[ti].p[1], tMeshView.tris[ti].p[1], tMatView.m);
 			MultiplyMatrixVector(tMeshTranslate.tris[ti].p[2], tMeshView.tris[ti].p[2], tMatView.m);
 		}
+
+
+
+
+
+		//시야절두체 클리핑 테스트
+		//'클립' 처리된 삼각형 목록을 담아둘 삼각형 목록
+		list<SRyuTriangle> tClippedTriangles;
+
 		
 		
+		
+
+
+
+
+
 		//투영변환
 		//아주 정직한 버전
 		//float tNear = 0.7f;
@@ -591,7 +606,7 @@ public:
 
 		//투영 변환 행렬을 적용한 결과 정점
 		SRyuMesh tMeshProj;
-		tMeshProj.tris = tMeshView.tris;
+		//tMeshProj.tris = tMeshView.tris;
 
 		for (int ti = 0; ti < tMeshView.tris.size(); ++ti)
 		{
@@ -680,58 +695,74 @@ public:
 
 
 			//은면(후면)이 아니면 렌더링한다( 은면(후면)이면 렌더링하지 않는다 )
-			if (tDotResult >= 0.0f) //<--후면 컬링 cull back
+			//if (tDotResult >= 0.0f) //<--후면 컬링 cull back
 			//if (tDotResult < 0.0f)//<--전면 컬링 cull front
-			{
-				//투영변환 행렬 적용
-				MultiplyMatrixVector(tMeshView.tris[ti].p[0], tMeshProj.tris[ti].p[0], tMatProj);
-				MultiplyMatrixVector(tMeshView.tris[ti].p[1], tMeshProj.tris[ti].p[1], tMatProj);
-				MultiplyMatrixVector(tMeshView.tris[ti].p[2], tMeshProj.tris[ti].p[2], tMatProj);
-
-				//색상정보도 다음 렌더링 단계로 전달
-				tMeshProj.tris[ti].color = t.color;
-
-				//뷰포트 변환
-				//스크린 공간의 가운데를 원점으로 삼는다
-				tMeshProj.tris[ti].p[0].x += 1.0f;
-				tMeshProj.tris[ti].p[0].y += 1.0f;
-
-				tMeshProj.tris[ti].p[1].x += 1.0f;
-				tMeshProj.tris[ti].p[1].y += 1.0f;
-
-				tMeshProj.tris[ti].p[2].x += 1.0f;
-				tMeshProj.tris[ti].p[2].y += 1.0f;
-				//정규 뷰 볼륨의 근평면에 각각의 축의 부호방향으로 스케일업한다.
-				//<--스크린 공간 전체를 뷰포트로 보고 정규 뷰 볼륨의 근평면에 대응시켰다.
-				tMeshProj.tris[ti].p[0].x *= 0.5f * ScreenWidth();
-				tMeshProj.tris[ti].p[0].y *= 0.5f * ScreenHeight();
-
-				tMeshProj.tris[ti].p[1].x *= 0.5f * ScreenWidth();
-				tMeshProj.tris[ti].p[1].y *= 0.5f * ScreenHeight();
-
-				tMeshProj.tris[ti].p[2].x *= 0.5f * ScreenWidth();
-				tMeshProj.tris[ti].p[2].y *= 0.5f * ScreenHeight();
-
-
-				tRasterTriangles.push_back(tMeshProj.tris[ti]);
-
-
-				////래스터라이즈
-				////전달받은 색상으로 삼각형을 면으로 그리기
-				//FillTriangle(tMeshProj.tris[ti].p[0].x, tMeshProj.tris[ti].p[0].y,
-				//	tMeshProj.tris[ti].p[1].x, tMeshProj.tris[ti].p[1].y,
-				//	tMeshProj.tris[ti].p[2].x, tMeshProj.tris[ti].p[2].y,
-				//	tMeshProj.tris[ti].color);
-
-				//DrawTriangle(
-				//	tMeshProj.tris[ti].p[0].x, tMeshProj.tris[ti].p[0].y,
-				//	tMeshProj.tris[ti].p[1].x, tMeshProj.tris[ti].p[1].y,
-				//	tMeshProj.tris[ti].p[2].x, tMeshProj.tris[ti].p[2].y,
-				//	olc::BLACK
-				//);
-			}
+			//{
+				//뷰변환, 조명적용된 삼각형을 tclippedTriangles에 담는다
+				tClippedTriangles.push_back(t);
+			//}
 
 		}
+
+
+
+		SRyuVector3 tPointOnPlane = { 0.0f, 0.0f, 10.0f };
+		SRyuVector3 tNormalToPlane = { 0.0f, 0.0f, 1.0f };
+		ClipByPlane(tPointOnPlane, tNormalToPlane, tClippedTriangles);
+
+
+		//클립 처리된 삼각형 개수만큼 tMeshProj의 삼각형을 만든다.
+		for (auto t = tClippedTriangles.begin(); t != tClippedTriangles.end(); ++t)
+		{
+			SRyuTriangle tri;
+			tMeshProj.tris.push_back(tri);
+		}
+
+		//투영변환, 뷰포트변환 적용
+		int ti = 0;
+		for (auto t : tClippedTriangles)
+		{
+			//투영변환 행렬 적용
+			MultiplyMatrixVector(t.p[0], tMeshProj.tris[ti].p[0], tMatProj);
+			MultiplyMatrixVector(t.p[1], tMeshProj.tris[ti].p[1], tMatProj);
+			MultiplyMatrixVector(t.p[2], tMeshProj.tris[ti].p[2], tMatProj);
+
+			//색상정보도 다음 렌더링 단계로 전달
+			tMeshProj.tris[ti].color = t.color;
+
+			//뷰포트 변환
+			//스크린 공간의 가운데를 원점으로 삼는다
+			tMeshProj.tris[ti].p[0].x += 1.0f;
+			tMeshProj.tris[ti].p[0].y += 1.0f;
+
+			tMeshProj.tris[ti].p[1].x += 1.0f;
+			tMeshProj.tris[ti].p[1].y += 1.0f;
+
+			tMeshProj.tris[ti].p[2].x += 1.0f;
+			tMeshProj.tris[ti].p[2].y += 1.0f;
+			//정규 뷰 볼륨의 근평면에 각각의 축의 부호방향으로 스케일업한다.
+			//<--스크린 공간 전체를 뷰포트로 보고 정규 뷰 볼륨의 근평면에 대응시켰다.
+			tMeshProj.tris[ti].p[0].x *= 0.5f * ScreenWidth();
+			tMeshProj.tris[ti].p[0].y *= 0.5f * ScreenHeight();
+
+			tMeshProj.tris[ti].p[1].x *= 0.5f * ScreenWidth();
+			tMeshProj.tris[ti].p[1].y *= 0.5f * ScreenHeight();
+
+			tMeshProj.tris[ti].p[2].x *= 0.5f * ScreenWidth();
+			tMeshProj.tris[ti].p[2].y *= 0.5f * ScreenHeight();
+
+
+			tRasterTriangles.push_back(tMeshProj.tris[ti]);
+
+			++ti;
+		}
+
+
+
+
+
+
+
 
 
 		//렌더링 순서를 정렬
@@ -833,24 +864,9 @@ public:
 		{
 			SRyuTriangle& tri = (*t);
 
-			int tCountVertex = 0;//CountVerticesOnCorrectSide()
+			int tCountVertex = CountVerticesOnCorrectSide(pointOnPlane, normalVectorToPlane, tri);
 
-			if (0 == tCountVertex)
-			{
-				//삼각형이 시야절두체에 포함되지 않은 경우
-
-				//삼각형 목록에서 삼각형 제거( 렌더링 대상에 포함하지 않는다 )
-				t = tris.erase(t);
-			}
-			else if (1 == tCountVertex)
-			{
-				//삼각형의 일부만 시야절두체에 포함된 경우( 정점 1개 )
-			}
-			else if (2 == tCountVertex)
-			{
-				//삼각형의 일부만 시야절두체에 포함된 경우( 정점 2개 )
-			}
-			else if (3 == tCountVertex)
+			if (3 == tCountVertex)
 			{
 				//삼각형이 시야절두체에 포함된 경우
 
@@ -858,7 +874,84 @@ public:
 				//렌더링 대상에 포함해야 하므로 아무 처리 없이 다음으로 넘어간다
 				++t;
 			}
+			else if (2 == tCountVertex)
+			{
+				//삼각형의 일부만 시야절두체에 포함된 경우( 정점 2개 )
+				// 
+				//삼각형의 p[0]이 위치하는 세 가지 경우를 모두 처리하기 위해 이렇게 표현
+				while (OnCorrectSideOfPlane(pointOnPlane, normalVectorToPlane, tri.p[0]))
+				{
+					RotateTriangle(tri);
+				}
+
+				//p[0](의 값)이 바깥쪽에 있는 상태가 된다.
+				SRyuVector3 tInter_0 = IntersectionOfLineAndPlane(pointOnPlane, normalVectorToPlane, tri.p[0], tri.p[1]);
+				SRyuVector3 tInter_1 = IntersectionOfLineAndPlane(pointOnPlane, normalVectorToPlane, tri.p[0], tri.p[2]);
+
+
+				SRyuTriangle tNewTri_0 = { tri.p[1], tri.p[2], tInter_0 };
+				tNewTri_0.color = tri.color;
+				SRyuTriangle tNewTri_1 = { tri.p[2], tInter_1, tInter_0 };
+				tNewTri_1.color = tri.color;
+
+				//기존 삼각형은 제거
+				t = tris.erase(t);
+				//새로운 삼각형은 추가
+				tris.insert(t, tNewTri_0);
+				tris.insert(t, tNewTri_1);
+
+			}
+			else if (1 == tCountVertex)
+			{
+				//삼각형의 일부만 시야절두체에 포함된 경우( 정점 1개 )
+
+				//삼각형의 p[0]이 위치하는 세 가지 경우를 모두 처리하기 위해 이렇게 표현
+				while (!OnCorrectSideOfPlane(pointOnPlane, normalVectorToPlane, tri.p[0]))
+				{
+					RotateTriangle(tri);
+				}
+
+				//p[0](의 값)이 안쪽에 있는 상태가 된다.
+				SRyuVector3 tInter_0 = IntersectionOfLineAndPlane(pointOnPlane, normalVectorToPlane, tri.p[0], tri.p[1]);
+				SRyuVector3 tInter_1 = IntersectionOfLineAndPlane(pointOnPlane, normalVectorToPlane, tri.p[0], tri.p[2]);
+
+				//새로운 삼각형 생성과 데이터 설정
+				SRyuTriangle tNewTri = { tri.p[0], tInter_0, tInter_1 };
+				tNewTri.color = tri.color;
+
+				//기존 삼각형은 제거
+				t = tris.erase(t);
+				//새로운 삼각형은 추가
+				tris.insert(t, tNewTri);
+			}
+			else if (0 == tCountVertex)
+			{
+				//삼각형이 시야절두체에 포함되지 않은 경우
+
+				//삼각형 목록에서 삼각형 제거( 렌더링 대상에 포함하지 않는다 )
+				t = tris.erase(t);
+			}
 		}
+	}
+	/*
+		평면
+		pointOnPlane: P
+		normalVectorToPlane: N
+
+		직선(선분)
+		firstPoint: 시점
+		lastPoint: 종점
+	*/
+	SRyuVector3 IntersectionOfLineAndPlane(SRyuVector3& pointOnPlane, SRyuVector3& normalVectorToPlane, SRyuVector3& firstPoint, SRyuVector3& lastPoint)
+	{
+		//목적지점 - 시작지점
+		SRyuVector3 tLineDir = lastPoint - firstPoint;
+
+		float planeEqnConstant = dotProduct(normalVectorToPlane, pointOnPlane);	//P dot N = d
+		//선분과 평면의 교차점이 위치에 해당하는 '비율'값를 구함
+		float intersectionTime = (planeEqnConstant - dotProduct(normalVectorToPlane, firstPoint)) / (dotProduct(normalVectorToPlane, tLineDir));
+
+		SRyuVector3 tIntersectionPoint = firstPoint + intersectionTime * tLineDir + firstPoint;
 	}
 
 
@@ -880,9 +973,25 @@ public:
 	//평면의 안쪽에(올바른쪽) 삼각형의 임의의 한 점이 있는지 판단하는 함수
 	bool OnCorrectSideOfPlane(SRyuVector3& pointOnPlane, SRyuVector3& normalVectorToPlane, SRyuVector3& somePoint)
 	{
+		SRyuVector3 tVector = somePoint - pointOnPlane;
+		Normalize(tVector);
+
+		//벡터의 내적 연산으로 두 벡터의 위치관계를 대수적으로 판단
+		//하여
+		//평면의 안쪽에(올바른쪽) 임의의 한 점이 있는지 판단
+		return (dotProduct(normalVectorToPlane, tVector) >= 0.0f);
 
 		return false;
 	}
+	//평면의 안쪽(올바른 쪽)에 임의의 삼각형의 정점 몇개가 들어있는지 판단하는 함수
+	int CountVerticesOnCorrectSide(SRyuVector3& pointOnPlane, SRyuVector3& normalVectorToPlane, SRyuTriangle& tri)
+	{
+		//bool ---> int : type cast 0, 1
+		return OnCorrectSideOfPlane(pointOnPlane, normalVectorToPlane, tri.p[0]) +
+			OnCorrectSideOfPlane(pointOnPlane, normalVectorToPlane, tri.p[1]) +
+			OnCorrectSideOfPlane(pointOnPlane, normalVectorToPlane, tri.p[2]);
+	}
+
 
 };
 
