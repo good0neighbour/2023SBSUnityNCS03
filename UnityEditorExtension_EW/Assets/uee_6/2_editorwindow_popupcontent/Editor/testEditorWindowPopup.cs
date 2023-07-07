@@ -4,8 +4,13 @@ using UnityEngine;
 
 using UnityEditor;
 
+/*
+*/
+
 public class testEditorWindowPopup : EditorWindow
 {
+    testPopupContent mPopup = new testPopupContent();
+
     [MenuItem("Window/show testEditorWindowPopup")]
     static void Open()
     {
@@ -19,7 +24,36 @@ public class testEditorWindowPopup : EditorWindow
 
         if (GUILayout.Button("Popup Content", GUILayout.Width(150.0f)))
         {
-            //PopupWindow.Show(,);
+            var tActivatorRect = GUILayoutUtility.GetLastRect();
+            PopupWindow.Show(tActivatorRect, mPopup);
+        }
+    }
+
+
+    public class testPopupContent : PopupWindowContent
+    {
+        bool toggle1 = true;
+        bool toggle2 = true;
+        bool toggle3 = true;
+
+        public override void OnGUI(Rect tRect)
+        {
+            EditorGUILayout.LabelField("This is popup Content.", EditorStyles.boldLabel);
+            toggle1 = EditorGUILayout.Toggle("Toggle1", toggle1);
+            toggle2 = EditorGUILayout.Toggle("Toggle2", toggle2);
+            toggle3 = EditorGUILayout.Toggle("Toggle3", toggle3);
+
+            if (true == GUILayout.Button("no function", GUILayout.Height(100)))
+            {
+                this.editorWindow.Close();
+            }
+        }
+
+        public override void OnClose()
+        {
+            base.OnClose();
+
+            Debug.Log("OnClose");
         }
     }
 }
