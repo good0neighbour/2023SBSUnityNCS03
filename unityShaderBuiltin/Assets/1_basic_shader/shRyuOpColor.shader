@@ -134,10 +134,29 @@ Shader "Ryu/shRyuOpColor"
             //각각의 구성성분끼리 곱한다.
             //o.Emission = fixed3(1.0f, 0.0f, 0.0f) * fixed3(0.0f, 0.0f, 0.0f);
             //o.Emission = fixed3(1.0f, 0.0f, 0.0f) * fixed3(0.0f, 1.0f, 0.0f);
-            o.Emission = fixed3(0.5f, 0.5f, 0.0f) * fixed3(0.2f, 1.0f, 0.0f);
+            //o.Emission = fixed3(0.5f, 0.5f, 0.0f) * fixed3(0.2f, 1.0f, 0.0f);
             //<-- (0.1, 0.5, 0)
 
 
+            //step_3
+            //같은 자리수끼리 연산이 가능하다.
+            fixed2 t = fixed2(1, 0) + fixed2(0, 1);
+            fixed3 tt = fixed3(1, 0, 0) + fixed3(0, 1, 0);
+            fixed4 ttt = fixed4(1, 0, 0, 0) + fixed4(0, 1, 0, 0);
+            fixed tttt = fixed(1) + fixed(0);
+
+            //o.Emission = fixed2(1, 0) + fixed4(0, 1, 0, 1); //자리수가 다르면 연산이 불가능하다.
+            //o.Emission = fixed2(1, 0) + fixed3(0, 1, 0);//자리수가 다르면 연산이 불가능하다.
+            //o.Emission = fixed2(1, 0) * fixed3(0, 1, 0);//자리수가 다르면 연산이 불가능하다.
+
+            //--한자리수는 모든 자리수에 연산이 가능하다.(1 * 0.5, 0 * 0.5, 0 * 0.5, 1 * 0.5) = (0.5, 0, 0, 0.5)
+            //o.Emission = fixed(0.5) * fixed4(1, 0, 0, 1);
+
+            //--한자리수는 모든 자리수에 연산이 가능하다.(1 + 0.5, 0 + 0.5, 0 + 0.5, 1 + 0.5) = (1.5, 0.5, 0.5, 1.5)
+            //<-- 정규화되어 출력되므로 (1, 0.5, 0.5, 1)
+            o.Emission = fixed(0.5) + fixed4(1, 0, 0, 1);
+
+            o.Alpha = 1;
         }
         ENDCG
     }
