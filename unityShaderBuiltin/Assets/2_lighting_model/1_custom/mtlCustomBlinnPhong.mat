@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: mtlCustomLambert
-  m_Shader: {fileID: 4800000, guid: a18aa482b0d06cb4facf35d60f817de7, type: 3}
+  m_Name: mtlCustomBlinnPhong
+  m_Shader: {fileID: 4800000, guid: af1be626cce72ab4d977fdb28fcf1c87, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -68,6 +68,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _Glow: 30
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -80,4 +81,6 @@ Material:
     m_Colors:
     - _Color: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _HighLightColour: {r: 0.25490198, g: 0, b: 1, a: 1}
+    - _SpecularColour: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

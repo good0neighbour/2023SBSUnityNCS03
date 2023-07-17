@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: mtlCustomLambert
-  m_Shader: {fileID: 4800000, guid: a18aa482b0d06cb4facf35d60f817de7, type: 3}
+  m_Name: mtlCustomHalfLambert
+  m_Shader: {fileID: 4800000, guid: 99971f65df8471949a0d3f47effd34e0, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []

@@ -29,7 +29,7 @@
 
 */
 
-Shader "Ryu/shCustomLambert"
+Shader "Ryu/shCustomHalfLambert"
 {
     Properties
     {
@@ -46,14 +46,14 @@ Shader "Ryu/shCustomLambert"
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
         //#pragma surface surf RyuLambert//Standard fullforwardshadows
-        #pragma surface surf RyuLambertEdgeAdv
+        #pragma surface surf RyuHalfLambert
         //<----custom light model을 명시해준다.
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
 
         //sampler2D _MainTex;
-        //렌더링 파이프라인에서 넘어온 값에 대해 구조체에 정의하는 것이다.
+
         struct Input
         {
             float2 uv_MainTex;
@@ -95,71 +95,30 @@ Shader "Ryu/shCustomLambert"
             //o.Smoothness = _Glossiness;
             o.Alpha = c.a;
         }
-        //step_0
+        
+
         //custom lighting model
         //조명 모델 함수: 조명(빛)에 대한 처리를 수행하는 셰이더 함수의 정의
         //Lighting~ 형태로 이름을 맞추어야 한다.
         //<--매뉴얼에 제작방법이 있으므로 살펴보고 맞추면 된다.
-        //lightDir: 조명벡터
-        //viewDir: 시선벡터
+        //lightDir: 조명벡터    <-- 유니티엔진이 뒤집어서 넣어준다
+        //viewDir: 시선벡터     <-- 유니티엔진이 뒤집어서 넣어준다
         //tAtten: 감쇄
-        inline fixed4 LightingRyuLambert(SurfaceOutputRyuLambert s, fixed3 lightDir, half3 viewDir, fixed tAtten)
+        inline fixed4 LightingRyuHalfLambert(SurfaceOutputRyuLambert s, fixed3 lightDir, half3 viewDir, fixed tAtten)
         {
             fixed4 tResult;
+            //Half Lambert (N dot L) * 0.5 + 0.5
+            //<--좀더 완만한 부드러운 음영을 얻는다
+            fixed tDot = dot(s.Normal, lightDir) * 0.5 + 0.5;//N dot L  [-1, 1]의 값 ---> [-0.5, 0.5] ---> [0, 1]
+            
+            //fixed tDotResult = max(0, tDot); //[0, 1]의 값
 
-            fixed tDot = dot(s.Normal, lightDir);//N dot L  [-1, 1]의 값
-            fixed tDotResult = max(0, tDot); //[0, 1]의 값
-
-            tResult.rgb = s.Albedo * tDotResult;//표면의 색상에 조명도 적용, 색상곱셈 연산
+            tResult.rgb = s.Albedo * tDot;  //표면의 색상에 조명도 적용, 색상곱셈 연산
             tResult.a = s.Alpha;
 
             return tResult;
         }
 
-        //step_1
-        //판단제어구조를 사용해보자
-        inline fixed4 LightingRyuLambertEdge(SurfaceOutputRyuLambert s, fixed3 lightDir, half3 viewDir, fixed tAtten)
-        {
-            fixed4 tResult;
-
-            fixed tDot = dot(s.Normal, lightDir);//N dot L  [-1, 1]의 값
-            fixed tDotResult = max(0, tDot); //[0, 1]의 값
-
-            //판단제어구조
-            //<-- 경계가 명확한 셰이딩을 구현하기 위해 사용
-            if (tDotResult < 0.2)
-            {
-                tResult.rgb = 0;
-            }
-            else
-            {
-                tResult.rgb = s.Albedo * tDotResult;    //표면의 색상에 조명도 적용, 색상곱셈 연산
-            }
-
-            tResult.a = s.Alpha;
-
-            return tResult;
-        }
-
-        //step_2
-        inline fixed4 LightingRyuLambertEdgeAdv(SurfaceOutputRyuLambert s, fixed3 lightDir, half3 viewDir, fixed tAtten)
-        {
-            fixed4 tResult;
-
-            fixed tDot = dot(s.Normal, lightDir);//N dot L  [-1, 1]의 값
-            fixed tDotResult = max(0, tDot); //[0, 1]의 값
-
-            //판단제어구조를 대신하여 step셰이더 함수를 사용
-            //step(y, x) <------ x >= y ? 1 : 0
-            //<-- 경계가 명확한 셰이딩을 구현하기 위해 사용
-            fixed tStep = step(0.2, tDotResult) * tDotResult;   //tDotResult >= 0.2 ? 1 : 0
-
-            tResult.rgb = s.Albedo * tStep;
-
-            tResult.a = s.Alpha;
-
-            return tResult;
-        }
 
 
 
