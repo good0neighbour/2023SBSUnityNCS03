@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: mlRimLight
-  m_Shader: {fileID: 4800000, guid: 999b9f4ba095e3040836ab565944a6ea, type: 3}
+  m_Name: mtlOutline2Pass
+  m_Shader: {fileID: 4800000, guid: a549740891c35ff43b6a34fb68bb237f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
