@@ -1,28 +1,16 @@
-/*
-    flaat shading
-    gourad shading
+//
+//Outline2Pass와 ToonShade를 결합해보세요.
 
-
-    두 번 랜더링(그리기)을 통해 외곽선을 표현하자
-
-    i) 다음과 같은 방법으로 렌더링한다.
-
-        가) 전변컬링, 즉 후면을 그린다.( 뒤집어서 그린다 )
-        나) 정점에 지정된 법선벡터 방향으로 정점을 이동시켜 확대? 시킨다.
-            <--정점 셰이더 vertext shader 함수가 필요하다.
-
-    ii) 정장적으로 랜더링한다
-
-*/
-
-Shader "Ryu/shOutline2Pass"
+Shader "Ryu/shOutlineToon"
 {
     Properties
     {
         _Color ("Color", Color) = (1,1,1,1)
         
         _OutlineColor ("outline Color", Color) = (0,0,0,1)
-        _OutlineWidth ("outline width", Range(0.005,0.02)) = 0.01
+        _OutlineWidth ("outline width", Range(0,0.1)) = 0.01
+
+        _ToonShadeLevel ("toon shade level", Range(1,10)) = 5
     }
     SubShader
     {
@@ -46,8 +34,6 @@ Shader "Ryu/shOutline2Pass"
             float2 uv_MainTex;
         };
 
-        //half _Glossiness;
-        //half _Metallic;
         fixed4 _Color;
 
         fixed4 _OutlineColor;
@@ -77,14 +63,13 @@ Shader "Ryu/shOutline2Pass"
                 //<-- 벡터의 덧셈 연산
         }
 
-        //void surf (Input IN, inout SurfaceOutputStandard o)
         void surf (Input IN, inout SurfaceOutputNoLight o)
         {
             // Albedo comes from a texture tinted by color
-            fixed4 c = _Color;
-            o.Albedo = c.rgb;
+            //fixed4 c = _Color;
+            //o.Albedo = c.rgb;
             
-            o.Alpha = c.a;
+            //o.Alpha = c.a;
         }
         //조명은 적용하지 않겠다
         float4 LightingNoLighting(SurfaceOutputNoLight s, float3 lightDir, float3 viewDir, float attenu)
@@ -99,21 +84,52 @@ Shader "Ryu/shOutline2Pass"
 
         //2 pass
         CGPROGRAM
-        #pragma surface surf Lambert//Standard fullforwardshadows
+        #pragma surface surf RyuToonShade noambient
         #pragma target 3.0
 
         struct Input
         {
             float2 uv_MainTex;
         };
+
         fixed4 _Color;
 
-        void surf (Input IN, inout SurfaceOutput o)
+        fixed _ToonShadeLevel;
+
+        struct SurfaceOutputToonShade {
+            fixed3 Albedo;
+            fixed3 Normal;
+            fixed3 Emission;
+            half Specular;
+            fixed Gloss;
+            fixed Alpha;
+        };
+
+        void surf (Input IN, inout SurfaceOutputToonShade o)
         {
             fixed4 c = _Color;
-            
+
             o.Albedo = c.rgb;
             o.Alpha = c.a;
+        }
+
+        //custom lighting
+        float4 LightingRyuToonShade(SurfaceOutputToonShade s, float3 lightDir, float3 viewDir, float atten)
+        {
+            float4 tResult = float4(0, 0, 0, 1);
+
+            //Lambert lighting model
+            float tDot = dot(s.Normal, lightDir);   //[-1, 1]
+            float tDotResult = saturate(tDot);      //[0, 1]
+
+            float tToonShade = tDotResult * _ToonShadeLevel;//[0, _ToonShadeLevel]  <-- 범위를 늘림
+            tToonShade = ceil(tToonShade);   //0, 1, 2, 3, 4, 5
+            tToonShade = tToonShade / _ToonShadeLevel;    //[0, _ToonShadeLevel]사이에 불연속적인 단계별 값을 만든다.
+
+            tResult.rgb = tToonShade * s.Albedo;
+            tResult.a = s.Albedo;
+
+            return tResult;
         }
         ENDCG
 
