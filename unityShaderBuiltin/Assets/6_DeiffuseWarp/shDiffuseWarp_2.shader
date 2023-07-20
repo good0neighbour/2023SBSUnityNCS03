@@ -9,18 +9,28 @@
         <-- '텍스쳐(이미지) 기반 라이팅 기법'이다.
         <-- Half Lambert 기법도 섞여있다.
 
+
+
+        메쉬에 메인 텍스쳐를 추가하자
+
+
+        Normal Mapping
 */
 
 
 
-Shader "Ryu/shDiffuseWarp_0"
+Shader "Ryu/shDiffuseWarp_2"
 {
     Properties
     {
+        _MainTex ("Main Texture", 2D) = "white" {}
+
         //_Color ("Color", Color) = (1,1,1,1)
         _RampTex ("Ramp Texture", 2D) = "white" {}
         //_Glossiness ("Smoothness", Range(0,1)) = 0.5
         //_Metallic ("Metallic", Range(0,1)) = 0.0
+
+        _BumpMap ("Normal map", 2D) = "bump" {}
     }
     SubShader
     {
@@ -34,11 +44,15 @@ Shader "Ryu/shDiffuseWarp_0"
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
 
+        sampler2D _MainTex;
         sampler2D _RampTex;
+
+        sampler2D _BumpMap;//<--
 
         struct Input
         {
             float2 uv_MainTex;
+            float2 uv_BumpMap;//<--
         };
 
         //half _Glossiness;
@@ -55,7 +69,12 @@ Shader "Ryu/shDiffuseWarp_0"
         void surf (Input IN, inout SurfaceOutput o)
         {
             // Albedo comes from a texture tinted by color
-            fixed4 c = fixed4(1,1,1,1);//<--흰색을 결정. 왜냐하면 그래야 조명색상을 정확히 관찰 가능
+            fixed4 c = tex2D(_MainTex, IN.uv_MainTex);//fixed4(1,1,1,1);//<--흰색을 결정. 왜냐하면 그래야 조명색상을 정확히 관찰 가능
+
+            //노멀맵텍스에서 텍셀을 가져와, 접선공간으로 끄집어 내기(법선벡터로 바꾸는) 위한 것이 필요하다.
+            //UnpackNormal
+            o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
+
             o.Albedo = c.rgb;
             o.Alpha = c.a;
         }
@@ -70,7 +89,7 @@ Shader "Ryu/shDiffuseWarp_0"
             //Ramp Texture을 이용한 라이팅 색상
             float4 tTexColor = tex2D(_RampTex, float2(tDot, 0.5));
 
-            tResult.rgb = tTexColor;//tDot;
+            tResult.rgb = s.Albedo * tTexColor;//tDot;
             tResult.a = s.Albedo;
 
 
