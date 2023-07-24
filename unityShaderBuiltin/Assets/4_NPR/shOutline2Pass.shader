@@ -70,10 +70,17 @@ Shader "Ryu/shOutline2Pass"
             // put more per-instance properties here
         UNITY_INSTANCING_BUFFER_END(Props)
 
+        //vertex shader함수
         void vert(inout appdata_full v)
         {
+            //거리에 따라 외곽선의 굵기가 크게 변하되지 않게 조정
+            //<--투영된 결과에 저장된 깊이값을 이용하여 법선방향으로 정점이동(된 모델이 줌인(카메라에 가까워짐)됨)을 상쇄시켰다.
+            float4 tRyu = UnityObjectToClipPos(v.vertex);
+            float tDepth = tRyu.w * 0.5;
+
+
             //정점의 위치 v.vertex를 정점의 법선벡터 v.normal 방향으로 이동
-            v.vertex.xyz = v.vertex.xyz + v.normal.xyz * _OutlineWidth;//<--벡터의 스칼라곱셈
+            v.vertex.xyz = v.vertex.xyz + v.normal.xyz * _OutlineWidth * tDepth;//<--벡터의 스칼라곱셈
                 //<-- 벡터의 덧셈 연산
         }
 

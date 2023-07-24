@@ -1,8 +1,8 @@
 /*
-Shader함수의 활용을 살펴보자
+    Shader함수의 활용을 살펴보자
 
-step
-lerp
+    step
+    lerp
 */
 
 Shader "Ryu/shUnlitEdge"
@@ -12,7 +12,7 @@ Shader "Ryu/shUnlitEdge"
         _Color("face color", Color) = (1, 0, 0, 0)
         _EdgeColor("edge color", Color) = (0, 1, 0, 1)
 
-        _Width("edge width", Range(0.1, 0.9)) = 0.1
+        _Width("edge width", Range(0.01, 0.9)) = 0.1
 
         //_MainTex ("Texture", 2D) = "white" {}
     }
@@ -73,10 +73,14 @@ Shader "Ryu/shUnlitEdge"
             {
                 fixed4 col = fixed4(0, 0, 0, 1);
 
-                float tLowX = step(_Width, i.uv.x);
+                float tLowX = step(_Width, i.uv.x); //i.uv.x >= _Width ? 1 : 0
+                float tLowY = step(_Width, i.uv.y); //i.uv.y >= _Width ? 1 : 0
+
+                float tHighX = step(i.uv.x, 1 - _Width);    //1 - _Width >= i.uv.x ? 1 : 0
+                float tHighY = step(i.uv.y, 1 - _Width);    //1 - _Width >= i.uv.y ? 1 : 0
 
                 //선형보간
-                col = lerp(_EdgeColor, _Color, tLowX);
+                col = lerp(_EdgeColor, _Color, tLowX * tHighX * tLowY * tHighY);
 
                 return col;
             }
