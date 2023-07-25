@@ -90,4 +90,5 @@ Shader "Ryu/shAlphaBlend"
         ENDCG
     }
     FallBack "Diffuse"
+    FallBack "Legacy Shaders/Transparent/VertexLit"
 }
