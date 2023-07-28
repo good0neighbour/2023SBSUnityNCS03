@@ -1,13 +1,12 @@
 /*
-    물을 표현하는 재질을 만들어보자.
+    step_2
 
-    step_0
+    반사와 프레넬을 결함하자.
 
-    하늘이 반사되는 느낌의 반사맵을 구현하자
-    <--큐브맵을 이용하겠다.
+    
 
 */
-Shader "Ryu/shWater_step_0"
+Shader "Ryu/shWater_step_2"
 {
     Properties
     {
@@ -41,6 +40,9 @@ Shader "Ryu/shWater_step_0"
             float2 uv_MainTex;
             float2 uv_BumpMap;//노멀맵의 UV좌표 정보
 
+            float3 viewDir;
+            //<--시선벡터
+
             float3 worldRefl;//<--반사 벡터 정보, 큐브맵을 이용하여 반사맵을 표현하기 위해 필요
             INTERNAL_DATA//<-- WorldReflectionVector를 사용하기 위해 표기
         };
@@ -64,15 +66,28 @@ Shader "Ryu/shWater_step_0"
             //o.Smoothness = _Glossiness;
             //o.Alpha = c.a;
 
+            //반사를 만듦
             //텍셀을 샘플링하고, 접선공간 변환을 적용
             o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
             //o.Normal = float3(0, 0, 1);
             float3 tReflectColor = texCUBE(_Cube, WorldReflectionVector(IN, o.Normal));
 
 
+            //o.Albedo = 0;
+            //o.Emission = tReflectColor;
+            //o.Alpha = 0.8;
+            
+            //프레넬 효과를 적용(림라이트)
+            float tRim = saturate(dot(o.Normal, IN.viewDir));
+            tRim = 1 - tRim;
+            tRim = pow(tRim, 1.2);
+
             o.Albedo = 0;
-            o.Emission = tReflectColor;
-            o.Alpha = 0.8;
+            o.Emission = tReflectColor * tRim * 1.3; //반사와 프레넬(림라이트)를 결합
+            o.Alpha = saturate(tRim + 0.5);
+            //<-- 수치조정, 수치범위제한
+            //이를 통해 물의 가장자리로 갈수록 완전반사하여 ( 투명하지 않도록 하여 )
+            //물밑이 비치지 않도록 강조하고 있다.
 
         }
         ENDCG

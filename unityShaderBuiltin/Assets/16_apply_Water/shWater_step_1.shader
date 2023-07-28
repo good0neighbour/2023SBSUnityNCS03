@@ -1,13 +1,24 @@
 /*
-    물을 표현하는 재질을 만들어보자.
+    step_1
 
-    step_0
+    물은 '프레넬 효과'의 관찰이 용이한 매질이다.
 
-    하늘이 반사되는 느낌의 반사맵을 구현하자
-    <--큐브맵을 이용하겠다.
+    프레넬 효과: 문체의 매질에 따라 반사율, 굴절울이 모두 달라서 나타나는 현상
+    <-- 관찰자의 시선벡터와 반사벡터의 각도에 따라 반사와 굴절이 일어나는 현상
+
+    물같은 경우 가장자리로 갈 수록 완전반사되는 특징이 있다.
+    중심으로 올 수록 반사가 일어나지 않는다
+
+    이것은 림라이트 효과와 매우 유사하다.
+
+    그러므로 여기서는
+    림라이트를 만들어
+    프레넬 효과를 적용하자.
+
+    
 
 */
-Shader "Ryu/shWater_step_0"
+Shader "Ryu/shWater_step_1"
 {
     Properties
     {
@@ -41,6 +52,9 @@ Shader "Ryu/shWater_step_0"
             float2 uv_MainTex;
             float2 uv_BumpMap;//노멀맵의 UV좌표 정보
 
+            float3 viewDir;
+            //<--시선벡터
+
             float3 worldRefl;//<--반사 벡터 정보, 큐브맵을 이용하여 반사맵을 표현하기 위해 필요
             INTERNAL_DATA//<-- WorldReflectionVector를 사용하기 위해 표기
         };
@@ -64,15 +78,24 @@ Shader "Ryu/shWater_step_0"
             //o.Smoothness = _Glossiness;
             //o.Alpha = c.a;
 
+            //반사를 만듦
             //텍셀을 샘플링하고, 접선공간 변환을 적용
             o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
             //o.Normal = float3(0, 0, 1);
             float3 tReflectColor = texCUBE(_Cube, WorldReflectionVector(IN, o.Normal));
 
 
+            //o.Albedo = 0;
+            //o.Emission = tReflectColor;
+            //o.Alpha = 0.8;
+            
+            //프레넬 효과를 적용(림라이트)
+            float tRim = saturate(dot(o.Normal, IN.viewDir));
+            tRim = 1 - tRim;
+
             o.Albedo = 0;
-            o.Emission = tReflectColor;
-            o.Alpha = 0.8;
+            o.Emission = pow(tRim, 3);
+            o.Alpha = 1;//0.8;
 
         }
         ENDCG
