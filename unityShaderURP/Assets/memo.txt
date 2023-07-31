@@ -1,0 +1,31 @@
+==SRP overview ==
+
+2018버전부터
+유니티의 렌더링 시스템은
+
+이전까지의 build in Rendering Pipeline
+구조 대신에
+
+SRP( Scriptable Rendering Pipeline )구조로 변경되었다.
+
+해당 구조는 원한다면
+맘대로 렌더링 파이프라인의 렌더를 작성하여 변경가능한 구조다.
+보다 유연한 렌더일 구조를 가지게 된 것이다.
+
+그리고
+유니티에서는
+주요한 렌더링 파이프라인의 렌더러 예로서
+
+URP와 HDRP를 제공한다.( LWRP이 처음에 만들어졌지만 이는 URP로 통합되었다 )
+
+URP Universal Render Pipeline: 새로운 범용적인 렌더링 파이프라인
+HDRP High Definition Render Pipeline: 고품질 결과물용( 3D 에니메이션 영화 ) 렌더링 파이프라인
+
+<-- 기존의 렌더는 Builtin Render로 취급하고 있다.
+
+
+shader graph 셰이더 그래프: 새로운 렌더링 파이프라인과 함께 제공되는 비주얼 셰이더 에디터
+<-- hlsl을 기반으로 한다.
+<-- 노드와 링크를 가지고 비주얼하게 편집가능하다
+
+vs 기존의 빌트인 렌더러에서 제공하는 shaderlab + cg를 기반으로 한 surface shader( surface함수 + 조명함수 )와는 완전히 다르다

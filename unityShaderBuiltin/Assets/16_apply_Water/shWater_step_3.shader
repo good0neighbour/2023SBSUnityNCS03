@@ -1,12 +1,13 @@
 /*
-    step_2
+    step_3
 
-    반사와 프레넬을 결함하자.
+    물이 흘러가는 느낌(일렁이는 느낌)이 들도록 하겠다.
 
+    이를 위해서 법선데이터를 조작한다.
+    <--uv animation
     
-
 */
-Shader "Ryu/shWater_step_2"
+Shader "Ryu/shWater_step_3"
 {
     Properties
     {
@@ -68,7 +69,23 @@ Shader "Ryu/shWater_step_2"
 
             //반사를 만듦
             //텍셀을 샘플링하고, 접선공간 변환을 적용
-            o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
+
+            //정지되어 있는 느낌
+            //o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
+            
+            //한쪽으로 흐르는 느낌
+            //o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap + _Time.x * 0.1));
+            //<--- uv animation을 normal map에 적용하여 법선데이터를 조작
+            //  <-- 무한 스크롤 알고리즘의 저글링 동작이 법선에 대해 일어나고 있는 것으로 봐도 된다.
+            
+            //보정
+            float3 tNormal_0 = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap + _Time.x * 0.1));
+            float3 tNormal_1 = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap - _Time.x * 0.1));
+            o.Normal = (tNormal_0 + tNormal_1) / 2;
+            //서로 반대방향으로 흐르도록?하고 이 두 벡터를 더해 보정
+            //<-- a물결이 일렁이는 느낌을 내고 있다.
+
+
             //o.Normal = float3(0, 0, 1);
             float3 tReflectColor = texCUBE(_Cube, WorldReflectionVector(IN, o.Normal));
 
