@@ -29,3 +29,58 @@ shader graph 셰이더 그래프: 새로운 렌더링 파이프라인과 함께 제공되는 비주얼 셰이
 <-- 노드와 링크를 가지고 비주얼하게 편집가능하다
 
 vs 기존의 빌트인 렌더러에서 제공하는 shaderlab + cg를 기반으로 한 surface shader( surface함수 + 조명함수 )와는 완전히 다르다
+
+
+
+
+Rendering PipeLine Asset
+<-- 렌더링 파이프라인을 추상화하여 애셋 형태로 만들어 놓은 것
+
+Renderer Asset
+<-- Rendering Pipeline Asset에 장착되어 렌더링을 담당하는 내부 프로그램, 애셋형태로 만들어져 있다.
+
+Render Asset은
+RenderFeature를 만들 수 있다.
+
+RenderFeature
+: 렌더링을 수행하기 위한 부가적인 구조물을 만들어 놓은 것
+<-- 렌더링 절차의 임의의 지점에
+머티리얼(셰이더 프로그램)을 끼워넣을 수 있다.
+
+Render Object <--임의의 게임오브젝트를 렌더일하는 것에 대한 이므로
+				<--임의의 게임오브젝트를 구별하기 위해 layer를 사용
+
+
+
+
+
+Stencil Buffer
+: 그래픽스 이론에서 임의의 용도를 위해 마련된 버퍼buffer(임의의 용도를 위한 메모리)
+
+DirectX를 기준으로 보면
+DepthBuffer + StencilBuffer의 구조로 만들어져 있다.
+( 32bit = 24bit + 8bit )
+<--함께 작동
+
+RenderFeature에 설정을 다음과 같이 한다.
+<--물론 씬에 존재하는 게임오브젝트는 일단 기본 렌더링이 수행되고
+부가적으로 렌더링을 하는 것을 RenderFeature애서 만드는 것이다. )
+
+	RenderFeature를 순서를 지켜 두 개 만든다.
+	( 렌더링 순서를 지키기 위해 순서를 맞췄다 )
+
+	WallRender
+
+		Stencil버퍼 옵션을
+			값 1,
+			비교함수 Always,
+			Pass(비교성공시) Replace( Stencil값변경)
+
+			<-- WallRender 렌더피처가 수행된 후에는 스텐실 버퍼에(Wall에 해당하는 픽셀)
+			1로 세팅된다
+
+	CharRender
+
+		값 1,
+		비교함수 Equal, <-- 1과 같으면
+		Pass(비교성공시) KeepM--렌더링을 그냥 정상적으로 수행하겠다

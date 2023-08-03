@@ -8,11 +8,11 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - layerOutline
   - Water
   - UI
-  - 
-  - 
+  - layerChar
+  - layerWall
   - 
   - 
   - 
