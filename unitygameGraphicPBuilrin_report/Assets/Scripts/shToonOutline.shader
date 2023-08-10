@@ -51,7 +51,8 @@ Shader "Custom/shToonOutline"
             fixed tOutlineArea = step(_OutlineWidth, 1 - dot(tViewDir, s.Normal));
 
             // 검정 림라이트를 적용하기 위해 림라이트 영역이 아닐 때만 Albedo 적용
-            tResult.rgb = s.Albedo * ceil(_ShadowLevel * dot(tLightDir, s.Normal)) / _ShadowLevel * (1 - tOutlineArea)
+            tResult.rgb = s.Albedo
+                * ceil(_ShadowLevel * (dot(tLightDir, s.Normal) * 0.5 + 0.5)) / _ShadowLevel * (1 - tOutlineArea)
                 + tOutlineArea * _OutlineColour.rgb;
             tResult.a = s.Alpha;
 

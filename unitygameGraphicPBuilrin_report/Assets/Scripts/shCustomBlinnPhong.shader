@@ -42,7 +42,8 @@ Shader "Custom/shCustomBlinnPhong"
         {
             fixed4 tResult;
 
-            tResult.rgb = s.Albedo * dot(tLightDir, s.Normal) + pow(saturate(dot(normalize(tLightDir + tViewDir), s.Normal)), _Glow);
+            tResult.rgb = s.Albedo * dot(tLightDir, s.Normal)
+                + pow(saturate(dot(normalize(tLightDir + tViewDir), s.Normal)), _Glow);
             tResult.a = s.Alpha;
 
             return tResult;
