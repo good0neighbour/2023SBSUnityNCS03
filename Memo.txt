@@ -2186,3 +2186,15 @@ RenderFeature에 의해
 
 
 
+URP
+Universal Rendering Pipeline
+
+HLSL
+High Level Shader Language
+
+Vertex Shader
+Fragment Shader( Pixel Shader )
+
+
+
+
