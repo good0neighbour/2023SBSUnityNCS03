@@ -77,7 +77,7 @@ public class MeshCut
     //인덱스, 정점의 위치, 법선정보, uv정보
     static new List<int>[] mLtFinalSubIndices = new List<int>[]{ new List<int>(), new List<int>()};
 
-    static List<Vector3> left_Final_vertcies = new List<Vector3>();
+    static List<Vector3> left_Final_vertices = new List<Vector3>();
     static List<Vector3> left_Final_normals = new List<Vector3>();
     static List<Vector2> left_Final_uvs = new List<Vector2>();
 
@@ -86,7 +86,7 @@ public class MeshCut
     //인덱스, 정점의 위치, 법선정보, uv정보
     static new List<int>[] mRtFinalSubIndices = new List<int>[] { new List<int>(), new List<int>() };
 
-    static List<Vector3> right_Final_vertcies = new List<Vector3>();
+    static List<Vector3> right_Final_vertices = new List<Vector3>();
     static List<Vector3> right_Final_normals = new List<Vector3>();
     static List<Vector2> right_Final_uvs = new List<Vector2>();
 
@@ -142,14 +142,14 @@ public class MeshCut
     {
         mLtFinalSubIndices[0].Clear();
         mLtFinalSubIndices[1].Clear();
-        left_Final_vertcies.Clear();
+        left_Final_vertices.Clear();
         left_Final_normals.Clear();
         left_Final_uvs.Clear();
 
 
         mRtFinalSubIndices[0].Clear();
         mRtFinalSubIndices[1].Clear();
-        right_Final_vertcies.Clear();
+        right_Final_vertices.Clear();
         right_Final_normals.Clear();
         right_Final_uvs.Clear();
     }
@@ -247,18 +247,22 @@ public class MeshCut
         //최종결과물을 위한 데이터 초기화
         ResetFinalArrays();
 
-        //왼쪽 메쉬 최종데이터를 만든다
-        //오른쪽 메쉬 최종데이터를 만든다
-        //절단면을 채운다
-        SetFinalArrays_withOriginals();
-        AddNewTriangles_toFinalArrays();
+        //i)원래 데이터로부터 만들어낼 부분은 만든다
+        //  왼쪽 메쉬 최종데이터를 만든다
+        //  오른쪽 메쉬 최종데이터를 만든다
+        //ii)새롭게 만들어낼 부분을 만든다
+        //  왼쪽 메쉬 최종데이터를 만든다
+        //  오른쪽 메쉬 최종데이터를 만든다
+        //iii)절단면을 채운다
+        SetFinalArrays_withOriginals();//<-----원래 데이터로부터 만들어낼 부분은 만든다
+        AddNewTriangles_toFinalArrays();//<-----새롭게 만들어낼 부분을 만든다
         MakeCaps();
 
         //left Mesh로 다루기 위한 처리를 해준다
         Mesh tLtHalfMesh = new Mesh();
         tLtHalfMesh.name = "split mesh left";
 
-        tLtHalfMesh.vertices = left_Final_vertcies.ToArray();//List ---> Array
+        tLtHalfMesh.vertices = left_Final_vertices.ToArray();//List ---> Array
         tLtHalfMesh.subMeshCount = 2;//<--sub mesh count는 2ro
 
         //topology 위상구조: 정점의 집합을 어떤 도형으로 해석할 것이냐에 대한 옵션
@@ -273,7 +277,7 @@ public class MeshCut
         Mesh tRtHalfMesh = new Mesh();
         tRtHalfMesh.name = "split mesh right";
 
-        tRtHalfMesh.vertices = right_Final_vertcies.ToArray();//List ---> Array
+        tRtHalfMesh.vertices = right_Final_vertices.ToArray();//List ---> Array
         tRtHalfMesh.subMeshCount = 2;//<--sub mesh count는 2ro
 
         //topology 위상구조: 정점의 집합을 어떤 도형으로 해석할 것이냐에 대한 옵션
@@ -288,8 +292,28 @@ public class MeshCut
 
         //유니티에서 왼쪽 게임오브젝트, 오른쪽 게임오브젝트로 다루기 위한 처리를 한다
 
+        //왼쪽 게임오브젝트를 만든다.
+        //원본GameObject를 이용하여 만든다.
         GameObject leftSideObject = null;
+        tVictim.name = "leftSideObject";
+        tVictim.GetComponent<MeshFilter>().mesh = tLtHalfMesh;//<-- 메쉬 데이터를 게임오브젝트에 설정
+        
+        leftSideObject = tVictim;//<--왼쪽 게임오브젝트는 원래 게임오브젝트를 가지고 만든다.
+
+        //오른쪽 게임오브젝트를 만든다
+        //<--새롭게 만든다.
         GameObject rightSideObject = null;
+        rightSideObject = new GameObject("rightSideObject", typeof(MeshFilter), typeof(MeshRenderer));
+        rightSideObject.transform.position = mVictimTransform.position; //원래 게임오브젝트의 변환정보 설정
+        rightSideObject.transform.rotation = mVictimTransform.rotation;
+        rightSideObject.GetComponent<MeshFilter>().mesh = tRtHalfMesh;//<-- 메쉬 데이터를 게임오브젝트에 설정
+
+        //머티리얼을 설정한다.
+        Material[] mats = new Material[] { tVictim.GetComponent<MeshRenderer>().material, tCapMaterial };
+        //<--원래 것, 절단면을 위한 머티리얼
+
+        leftSideObject.GetComponent<MeshRenderer>().materials = mats;
+        rightSideObject.GetComponent<MeshRenderer>().materials = mats;
         
         return new GameObject[] {leftSideObject, rightSideObject};
     }
@@ -297,16 +321,263 @@ public class MeshCut
     //임의의 면(삼각형) 절단 함수
     static void Cut_this_Face(int tSubMesh, int tIndex_0, int tIndex_1, int tIndex_2)
     {
+        int p = tIndex_0;
+        for (int side = 0; side < 3; side++)
+        {
+            switch (side)
+            {
+                case 0:
+                    p = tIndex_0;
+                    break;
+                case 1:
+                    p = tIndex_1;
+                    break;
+                case 2:
+                    p = tIndex_2;
+                    break;
+            }
+            //삼각형의 임의의 정점이 올바른 면에 있다면, 즉 왼편에 있다면
+            if (mIsCorrectSides[side])
+            {
+                if (mLtPoint_0 == Vector3.zero)
+                {
+                    //leftPoint1이 (0, 0, 0)이라면 임의의 정점 위치 정보로 설정
+                    mLtPoint_0 = mVictimMesh.vertices[p];
+                    mLtPoint_1 = mLtPoint_0;
+                    mLtUV_0 = mVictimMesh.uv[p];
+                    mLtUV_1 = mLtUV_0;
+                    mLtNormal_0 = mVictimMesh.normals[p];
+                    mLtNormal_1 = mLtNormal_0;
+                }
+                else
+                {
+                    mLtPoint_1 = mVictimMesh.vertices[p];
+                    mLtUV_1 = mVictimMesh.uv[p];
+                    mLtNormal_1 = mVictimMesh.normals[p];
+                }
+            }
+            else
+            {
+                if (mLtPoint_0 == Vector3.zero)
+                {
+                    //leftPoint1이 (0, 0, 0)이라면 임의의 정점 위치 정보로 설정
+                    mRtPoint_0 = mVictimMesh.vertices[p];
+                    mRtPoint_1 = mLtPoint_0;
+                    mRtUV_0 = mVictimMesh.uv[p];
+                    mRtUV_1 = mLtUV_0;
+                    mRtNormal_0 = mVictimMesh.normals[p];
+                    mRtNormal_1 = mLtNormal_0;
+                }
+                else
+                {
+                    mRtPoint_1 = mVictimMesh.vertices[p];
+                    mRtUV_1 = mVictimMesh.uv[p];
+                    mRtNormal_1 = mVictimMesh.normals[p];
+                }
+            }
+        }//for
+
+
+        //반복제어구조를 지나왔으므로, 이제 이 세 개의 인덱스에 대해 처리되어
+        //mLt0, mLt1, mRt0, mRt1이 준비되어 있다.
+
+        //이제 이렇게 준비된 데이터를 가지고, 평면과의 교점을 구하자.
+        float tDistance = 0.0f;
+        float tNormalizedDistance = 0.0f;
+
+        mPlane.Raycast(new Ray(mLtPoint_0, (mRtPoint_0 - mLtPoint_0).normalized), out tDistance);
+        //<--평면과 반직선의 충돌검토, 이를 통해서 충돌지점까지의 거리를 구한다
+        tNormalizedDistance = tDistance / (mRtPoint_0 - mLtPoint_0).magnitude;
+        // 충돌지점까지의 거리/ mRt0과 mLt0사이의 거리 = 충돌지점의 비율값
+
+        Vector3 newVertex1 = Vector3.Lerp(mLtPoint_0, mRtPoint_0, tNormalizedDistance);
+        //선형보간 함수의 가중치 부분에 비율값을 넣어 두 지점(위치)의 보간된 위치<--교점을 구한다.
+        Vector2 newUv1 = Vector2.Lerp(mLtUV_0, mRtUV_0, tNormalizedDistance);
+        Vector3 newNormal1 = Vector3.Lerp(mLtNormal_0, mRtNormal_0, tNormalizedDistance);
+        mCreatedVertexPoints.Add(newVertex1);//절단면을 위한 정점
+
+
+
+
+        mPlane.Raycast(new Ray(mLtPoint_1, (mRtPoint_1 - mLtPoint_1).normalized), out tDistance);
+        //<--평면과 반직선의 충돌검토, 이를 통해서 충돌지점까지의 거리를 구한다
+        tNormalizedDistance = tDistance / (mRtPoint_1 - mLtPoint_1).magnitude;
+        // 충돌지점까지의 거리/ mRt0과 mLt0사이의 거리 = 충돌지점의 비율값
+
+        Vector3 newVertex2 = Vector3.Lerp(mLtPoint_1, mRtPoint_1, tNormalizedDistance);
+        //선형보간 함수의 가중치 부분에 비율값을 넣어 두 지점(위치)의 보간된 위치<--교점을 구한다.
+        Vector2 newUv2 = Vector2.Lerp(mLtUV_1, mRtUV_1, tNormalizedDistance);
+        Vector3 newNormal2 = Vector3.Lerp(mLtNormal_1, mRtNormal_1, tNormalizedDistance);
+        mCreatedVertexPoints.Add(newVertex2);//절단면을 위한 정점
+
+
+        //왼쪽 첫 번째 삼각형
+        Add_Left_triangle(tSubMesh, newNormal1, new Vector3[] { mLtPoint_0, newVertex1, newVertex2 },
+            new Vector2[] { mLtUV_0, newUv1, newUv2 },
+            new Vector3[] { mLtNormal_0, newNormal1, newNormal2 });
+        //왼쪽 두 번째 삼각형
+        Add_Left_triangle(tSubMesh, newNormal2, new Vector3[] { mLtPoint_0, mLtPoint_1, newVertex2 },
+            new Vector2[] { mLtUV_0, mLtUV_1, newUv2 },
+            new Vector3[] { mLtNormal_0, mLtNormal_1, newNormal2 });
+
+        //오른쪽 첫 번째 삼각형
+        Add_Right_triangle(tSubMesh, newNormal1, new Vector3[] { mRtPoint_0, newVertex1, newVertex2 },
+            new Vector2[] { mRtUV_0, newUv1, newUv2 },
+            new Vector3[] { mRtNormal_0, newNormal1, newNormal2 });
+        //오른쪽 두 번째 삼각형
+        Add_Right_triangle(tSubMesh, newNormal2, new Vector3[] { mRtPoint_0, mRtPoint_1, newVertex2 },
+            new Vector2[] { mRtUV_0, mLtUV_1, newUv2 },
+            new Vector3[] { mRtNormal_0, mLtNormal_1, newNormal2 });
+
+
+
 
     }
-    //왼쪽 메쉬 최종 데이터는 원래의 데이터로부터 만들어낸다.
+
+
+
+    //왼쪽 메쉬를 위한 인덱스 정보 수집
+    static void Add_Left_triangle(int tSubMesh, Vector3 faceNormal, Vector3[] points, Vector2[] uvs, Vector3[] normals)
+    {
+
+        int p_0 = 0;
+        int p_1 = 1;
+        int p_2 = 2;
+        //법선 벡터 구하기 
+        Vector3 calculated_normal = Vector3.Cross((points[1] - points[0]).normalized, (points[2] - points[0]).normalized);
+
+        //정점 나열 순서 조정 
+        if (Vector3.Dot(calculated_normal, faceNormal) < 0)
+        {
+
+            p_0 = 2;
+            p_1 = 1;
+            p_2 = 0;
+        }
+        //수집용 데이터로 일단 저장해둠 
+        left_Gather_added_Points[tSubMesh].Add(points[p_0]);
+        left_Gather_added_Points[tSubMesh].Add(points[p_1]);
+        left_Gather_added_Points[tSubMesh].Add(points[p_2]);
+
+        left_Gather_added_uvs[tSubMesh].Add(uvs[p_0]);
+        left_Gather_added_uvs[tSubMesh].Add(uvs[p_1]);
+        left_Gather_added_uvs[tSubMesh].Add(uvs[p_2]);
+
+        left_Gather_added_normals[tSubMesh].Add(normals[p_0]);
+        left_Gather_added_normals[tSubMesh].Add(normals[p_1]);
+        left_Gather_added_normals[tSubMesh].Add(normals[p_2]);
+
+    }
+
+    static void Add_Right_triangle(int tSubMesh, Vector3 faceNormal, Vector3[] points, Vector2[] uvs, Vector3[] normals)
+    {
+
+
+        int p_0 = 0;
+        int p_1 = 1;
+        int p_2 = 2;
+        //법선 벡터 구하기 
+        Vector3 calculated_normal = Vector3.Cross((points[1] - points[0]).normalized, (points[2] - points[0]).normalized);
+        //정점 나열 순서 조정 
+        if (Vector3.Dot(calculated_normal, faceNormal) < 0)
+        {
+
+            p_0 = 2;
+            p_1 = 1;
+            p_2 = 0;
+        }
+
+
+        right_Gather_added_Points[tSubMesh].Add(points[p_0]);
+        right_Gather_added_Points[tSubMesh].Add(points[p_1]);
+        right_Gather_added_Points[tSubMesh].Add(points[p_2]);
+
+        right_Gather_added_uvs[tSubMesh].Add(uvs[p_0]);
+        right_Gather_added_uvs[tSubMesh].Add(uvs[p_1]);
+        right_Gather_added_uvs[tSubMesh].Add(uvs[p_2]);
+
+        right_Gather_added_normals[tSubMesh].Add(normals[p_0]);
+        right_Gather_added_normals[tSubMesh].Add(normals[p_1]);
+        right_Gather_added_normals[tSubMesh].Add(normals[p_2]);
+
+    }
+
+
+
+    //지금까지 수집된 데이터들을 바탕으로 그리고 기존에 있던 메쉬정보에 대해  왼쪽 , 오른쪽 메쉬 정보를 조직화한다 
     static void SetFinalArrays_withOriginals()
     {
+        int tIndexP = 0;
+        //두 개의 서브메쉬 를 가정: 0번 서브메쉬 , 1번 서브메쉬 
+        for (int tSubMesh = 0; tSubMesh < 2; tSubMesh++)
+        {
+            //왼쪽 수집된 0번 서브메쉬 1번 서브메쉬 
+            for (int i = 0; i < left_Gather_subIndices[tSubMesh].Count; i++)
+            {
+
+                tIndexP = left_Gather_subIndices[tSubMesh][i];//인덱스를 얻는다 
+
+                //해당 인덱스로 정점의 위치정보, 법선정보 , UV정보 를 추가한다 
+                left_Final_vertices.Add(mVictimMesh.vertices[tIndexP]);
+                mLtFinalSubIndices[tSubMesh].Add(left_Final_vertices.Count - 1);
+
+                left_Final_normals.Add(mVictimMesh.normals[tIndexP]);
+                left_Final_uvs.Add(mVictimMesh.uv[tIndexP]);
+
+            }
+
+            //오른쪽 수집된 0번 서브메쉬 1번 서브메쉬 
+            for (int i = 0; i < right_Gather_subIndices[tSubMesh].Count; i++)
+            {
+
+                tIndexP = right_Gather_subIndices[tSubMesh][i];//인덱스를 얻는다 
+
+                //해당 인덱스로 정점의 위치정보, 법선정보 , UV정보 를 추가한다 
+                right_Final_vertices.Add(mVictimMesh.vertices[tIndexP]);
+                mRtFinalSubIndices[tSubMesh].Add(right_Final_vertices.Count - 1);
+
+                right_Final_normals.Add(mVictimMesh.normals[tIndexP]);
+                right_Final_uvs.Add(mVictimMesh.uv[tIndexP]);
+
+            }
+
+        }
 
     }
-    //오른쪽 메쉬 최종 데이터는 새로 만든다.
+    //지금까지 수집된 데이터들을 바탕으로 새롭게 구성되는 삼각형들에 대해  최종적인 왼쪽 , 오른쪽 메쉬 정보를 조직화한다 
     static void AddNewTriangles_toFinalArrays()
     {
+
+        for (int tSubMesh = 0; tSubMesh < 2; tSubMesh++)
+        {
+
+            int count = left_Final_vertices.Count;//<-----------------SetFinalArrays_withOriginals 로 만들어진 그 데이터에 더해 가기 위해 
+                                                  // add the new ones
+                                                  // 새롭게 추가된 데이터 를 왼쪽 것으로 한다 
+            for (int i = 0; i < left_Gather_added_Points[tSubMesh].Count; i++)
+            {
+
+                left_Final_vertices.Add(left_Gather_added_Points[tSubMesh][i]);
+                mLtFinalSubIndices[tSubMesh].Add(i + count);
+
+                left_Final_uvs.Add(left_Gather_added_uvs[tSubMesh][i]);
+                left_Final_normals.Add(left_Gather_added_normals[tSubMesh][i]);
+
+            }
+
+            count = right_Final_vertices.Count;//<-----------------SetFinalArrays_withOriginals 로 만들어진 그 데이터에 더해 가기 위해 
+
+            for (int i = 0; i < right_Gather_added_Points[tSubMesh].Count; i++)
+            {
+
+                right_Final_vertices.Add(right_Gather_added_Points[tSubMesh][i]);
+                mRtFinalSubIndices[tSubMesh].Add(i + count);
+
+                right_Final_uvs.Add(right_Gather_added_uvs[tSubMesh][i]);
+                right_Final_normals.Add(right_Gather_added_normals[tSubMesh][i]);
+
+            }
+        }
 
     }
     //절단면을 채운다.
