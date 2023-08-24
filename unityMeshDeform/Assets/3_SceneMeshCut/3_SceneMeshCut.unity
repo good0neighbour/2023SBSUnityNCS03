@@ -354,6 +354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mpVictim: {fileID: 1341224949}
+  mMtlCutFace: {fileID: 2100000, guid: 1c46ba321c7c90e40b5e00d75ee99386, type: 2}
 --- !u!1001 &1341224948
 PrefabInstance:
   m_ObjectHideFlags: 0
