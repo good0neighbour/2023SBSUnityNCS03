@@ -47,25 +47,38 @@
                 Android <---- controlSchemaAndroid
                 ...
             <--Any로 두면 유니티가 알아서 선택해준다.
+
+
+
+    PlayerInput컴포넌트에 Behaviour항목을 보면
+    크게 두 가지로 처리할 수 있게 되어 있다.
+
+    i) 메시지 처리 방식 <-- 유니티 에디터에 PlayerInput컴포넌트의 Behaviour에 Send Message등을 설정한다.
+        소스코드에 연동할 함수를 작성한다. 이름 규칙은 On접두사를 액션이름앞에 붙여 만든다.
+
+    ii) 이벤트 처리 방식 <-- 유니티 에디터에 PlayerInput컴포넌트의 Behaviour 밑에, 이벤트에 대응되는 슬롯을 만들고 거기에 호출할 함수를 연동하면 된다.
+        이름 규칙은 별도로 없다.
+
+
+    <-------- 메시지, 이벤트 등은 함수 호출을 데이터 관점에서 극도로 추상화해놓은 것이다.
+        이렇게 되면 호출에 대해 시간(호출 시점)과 공간(호출할 코드가 어느 코드 위치에 있는지)을 분리할 수 있다.
+
+
+
+
+    step_2 에서는 서로 다른 ActionMaps를 만들어
+    교체해보는 테스트를 수행하였다.
+    이로서 알 수 있는 것은
+    새로운 Input System이
+    추상화된 단위로 매우 유연한 구조를 가지고 있다는 것이다.
+
+
+    step_3에서는 서로 다른 스키마를 만들어
+    적용해보는 테스트를 수행하였다.
+    이로서 알 수 있는 것은
+    'n개 종류의 플랫폼'을 'm개 종류의 입력방식 ------ 임의의 처리'에 조합할 수 있는
+    유연한 구조를 가지고 있다는 것이다.
+
+    (<--테스트 시 AutoSwitch는 꺼두고 테스트해본다.)
+
 */
-
-
-
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class memo : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-}

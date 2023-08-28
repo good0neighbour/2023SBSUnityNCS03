@@ -1,0 +1,230 @@
+{
+    "name": "InputActions_ActionMaps",
+    "maps": [
+        {
+            "name": "ActionMapsSlimeA",
+            "id": "9df34f5f-2d14-489a-bc18-5bac68c520b2",
+            "actions": [
+                {
+                    "name": "DoMoveForwardAxis",
+                    "type": "Value",
+                    "id": "666a7c9e-9fbf-4799-80c4-cff314b9c296",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "DoMoveRotate",
+                    "type": "Value",
+                    "id": "52ca88c6-1ef1-4873-8687-1907fdf29585",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "DoFire",
+                    "type": "Button",
+                    "id": "e89f1e45-c02b-439b-a4bc-06cdfbf153ce",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "WS",
+                    "id": "15173b2b-1abc-4ee3-a0da-20316ca0f6ec",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoMoveForwardAxis",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "592c0ec5-6532-4fd6-82ae-43360511900f",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoMoveForwardAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "58968f0c-2004-4f60-9467-20c6f001d674",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoMoveForwardAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "DA",
+                    "id": "ac68323c-9f56-42cf-910b-bae65eba702f",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoMoveRotate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "300c932b-e96f-44cd-8e26-fb496bff4711",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoMoveRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "4b9809ae-ecd4-494d-aac2-731860a82ae6",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoMoveRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "079c45a7-0fac-4d20-8a10-3c38fcc45511",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoFire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "ActionMapsSlimeB",
+            "id": "7533d422-76db-4e89-a372-2b048eb0c8dc",
+            "actions": [
+                {
+                    "name": "DoMoveForwardAxis",
+                    "type": "Value",
+                    "id": "f3363144-cdc9-451b-a556-2a7d5a0b32c4",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "DoMoveRotate",
+                    "type": "Value",
+                    "id": "8dfaaebd-e065-4fc4-90fb-19f4df5b95dc",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "DoFire",
+                    "type": "Button",
+                    "id": "c592fcbd-5d60-4800-9a1c-07b62c6bef17",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "OL",
+                    "id": "ab056424-5542-4ee5-a02c-a74d9b808819",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoMoveForwardAxis",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "0e6a29dc-4972-4c09-bee5-79941704c6b5",
+                    "path": "<Keyboard>/l",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoMoveForwardAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "e74c23d3-fff0-41c2-a31a-8454b321f49d",
+                    "path": "<Keyboard>/o",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoMoveForwardAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "DA",
+                    "id": "f035caa6-3569-42a2-828c-c9afbe357932",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoMoveRotate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "9a604b54-c3c0-458d-978a-18ac0d29f2f8",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoMoveRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "2146258a-3fa4-4eda-bccc-9e79d9e09682",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoMoveRotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "d42d3f41-fc55-4c3d-b7e8-bc1a0fe803dc",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoFire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

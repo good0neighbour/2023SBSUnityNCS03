@@ -1,0 +1,68 @@
+{
+    "name": "InputActions_Schema",
+    "maps": [
+        {
+            "name": "ActionMapsSchemaTest",
+            "id": "52d71e29-9d0b-4bc9-9b48-b19e66b3b5b4",
+            "actions": [
+                {
+                    "name": "DoFire",
+                    "type": "Button",
+                    "id": "743730fb-e906-4fd2-9e52-e12da8139bb2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "12c765e9-2a21-4155-9ea7-fce2519bb0cb",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "controlSchemaPC_0",
+                    "action": "DoFire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "802343b7-54f3-4e9c-89d0-a38be4eadda2",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "controlSchemaPC_1",
+                    "action": "DoFire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "controlSchemaPC_0",
+            "bindingGroup": "controlSchemaPC_0",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "controlSchemaPC_1",
+            "bindingGroup": "controlSchemaPC_1",
+            "devices": [
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
