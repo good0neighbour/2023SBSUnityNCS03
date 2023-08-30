@@ -15,4 +15,13 @@ public class CUnit : MonoBehaviour
     {
         
     }
+
+    public void CreatRyu()
+    {
+        Debug.Log("CUnit.CreateRyu");
+    }
+    public void DestroyRyu()
+    {
+        Debug.Log("CUnit.DestroyRyu");
+    }
 }
