@@ -1,0 +1,7 @@
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\csPartial\bin\Debug\csPartial.exe.config
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\csPartial\bin\Debug\csPartial.exe
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\csPartial\bin\Debug\csPartial.pdb
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\csPartial\obj\Debug\csPartial.csproj.AssemblyReference.cache
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\csPartial\obj\Debug\csPartial.csproj.CoreCompileInputs.cache
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\csPartial\obj\Debug\csPartial.exe
+C:\Users\User\Documents\GitHub\2023SBSUnityNCS03\csPartial\obj\Debug\csPartial.pdb
