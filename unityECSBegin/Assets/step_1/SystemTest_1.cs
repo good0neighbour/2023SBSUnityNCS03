@@ -45,6 +45,8 @@ partial struct SystemTest_1 : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState tState)
     {
+
+
         //등록해둔 컴포넌트를 얻는다.
         var tSpawnerCube = SystemAPI.GetSingleton<SpawnerCube>();
 
