@@ -2198,3 +2198,40 @@ Fragment Shader( Pixel Shader )
 
 
 
+JDK
+Java Development kit
+
+Android SDK
+
+NDK
+Native Development kit
+
+
+Gradle
+<-- 필요한 것을 알아서 설치한다.
+
+
+프로파일링
+Profiling
+병목지점을 찾는 과정
+
+
+Frame Debugger
+
+
+드로우 콜 Draw Call
+
+
+Batch: 넓은 의미의 드로우 콜
+
+SetPass: 렌더링 관련 상태 변경 '여부'
+
+
+Batching 배칭
+
+	Static Batching
+	Dynamic Batching
+
+
+
+
